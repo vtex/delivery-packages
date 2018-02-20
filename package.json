@@ -1,0 +1,33 @@
+{
+  "name": "delivery-packages",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "6",
+    "babel-eslint": "^8.2.2",
+    "babel-jest": "^22.2.2",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.18.0",
+    "eslint-config-vtex": "^8.0.0",
+    "eslint-plugin-jest": "^21.12.2",
+    "jest": "^22.3.0"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+    ]
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
+  }
+}
