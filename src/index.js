@@ -133,6 +133,10 @@ function createEnhancePackageFn({ logisticsInfo, selectedAddresses }) {
 }
 
 function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
+  if (logisticsInfo[itemIndex].deliveryChannel === 'pickup-in-point') {
+    return getPickupAddress({ itemIndex, logisticsInfo })
+  }
+
   const addressId = logisticsInfo[itemIndex].addressId
   return selectedAddresses.find(address => address.addressId === addressId)
 }
@@ -148,10 +152,19 @@ function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
 }
 
 function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
+  const sla = getSelectedSla({ itemIndex, logisticsInfo })
+  return sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
+}
+
+function getPickupAddress({ itemIndex, logisticsInfo }) {
+  const sla = getSelectedSla({ itemIndex, logisticsInfo })
+  return sla.pickupStoreInfo ? sla.pickupStoreInfo.address : null
+}
+
+function getSelectedSla({ itemIndex, logisticsInfo }) {
   const logisticInfo = logisticsInfo[itemIndex]
   const selectedSla = logisticInfo.selectedSla
-  const sla = logisticInfo.slas.find(sla => sla.id === selectedSla)
-  return sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
+  return logisticInfo.slas.find(sla => sla.id === selectedSla)
 }
 
 // {

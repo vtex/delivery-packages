@@ -237,4 +237,43 @@ describe('has two deliveries with different delivery channels', () => {
     expect(result[0].pickup)
     expect(result[1].selectedSla).toBe(pickupNormalSla.id)
   })
+
+  it('should return the pickup point address', () => {
+    const items = [
+      {
+        id: 0,
+        quantity: 1,
+        seller: '1',
+      },
+      {
+        id: 1,
+        quantity: 1,
+        seller: '2',
+      },
+    ]
+
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.normal,
+        itemIndex: 0,
+        slas: [normalSla],
+      },
+      {
+        ...baseLogisticsInfo.pickup,
+        itemIndex: 1,
+        slas: [pickupSla],
+      },
+    ]
+
+    const result = packagify({
+      items,
+      selectedAddresses,
+      logisticsInfo,
+    })
+
+    expect(result).toHaveLength(2)
+    expect(result[1].selectedSla).toBe(pickupSla.id)
+    expect(result[1].address.addressId).toBe(pickupPointAddress.addressId)
+  })
 })
