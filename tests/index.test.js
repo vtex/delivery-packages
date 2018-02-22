@@ -45,6 +45,7 @@ describe('has one package with all items', () => {
     expect(result[0].items).toHaveLength(2)
     expect(result[0].selectedSla).toBe(expressSla.id)
     expect(result[0].deliveryChannel).toBe(expressSla.deliveryChannel)
+    expect(result[0].slas[0]).toBe(expressSla)
     expect(result[0].shippingEstimate).toBe(
       baseLogisticsInfo.express.shippingEstimate
     )
