@@ -9,7 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "rollup -c"
   },
   "keywords": [],
   "author": "Breno Calazans (@klzns)",
