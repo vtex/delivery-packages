@@ -6,19 +6,19 @@ export default [
   // browser-friendly UMD build
   {
     input: 'src/index.js',
-    sourceMap: true,
     output: {
       name: 'vtex.deliveryPackages',
       file: pkg.browser,
       format: 'umd',
+      sourcemap: true,
+      globals: {
+        '@vtex/estimate-calculator': 'vtex.EstimateCalculator',
+      },
     },
     plugins: [
       resolve(), // so Rollup can find `ms`
       commonjs(), // so Rollup can convert `ms` to an ES module
     ],
-    globals: {
-      '@vtex/estimate-calculator': 'vtex.EstimateCalculator',
-    },
   },
 
   // CommonJS (for Node) and ES module (for bundlers) build.
@@ -30,10 +30,9 @@ export default [
   {
     input: 'src/index.js',
     external: ['ms'],
-    sourceMap: true,
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' },
+      { file: pkg.main, format: 'cjs', sourcemap: true },
+      { file: pkg.module, format: 'es', sourcemap: true },
     ],
   },
 ]
