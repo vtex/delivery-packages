@@ -28,6 +28,6 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4.17.5"
+    "@vtex/estimate-calculator": "^1.0.0"
   }
 }

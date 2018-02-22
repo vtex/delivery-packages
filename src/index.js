@@ -1,3 +1,7 @@
+const {
+  getShippingEstimateQuantityInSeconds,
+} = require('@vtex/estimate-calculator')
+
 module.exports = function(
   { items, packages, selectedAddresses, logisticsInfo }
 ) {
@@ -48,13 +52,13 @@ function addToPackage(items, fn) {
       const pack = fn(packages, item)
 
       if (pack) {
-        pack.shippingEstimate = pack.shippingEstimate > item.shippingEstimate
-          ? pack.shippingEstimate
-          : item.shippingEstimate
-        pack.shippingEstimateDate = new Date(pack.shippingEstimateDate) >
-          new Date(item.shippingEstimateDate)
-          ? pack.shippingEstimateDate
-          : item.shippingEstimateDate
+        if (
+          getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
+          getShippingEstimateQuantityInSeconds(item.shippingEstimate)
+        ) {
+          pack.shippingEstimate = item.shippingEstimate
+          pack.shippingEstimateDate = item.shippingEstimateDate
+        }
 
         pack.items = pack.items.concat(item.item)
         return packages
