@@ -3,7 +3,7 @@ const {
 } = require('@vtex/estimate-calculator')
 
 module.exports = function(
-  { items, packages, selectedAddresses, logisticsInfo }
+  { items, packages = [], selectedAddresses, logisticsInfo }
 ) {
   const itemsWithIndex = items.map((item, index) =>
     Object.assign({}, item, { index }))
@@ -44,7 +44,8 @@ function groupDeliveries(items) {
         pack.shippingEstimate === item.shippingEstimate &&
         pack.selectedSla === item.selectedSla &&
         pack.deliveryChannel === item.deliveryChannel &&
-        pack.address.addressId === item.address.addressId
+        pack.address.addressId === item.address.addressId &&
+        pack.seller === item.item.seller
     )
   })
 }
@@ -69,6 +70,7 @@ function addToPackage(items, fn) {
 
       const newPackage = Object.assign({}, item, {
         items: [item.item],
+        seller: item.item.seller,
         item: undefined,
       })
 
@@ -156,6 +158,7 @@ function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
 //   items: [],
 //   package: { trackingNumber, trackingUrl, courierStatus, invoiceNumber }
 //   address: {},
+//   seller: '',
 //   selectedSla: ''
 //   deliveryChannel: ''
 //   pickupFriendlyName: '',

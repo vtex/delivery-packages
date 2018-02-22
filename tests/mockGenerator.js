@@ -47,6 +47,15 @@ const pickupSla = {
   },
 }
 
+const pickupNormalSla = {
+  id: 'Normal',
+  deliveryChannel: 'pickup-in-point',
+  pickupStoreInfo: {
+    friendlyName: 'Shopping da Gávea',
+    address: pickupPointAddress,
+  },
+}
+
 const expressSla = {
   id: 'Expressa',
   deliveryChannel: 'delivery',
@@ -61,6 +70,7 @@ const createItems = quantity => {
   return Array.from(Array(quantity), (_, index) => ({
     id: index,
     quantity: 1,
+    seller: '1',
   }))
 }
 
@@ -68,6 +78,13 @@ const baseLogisticsInfo = {
   pickup: {
     addressId: pickupPointAddress.addressId,
     selectedSla: pickupSla.id,
+    shippingEstimate: '5h',
+    shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
+    deliveryChannel: 'pickup-in-point',
+  },
+  pickupNormal: {
+    addressId: pickupPointAddress.addressId,
+    selectedSla: pickupNormalSla.id,
     shippingEstimate: '5h',
     shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
     deliveryChannel: 'pickup-in-point',
@@ -86,12 +103,20 @@ const baseLogisticsInfo = {
     shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
     deliveryChannel: 'delivery',
   },
+  normalFastest: {
+    addressId: residentialAddress.addressId,
+    selectedSla: normalSla.id,
+    shippingEstimate: '3bd',
+    shippingEstimateDate: '2018-02-21T19:01:07.0336412+00:00',
+    deliveryChannel: 'delivery',
+  },
 }
 
 module.exports = {
   pickupPointAddress,
   residentialAddress,
   pickupSla,
+  pickupNormalSla,
   expressSla,
   normalSla,
   baseLogisticsInfo,
