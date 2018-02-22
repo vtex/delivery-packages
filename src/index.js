@@ -5,8 +5,10 @@ const {
 module.exports = function(
   { items, packages, selectedAddresses, logisticsInfo }
 ) {
-  const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
-  const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
+  const itemsWithIndex = items.map((item, index) =>
+    Object.assign({}, item, { index }))
+  const packagesWithIndex = packages.map((pack, index) =>
+    Object.assign({}, pack, { index }))
 
   const deliveredItems = getDeliveredItems({
     items: itemsWithIndex,
@@ -17,6 +19,7 @@ module.exports = function(
     logisticsInfo,
     selectedAddresses,
   })
+
   deliveredItems.delivered = deliveredItems.delivered.map(enhancePackage)
   deliveredItems.toBeDelivered = deliveredItems.toBeDelivered.map(
     enhancePackage
@@ -25,7 +28,7 @@ module.exports = function(
   const deliveredPackages = groupPackages(deliveredItems.delivered)
   const toBeDeliveredPackages = groupDeliveries(deliveredItems.toBeDelivered)
 
-  return [...deliveredPackages, ...toBeDeliveredPackages]
+  return deliveredPackages.concat(toBeDeliveredPackages)
 }
 
 function groupPackages(items) {
@@ -64,11 +67,10 @@ function addToPackage(items, fn) {
         return packages
       }
 
-      const newPackage = {
-        ...item,
+      const newPackage = Object.assign({}, item, {
         items: [item.item],
         item: undefined,
-      }
+      })
 
       return packages.concat(newPackage)
     },
@@ -106,22 +108,25 @@ function createEnhancePackageFn({ logisticsInfo, selectedAddresses }) {
   return pack => {
     const itemIndex = pack.item.index
 
-    return {
-      ...pack,
-      address: getAddress({
+    return Object.assign(
+      {},
+      pack,
+      {
+        address: getAddress({
+          itemIndex,
+          logisticsInfo,
+          selectedAddresses,
+        }),
+        pickupFriendlyName: getPickupFriendlyName({
+          itemIndex,
+          logisticsInfo,
+        }),
+      },
+      getLogisticsInfoData({
         itemIndex,
         logisticsInfo,
-        selectedAddresses,
-      }),
-      pickupFriendlyName: getPickupFriendlyName({
-        itemIndex,
-        logisticsInfo,
-      }),
-      ...getLogisticsInfoData({
-        itemIndex,
-        logisticsInfo,
-      }),
-    }
+      })
+    )
   }
 }
 
