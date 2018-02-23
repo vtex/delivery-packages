@@ -2,6 +2,21 @@
 
 > Small library to separate items in packages
 
+## Motivation
+
+The UX of displaying to the user how their items are going to be delivered can be tricky to be expressed and developed.
+
+That are many criterias to split items in different packages. They are:
+
+1. Seller
+2. SLAs options
+3. Selected SLA ID
+4. Selected SLA Shipping Estimate
+5. Selected SLA Delivery Channel
+6. Packages already delivered (post purchase scenario)
+
+This module provides a consistent way to handle all those criterias.
+
 ## Install
 
 ```sh
@@ -85,7 +100,7 @@ packagify({
 
 ### packagify({ items, selectedAddresses, logisticsInfo, packages })
 
-Returns an array of [Package](#Package)
+Returns an array of [Package](#Package)s.
 
 #### items
 
