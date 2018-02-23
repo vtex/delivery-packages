@@ -23,6 +23,13 @@ packagify({
 //     "seller": "1",
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Normal",
+//     "slas": [
+//       {
+//         "id": "Normal",
+//         "deliveryChannel": "delivery",
+//         ...
+//       }
+//     ],
 //     "shippingEstimate": "6bd",
 //     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
 //     "deliveryChannel": "delivery",
@@ -46,6 +53,13 @@ packagify({
 //     "seller": "2",
 //     "pickupFriendlyName": "Shopping da Gávea",
 //     "selectedSla": "Retirada na loja (17c6a89)",
+//     "slas": [
+//       {
+//         "id": "Retirada na loja (17c6a89)",
+//         "deliveryChannel": "pickup-in-point",
+//         ...
+//       }
+//     ],
 //     "shippingEstimate": "5h",
 //     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
 //     "deliveryChannel": "pickup-in-point",
@@ -100,6 +114,7 @@ A Package object shape
   seller: String,
   package: Object,  
   selectedSla: String,
+  slas: [Object],
   shippingEstimate: String,
   shippingEstimateDate: String,
   deliveryChannel: String,
@@ -122,7 +137,7 @@ The seller of the package.
 
 The `package` object from `packageAttachment`, if it is one.
 
-#### selectedSla, shippingEstimate, shippingEstimateDate, deliveryChannel
+#### slas, selectedSla, shippingEstimate, shippingEstimateDate, deliveryChannel
 
 These properties are taken from the `logisticsInfo` of the package.
 
@@ -224,6 +239,7 @@ packagify({items, selectedAddresses, logisticsInfo, packages})
 //     },
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Expressa",
+//     "slas": [{ "id": "Expressa", "deliveryChannel": "delivery" }],
 //     "shippingEstimate": "5bd",
 //     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
 //     "deliveryChannel": "delivery",
@@ -250,6 +266,7 @@ packagify({items, selectedAddresses, logisticsInfo, packages})
 //     },
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Normal",
+//     "slas": [{ "id": "Normal", "deliveryChannel": "delivery" }],
 //     "shippingEstimate": "6bd",
 //     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
 //     "deliveryChannel": "delivery",

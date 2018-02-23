@@ -148,6 +148,7 @@ function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
     shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate,
     deliveryChannel: logisticsInfo[itemIndex].deliveryChannel,
     deliveryWindow: logisticsInfo[itemIndex].deliveryWindow,
+    slas: logisticsInfo[itemIndex].slas,
   }
 }
 
@@ -173,6 +174,7 @@ function getSelectedSla({ itemIndex, logisticsInfo }) {
 //   address: {},
 //   seller: '',
 //   selectedSla: ''
+//   slas: []
 //   deliveryChannel: ''
 //   pickupFriendlyName: '',
 //   shippingEstimate: '',
