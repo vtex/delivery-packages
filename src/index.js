@@ -2,9 +2,19 @@ const {
   getShippingEstimateQuantityInSeconds,
 } = require('@vtex/estimate-calculator')
 
-module.exports = function(
-  { items, packages = [], selectedAddresses, logisticsInfo }
-) {
+module.exports = function(order) {
+  const { items = [], packageAttachment = {}, shippingData = {} } = order
+
+  const packages = packageAttachment && packageAttachment.packages
+    ? packageAttachment.packages
+    : []
+  const logisticsInfo = shippingData && shippingData.logisticsInfo
+    ? shippingData.logisticsInfo
+    : []
+  const selectedAddresses = shippingData && shippingData.selectedAddresses
+    ? shippingData.selectedAddresses
+    : []
+
   const itemsWithIndex = items.map((item, index) =>
     Object.assign({}, item, { index }))
   const packagesWithIndex = packages.map((pack, index) =>

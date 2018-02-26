@@ -14,12 +14,14 @@ const {
 describe('has one package with all items', () => {
   it('should create one package', () => {
     const items = createItems(2)
-    const packages = [
-      createPackage([
-        { itemIndex: 0, quantity: 1 },
-        { itemIndex: 1, quantity: 1 },
-      ]),
-    ]
+    const packageAttachment = {
+      packages: [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 1, quantity: 1 },
+        ]),
+      ],
+    }
     const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
       {
@@ -36,9 +38,11 @@ describe('has one package with all items', () => {
 
     const result = packagify({
       items,
-      packages,
-      selectedAddresses,
-      logisticsInfo,
+      packageAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(1)
@@ -59,7 +63,9 @@ describe('has one package with all items', () => {
 describe('has one package and a delivery', () => {
   it('should create two packages', () => {
     const items = createItems(2)
-    const packages = [createPackage([{ itemIndex: 0, quantity: 1 }])]
+    const packageAttachment = {
+      packages: [createPackage([{ itemIndex: 0, quantity: 1 }])]
+    }
     const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
       {
@@ -76,9 +82,11 @@ describe('has one package and a delivery', () => {
 
     const result = packagify({
       items,
-      packages,
-      selectedAddresses,
-      logisticsInfo,
+      packageAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(2)
@@ -90,12 +98,14 @@ describe('has one package and a delivery', () => {
 describe('has two packages with different shipping estimates', () => {
   it('should create one package with the latest estimate', () => {
     const items = createItems(2)
-    const packages = [
-      createPackage([
-        { itemIndex: 0, quantity: 1 },
-        { itemIndex: 1, quantity: 1 },
-      ]),
-    ]
+    const packageAttachment = {
+      packages: [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 1, quantity: 1 },
+        ]),
+      ],
+    }
     const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
       {
@@ -112,9 +122,11 @@ describe('has two packages with different shipping estimates', () => {
 
     const result = packagify({
       items,
-      packages,
-      selectedAddresses,
-      logisticsInfo,
+      packageAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(1)
@@ -143,8 +155,10 @@ describe('has two deliveries with different shipping estimates', () => {
 
     const result = packagify({
       items,
-      selectedAddresses,
-      logisticsInfo,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(2)
@@ -188,8 +202,10 @@ describe('has two deliveries of different sellers', () => {
 
     const result = packagify({
       items,
-      selectedAddresses,
-      logisticsInfo,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(2)
@@ -229,8 +245,10 @@ describe('has two deliveries with different delivery channels', () => {
 
     const result = packagify({
       items,
-      selectedAddresses,
-      logisticsInfo,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(2)
@@ -269,8 +287,10 @@ describe('has two deliveries with different delivery channels', () => {
 
     const result = packagify({
       items,
-      selectedAddresses,
-      logisticsInfo,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
     })
 
     expect(result).toHaveLength(2)
