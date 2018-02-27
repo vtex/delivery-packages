@@ -239,16 +239,3 @@ function getSelectedSla({ itemIndex, logisticsInfo }) {
   const selectedSla = logisticInfo.selectedSla
   return logisticInfo.slas.find(sla => sla.id === selectedSla)
 }
-
-// {
-//   items: [],
-//   package: { trackingNumber, trackingUrl, courierStatus, invoiceNumber }
-//   address: {},
-//   seller: '',
-//   selectedSla: ''
-//   slas: []
-//   deliveryChannel: ''
-//   pickupFriendlyName: '',
-//   shippingEstimate: '',
-//   shippingEstimateDate: ''
-// }
