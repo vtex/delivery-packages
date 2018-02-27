@@ -85,8 +85,8 @@ const baseLogisticsInfo = {
   pickupNormal: {
     addressId: pickupPointAddress.addressId,
     selectedSla: pickupNormalSla.id,
-    shippingEstimate: '5h',
-    shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
+    shippingEstimate: '6bd',
+    shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
     deliveryChannel: 'pickup-in-point',
   },
   express: {
