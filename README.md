@@ -29,7 +29,6 @@ $ npm install @vtex/delivery-packages
 const packagify = require('@vtex/delivery-packages')
 
 packagify(order)
-})
 // [
 //   {
 //     "seller": "1",
