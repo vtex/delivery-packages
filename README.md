@@ -6,7 +6,7 @@
 
 The UX of displaying to the user how their items are going to be delivered can be tricky to be expressed and developed.
 
-That are many criterias to split items in different packages. They are:
+There are many criteria to split items in different packages. They are:
 
 1. Seller
 2. SLAs options
@@ -15,7 +15,7 @@ That are many criterias to split items in different packages. They are:
 5. Selected SLA Delivery Channel
 6. Packages already delivered (post purchase scenario)
 
-This module provides a consistent way to handle all those criterias.
+This module provides a consistent way to handle all those criteria.
 
 ## Install
 
@@ -28,10 +28,7 @@ $ npm install @vtex/delivery-packages
 ```js
 const packagify = require('@vtex/delivery-packages')
 
-packagify({
-  items,
-  selectedAddresses,
-  logisticsInfo
+packagify(order)
 })
 // [
 //   {
@@ -98,25 +95,28 @@ packagify({
 
 ## API
 
-### packagify({ items, selectedAddresses, logisticsInfo, packages })
+### packagify(order, options)
 
 Returns an array of [Package](#Package)s.
 
-#### items
+#### order
 
-The `items` array from the order.
+An order shaped like an [orderForm](https://github.com/vtex/vtex.js/blob/master/docs/checkout/order-form.md).
 
-#### selectedAddresses
+#### options.criteria
 
-The `selectedAddress` array from the order's `shippingData`.
+Type: `Object`<br/>
+Default:<br/>
+```js
+{
+  slaOptions: false,
+  selectedSla: true,
+  seller: true,
+  shippingEstimate: true
+}
+```
 
-#### logisticsInfo
-
-The `logisticsInfo` array from the order's `shippingData`.
-
-#### packages (optional)
-
-The `packages` array from the order's `packageAttachment`. This property is only available using OMS API.
+This param will be merged with the default options.
 
 ## Package
 
@@ -159,72 +159,61 @@ These properties are taken from the `logisticsInfo` of the package.
 ## Example
 
 ```js
-const items = [
-  // You can pass all the properties of the item. That's simplified.
-  { "id": 0, "quantity": 1, "seller": "1" },
-  { "id": 1, "quantity": 1, "seller": "1" }
-]
-
-const selectedAddresses = [
-  {
-    "addressId": "-4556418741084",
-    "addressType": "residential",
-    "receiverName": "John Doe",
-    "street": "Rua Barão",
-    "number": "2",
-    "complement": null,
-    "neighborhood": "Botafogo",
-    "postalCode": "22231-100",
-    "city": "Rio de Janeiro",
-    "state": "RJ",
-    "country": "BRA",
-    "reference": null,
-    "geoCoordinates": []
-  }
-]
-
-const logisticsInfo = [
-  {
-    // You can pass all the properties of the logisticInfo
-    "addressId": "-4556418741084",
-    "selectedSla": "Expressa",
-    "shippingEstimate": "5bd",
-    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
-    "deliveryChannel": "delivery",
-    "itemIndex": 0,
-    "slas": [
-      // You can pass all the properties of the sla
-      { "id": "Expressa", "deliveryChannel": "delivery" }
+const order = {
+  items: [
+    // You can pass all the properties of the item. That's simplified.
+    { "id": 0, "quantity": 1, "seller": "1" },
+    { "id": 1, "quantity": 1, "seller": "1" }
+  ],
+  shippingData: {
+    selectedAddresses: [
+      { "addressId": "-4556418741084", "street": "Rua Barão" }
+    ],
+    logisticsInfo: [
+      {
+        // You can pass all the properties of the logisticInfo
+        "addressId": "-4556418741084",
+        "selectedSla": "Expressa",
+        "shippingEstimate": "5bd",
+        "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+        "deliveryChannel": "delivery",
+        "itemIndex": 0,
+        "slas": [
+          // You can pass all the properties of the sla
+          { "id": "Expressa", "deliveryChannel": "delivery" }
+        ]
+      },
+      {
+        "addressId": "-4556418741084",
+        "selectedSla": "Normal",
+        "shippingEstimate": "6bd",
+        "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+        "deliveryChannel": "delivery",
+        "itemIndex": 1,
+        "slas": [
+          { "id": "Normal", "deliveryChannel": "delivery" }
+        ]
+      }
     ]
   },
-  {
-    "addressId": "-4556418741084",
-    "selectedSla": "Normal",
-    "shippingEstimate": "6bd",
-    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
-    "deliveryChannel": "delivery",
-    "itemIndex": 1,
-    "slas": [
-      { "id": "Normal", "deliveryChannel": "delivery" }
+  packageAttachment: {
+    packages: [
+      {
+        // You can pass all the properties of tha package.
+        "courierStatus": { "finished": false },
+        "trackingNumber": "123",
+        "trackingUrl": "",
+        "invoiceNumber": "456",
+        "items": [
+          { "itemIndex": 0, "quantity": 1 }
+        ]
+      }
     ]
   }
-]
+}
 
-const packages = [
-  {
-    // You can pass all the properties of tha package.
-    "courierStatus": { "finished": false },
-    "trackingNumber": "123",
-    "trackingUrl": "",
-    "invoiceNumber": "456",
-    "items": [
-      { "itemIndex": 0, "quantity": 1 }
-    ]
-  }
-]
 
-packagify({items, selectedAddresses, logisticsInfo, packages})
-
+packagify(order, { criteria: { seller: false } })
 // [
 //   {
 //     "package": {
@@ -237,21 +226,7 @@ packagify({items, selectedAddresses, logisticsInfo, packages})
 //       ],
 //       "index": 0
 //     },
-//     "address": {
-//       "addressId": "-4556418741084",
-//       "addressType": "residential",
-//       "receiverName": "John Doe",
-//       "street": "Rua Barão",
-//       "number": "2",
-//       "complement": null,
-//       "neighborhood": "Botafogo",
-//       "postalCode": "22231-100",
-//       "city": "Rio de Janeiro",
-//       "state": "RJ",
-//       "country": "BRA",
-//       "reference": null,
-//       "geoCoordinates": []
-//     },
+//     "address": { "addressId": "-4556418741084", "street": "Rua Barão" },
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Expressa",
 //     "slas": [{ "id": "Expressa", "deliveryChannel": "delivery" }],
@@ -264,21 +239,7 @@ packagify({items, selectedAddresses, logisticsInfo, packages})
 //     "seller": "1"
 //   },
 //   {
-//     "address": {
-//       "addressId": "-4556418741084",
-//       "addressType": "residential",
-//       "receiverName": "John Doe",
-//       "street": "Rua Barão",
-//       "number": "2",
-//       "complement": null,
-//       "neighborhood": "Botafogo",
-//       "postalCode": "22231-100",
-//       "city": "Rio de Janeiro",
-//       "state": "RJ",
-//       "country": "BRA",
-//       "reference": null,
-//       "geoCoordinates": []
-//     },
+//     "address": { "addressId": "-4556418741084", "street": "Rua Barão" },
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Normal",
 //     "slas": [{ "id": "Normal", "deliveryChannel": "delivery" }],

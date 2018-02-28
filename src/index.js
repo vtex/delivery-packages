@@ -2,9 +2,31 @@ const {
   getShippingEstimateQuantityInSeconds,
 } = require('@vtex/estimate-calculator')
 
-module.exports = function(
-  { items, packages = [], selectedAddresses, logisticsInfo }
-) {
+const defaultCriteria = {
+  slaOptions: false,
+  selectedSla: true,
+  seller: true,
+  shippingEstimate: true,
+}
+
+module.exports = function(order, options = {}) {
+  const { items = [], packageAttachment = {}, shippingData = {} } = order
+  const criteria = Object.assign(
+    {},
+    defaultCriteria,
+    options.criteria ? options.criteria : {}
+  )
+
+  const packages = packageAttachment && packageAttachment.packages
+    ? packageAttachment.packages
+    : []
+  const logisticsInfo = shippingData && shippingData.logisticsInfo
+    ? shippingData.logisticsInfo
+    : []
+  const selectedAddresses = shippingData && shippingData.selectedAddresses
+    ? shippingData.selectedAddresses
+    : []
+
   const itemsWithIndex = items.map((item, index) =>
     Object.assign({}, item, { index }))
   const packagesWithIndex = packages.map((pack, index) =>
@@ -25,54 +47,104 @@ module.exports = function(
     enhancePackage
   )
 
-  const deliveredPackages = groupPackages(deliveredItems.delivered)
-  const toBeDeliveredPackages = groupDeliveries(deliveredItems.toBeDelivered)
+  const deliveredPackages = groupPackages(deliveredItems.delivered, criteria)
+  const toBeDeliveredPackages = groupDeliveries(
+    deliveredItems.toBeDelivered,
+    criteria
+  )
 
   return deliveredPackages.concat(toBeDeliveredPackages)
 }
 
-function groupPackages(items) {
-  return addToPackage(items, (packages, item) => {
+function groupPackages(items, criteria) {
+  return addToPackage(items, criteria, (packages, item) => {
     return packages.find(pack => pack.package.index === item.package.index)
   })
 }
 
-function groupDeliveries(items) {
-  return addToPackage(items, (packages, item) => {
-    return packages.find(
-      pack =>
-        pack.shippingEstimate === item.shippingEstimate &&
-        pack.selectedSla === item.selectedSla &&
-        pack.deliveryChannel === item.deliveryChannel &&
-        pack.address.addressId === item.address.addressId &&
-        pack.seller === item.item.seller
-    )
+function groupDeliveries(items, criteria) {
+  return addToPackage(items, criteria, (packages, item) => {
+    return packages.find(pack => {
+      if (
+        criteria.shippingEstimate &&
+        criteria.selectedSla &&
+        pack.shippingEstimate !== item.shippingEstimate
+      ) {
+        return false
+      }
+
+      if (criteria.slaOptions) {
+        const packSlas = pack.slas.reduce((acc, sla) => acc + sla.id, '')
+        const itemSlas = item.slas.reduce((acc, sla) => acc + sla.id, '')
+
+        if (packSlas !== itemSlas) {
+          return false
+        }
+      }
+
+      if (criteria.seller && pack.seller !== item.item.seller) {
+        return false
+      }
+
+      if (criteria.selectedSla && pack.selectedSla !== item.selectedSla) {
+        return false
+      }
+
+      if (
+        criteria.selectedSla && pack.deliveryChannel !== item.deliveryChannel
+      ) {
+        return false
+      }
+
+      return true
+    })
   })
 }
 
-function addToPackage(items, fn) {
+function addToPackage(items, criteria, fn) {
   return items.reduce(
     (packages, item) => {
       const pack = fn(packages, item)
 
       if (pack) {
         if (
+          criteria.selectedSla &&
           getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
-          getShippingEstimateQuantityInSeconds(item.shippingEstimate)
+            getShippingEstimateQuantityInSeconds(item.shippingEstimate)
         ) {
           pack.shippingEstimate = item.shippingEstimate
           pack.shippingEstimateDate = item.shippingEstimateDate
+        }
+
+        if (!criteria.selectedSla) {
+          pack.slas = pack.slas.concat(item.slas)
         }
 
         pack.items = pack.items.concat(item.item)
         return packages
       }
 
-      const newPackage = Object.assign({}, item, {
-        items: [item.item],
-        seller: item.item.seller,
-        item: undefined,
-      })
+      const newPackage = Object.assign(
+        {},
+        {
+          items: [item.item],
+          package: item.package,
+          slas: item.slas,
+          seller: criteria.seller ? item.item.seller : undefined,
+          address: criteria.selectedSla ? item.address : undefined,
+          selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
+          deliveryChannel: criteria.selectedSla
+            ? item.deliveryChannel
+            : undefined,
+          shippingEstimate: criteria.selectedSla
+            ? item.shippingEstimate
+            : undefined,
+          shippingEstimateDate: criteria.selectedSla
+            ? item.shippingEstimateDate
+            : undefined,
+          item: undefined,
+        }
+      )
 
       return packages.concat(newPackage)
     },
@@ -154,7 +226,7 @@ function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
 
 function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
   const sla = getSelectedSla({ itemIndex, logisticsInfo })
-  return sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
+  return sla && sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
 }
 
 function getPickupAddress({ itemIndex, logisticsInfo }) {
@@ -167,16 +239,3 @@ function getSelectedSla({ itemIndex, logisticsInfo }) {
   const selectedSla = logisticInfo.selectedSla
   return logisticInfo.slas.find(sla => sla.id === selectedSla)
 }
-
-// {
-//   items: [],
-//   package: { trackingNumber, trackingUrl, courierStatus, invoiceNumber }
-//   address: {},
-//   seller: '',
-//   selectedSla: ''
-//   slas: []
-//   deliveryChannel: ''
-//   pickupFriendlyName: '',
-//   shippingEstimate: '',
-//   shippingEstimateDate: ''
-// }
