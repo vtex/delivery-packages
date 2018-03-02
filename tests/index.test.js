@@ -314,6 +314,7 @@ describe('has two deliveries', () => {
         expect(result[0].selectedSla).toBe(normalSla.id)
         expect(result[0].pickup)
         expect(result[1].selectedSla).toBe(pickupNormalSla.id)
+        expect(result[1].pickupFriendlyName).toBe(pickupNormalSla.pickupStoreInfo.friendlyName)
       })
 
       it('should not create two packages if selectedSla criterion is false', () => {

@@ -130,6 +130,9 @@ function addToPackage(items, criteria, fn) {
           items: [item.item],
           package: item.package,
           slas: item.slas,
+          pickupFriendlyName: criteria.selectedSla
+            ? item.pickupFriendlyName
+            : undefined,
           seller: criteria.seller ? item.item.seller : undefined,
           address: criteria.selectedSla ? item.address : undefined,
           selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
