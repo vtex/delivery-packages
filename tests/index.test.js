@@ -6,6 +6,7 @@ const {
   pickupNormalSla,
   expressSla,
   normalSla,
+  normalFastestSla,
   baseLogisticsInfo,
   createPackage,
   createItems,
@@ -50,14 +51,12 @@ describe('has one package with all items', () => {
     expect(result).toHaveLength(1)
     expect(result[0].items).toHaveLength(2)
     expect(result[0].selectedSla).toBe(expressSla.id)
-    expect(result[0].deliveryChannel).toBe(expressSla.deliveryChannel)
-    expect(result[0].slas[0]).toBe(expressSla)
-    expect(result[0].shippingEstimate).toBe(
-      baseLogisticsInfo.normal.shippingEstimate
+    expect(result[0].deliveryChannel).toBe(
+      baseLogisticsInfo.express.selectedDeliveryChannel
     )
-    expect(result[0].shippingEstimateDate).toBe(
-      baseLogisticsInfo.normal.shippingEstimateDate
-    )
+    expect(result[0].slas[0].id).toBe(expressSla.id)
+    expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
+    expect(result[0].shippingEstimateDate).toBe(normalSla.shippingEstimateDate)
     expect(result[0].address.addressId).toBe(residentialAddress.addressId)
     expect(result[0].package).toBeDefined()
   })
@@ -135,9 +134,7 @@ describe('has two packages with different shipping estimates', () => {
     const result = packagify(order)
 
     expect(result).toHaveLength(1)
-    expect(result[0].shippingEstimate).toBe(
-      baseLogisticsInfo.normal.shippingEstimate
-    )
+    expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
   })
 })
 
@@ -181,7 +178,7 @@ describe('has two deliveries', () => {
         {
           ...baseLogisticsInfo.normalFastest,
           itemIndex: 0,
-          slas: [normalSla],
+          slas: [normalFastestSla],
         },
         {
           ...baseLogisticsInfo.normal,
@@ -203,11 +200,9 @@ describe('has two deliveries', () => {
 
         expect(result).toHaveLength(2)
         expect(result[0].shippingEstimate).toBe(
-          baseLogisticsInfo.normalFastest.shippingEstimate
+          normalFastestSla.shippingEstimate
         )
-        expect(result[1].shippingEstimate).toBe(
-          baseLogisticsInfo.normal.shippingEstimate
-        )
+        expect(result[1].shippingEstimate).toBe(normalSla.shippingEstimate)
       })
 
       it('should not create two packages if shippingEstimate criterion is false', () => {
@@ -314,7 +309,9 @@ describe('has two deliveries', () => {
         expect(result[0].selectedSla).toBe(normalSla.id)
         expect(result[0].pickup)
         expect(result[1].selectedSla).toBe(pickupNormalSla.id)
-        expect(result[1].pickupFriendlyName).toBe(pickupNormalSla.pickupStoreInfo.friendlyName)
+        expect(result[1].pickupFriendlyName).toBe(
+          pickupNormalSla.pickupStoreInfo.friendlyName
+        )
       })
 
       it("should separate packages only by deliveryChannel if it's the only criterion as true", () => {
@@ -359,8 +356,12 @@ describe('has two deliveries', () => {
         expect(result).toHaveLength(2)
         expect(result[0].items).toHaveLength(2)
         expect(result[1].items).toHaveLength(1)
-        expect(result[0].deliveryChannel).toBe(normalSla.deliveryChannel)
-        expect(result[1].deliveryChannel).toBe(pickupSla.deliveryChannel)
+        expect(result[0].deliveryChannel).toBe(
+          baseLogisticsInfo.normal.selectedDeliveryChannel
+        )
+        expect(result[1].deliveryChannel).toBe(
+          baseLogisticsInfo.pickupNormal.selectedDeliveryChannel
+        )
       })
 
       it('should return the pickup point address', () => {
@@ -401,7 +402,9 @@ describe('has two deliveries', () => {
 
         expect(result).toHaveLength(2)
         expect(result[1].selectedSla).toBe(pickupSla.id)
-        expect(result[1].address.addressId).toBe(pickupPointAddress.addressId)
+        expect(result[1].address.addressId).toBe(
+          baseLogisticsInfo.pickup.addressId
+        )
       })
     })
   })

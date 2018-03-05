@@ -210,7 +210,14 @@ function createEnhancePackageFn({ logisticsInfo, selectedAddresses }) {
 }
 
 function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
-  if (logisticsInfo[itemIndex].deliveryChannel === 'pickup-in-point') {
+  const selectedSla = getSelectedSla({
+    itemIndex,
+    logisticsInfo,
+  })
+
+  if (!selectedSla) return null
+
+  if (selectedSla.deliveryChannel === 'pickup-in-point') {
     return getPickupAddress({ itemIndex, logisticsInfo })
   }
 
@@ -219,11 +226,18 @@ function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
 }
 
 function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
+  const selectedSla = getSelectedSla({
+    itemIndex,
+    logisticsInfo,
+  })
+
   return {
     selectedSla: logisticsInfo[itemIndex].selectedSla,
-    shippingEstimate: logisticsInfo[itemIndex].shippingEstimate,
-    shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate,
-    deliveryChannel: logisticsInfo[itemIndex].deliveryChannel,
+    shippingEstimate: selectedSla ? selectedSla.shippingEstimate : undefined,
+    shippingEstimateDate: selectedSla
+      ? selectedSla.shippingEstimateDate
+      : undefined,
+    deliveryChannel: logisticsInfo[itemIndex].selectedDeliveryChannel,
     deliveryWindow: logisticsInfo[itemIndex].deliveryWindow,
     slas: logisticsInfo[itemIndex].slas,
   }
