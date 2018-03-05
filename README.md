@@ -127,6 +127,7 @@ A Package object shape
   address: Object,
   pickupFriendlyName: String,
   seller: String,
+  items: [Object],
   package: Object,  
   selectedSla: String,
   slas: [Object],
@@ -143,6 +144,10 @@ The `address` used for that package. If it is a pickup point, the address of the
 #### pickupFriendlyName
 
 If the package is delivered to a pickup point, this field has its friendly name.
+
+#### items
+
+The items of the package.
 
 #### seller
 
