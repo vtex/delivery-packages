@@ -7,6 +7,7 @@ const defaultCriteria = {
   selectedSla: true,
   seller: true,
   shippingEstimate: true,
+  deliveryChannel: true,
 }
 
 module.exports = function(order, options = {}) {
@@ -91,7 +92,8 @@ function groupDeliveries(items, criteria) {
       }
 
       if (
-        criteria.selectedSla && pack.deliveryChannel !== item.deliveryChannel
+        criteria.deliveryChannel &&
+        pack.deliveryChannel !== item.deliveryChannel
       ) {
         return false
       }
@@ -130,10 +132,13 @@ function addToPackage(items, criteria, fn) {
           items: [item.item],
           package: item.package,
           slas: item.slas,
+          pickupFriendlyName: criteria.selectedSla
+            ? item.pickupFriendlyName
+            : undefined,
           seller: criteria.seller ? item.item.seller : undefined,
           address: criteria.selectedSla ? item.address : undefined,
           selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
-          deliveryChannel: criteria.selectedSla
+          deliveryChannel: criteria.deliveryChannel
             ? item.deliveryChannel
             : undefined,
           shippingEstimate: criteria.selectedSla

@@ -314,21 +314,27 @@ describe('has two deliveries', () => {
         expect(result[0].selectedSla).toBe(normalSla.id)
         expect(result[0].pickup)
         expect(result[1].selectedSla).toBe(pickupNormalSla.id)
+        expect(result[1].pickupFriendlyName).toBe(pickupNormalSla.pickupStoreInfo.friendlyName)
       })
 
-      it('should not create two packages if selectedSla criterion is false', () => {
-        const items = createItems(2)
+      it("should separate packages only by deliveryChannel if it's the only criterion as true", () => {
+        const items = createItems(3)
         const selectedAddresses = [residentialAddress]
         const logisticsInfo = [
           {
-            ...baseLogisticsInfo.express,
+            ...baseLogisticsInfo.normal,
             itemIndex: 0,
-            slas: [expressSla],
+            slas: [normalSla],
           },
           {
             ...baseLogisticsInfo.normal,
             itemIndex: 1,
             slas: [normalSla],
+          },
+          {
+            ...baseLogisticsInfo.pickupNormal,
+            itemIndex: 2,
+            slas: [pickupNormalSla],
           },
         ]
 
@@ -340,10 +346,21 @@ describe('has two deliveries', () => {
           },
         }
 
-        const result = packagify(order, { criteria: { selectedSla: false } })
+        const result = packagify(order, {
+          criteria: {
+            slaOptions: false,
+            selectedSla: false,
+            seller: false,
+            shippingEstimate: false,
+            deliveryChannel: true,
+          },
+        })
 
-        expect(result).toHaveLength(1)
+        expect(result).toHaveLength(2)
         expect(result[0].items).toHaveLength(2)
+        expect(result[1].items).toHaveLength(1)
+        expect(result[0].deliveryChannel).toBe(normalSla.deliveryChannel)
+        expect(result[1].deliveryChannel).toBe(pickupSla.deliveryChannel)
       })
 
       it('should return the pickup point address', () => {

@@ -111,7 +111,8 @@ Default:<br/>
   slaOptions: false,
   selectedSla: true,
   seller: true,
-  shippingEstimate: true
+  shippingEstimate: true,
+  deliveryChannel: true
 }
 ```
 
