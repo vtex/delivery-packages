@@ -1,0 +1,1107 @@
+{
+  "orderId": "768090993819-01",
+  "sequence": "1017638",
+  "marketplaceOrderId": "",
+  "items": [
+    {
+      "uniqueId": "36668245990E47F18437ABA990CFAD4F",
+      "id": "15",
+      "productId": "4",
+      "ean": "produtohomologação",
+      "lockId": "606d3fdf0b5e49d7991bc58fed73d830",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Novalgina",
+      "refId": "produtohomologação",
+      "price": 5700,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155400-55-55/Novalgina.jpg",
+      "detailUrl": "/novalgina/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "15",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca Exemplo",
+        "brandId": "2000000",
+        "categoriesIds": "/4/5/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 0.1667,
+          "height": 10.0,
+          "length": 10.0,
+          "weight": 10.0,
+          "width": 10.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 5700,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    },
+    {
+      "uniqueId": "C4B1366350304AAE986C28F9412225A5",
+      "id": "1",
+      "productId": "1",
+      "ean": "SKUUN14",
+      "lockId": "645ba51141c14d24b0961b02b10bd928",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Produto Simples 2 Sku Simples 2",
+      "refId": null,
+      "price": 7000,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155378-55-55/ProdutoSimples2.png",
+      "detailUrl": "/produto-simples-2/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "1",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca Exemplo",
+        "brandId": "2000000",
+        "categoriesIds": "/4/7/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 0.25,
+          "height": 10.0,
+          "length": 15.0,
+          "weight": 100.0,
+          "width": 10.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 7000,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    },
+    {
+      "uniqueId": "5C83D51A9D814599AAD5608B2A0C0DFE",
+      "id": "13",
+      "productId": "2",
+      "ean": "SKUVR2",
+      "lockId": "606d3fdf0b5e49d7991bc58fed73d830",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Produto Variação SKU Variação 2 Verde",
+      "refId": null,
+      "price": 8000,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155380-55-55/ProdutoVariacaoSku.png",
+      "detailUrl": "/produto-variacao/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "13",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca Exemplo",
+        "brandId": "2000000",
+        "categoriesIds": "/4/6/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 0.5625,
+          "height": 15.0,
+          "length": 15.0,
+          "weight": 100.0,
+          "width": 15.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 8000,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    },
+    {
+      "uniqueId": "F5AE815E04AC44C594FFC312845F74A8",
+      "id": "14",
+      "productId": "2",
+      "ean": "SKUVR3",
+      "lockId": "606d3fdf0b5e49d7991bc58fed73d830",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Produto Variação SKU Variação 3 Vermelha",
+      "refId": null,
+      "price": 8000,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155381-55-55/ProdutoVariacaoSku.png",
+      "detailUrl": "/produto-variacao/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "14",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca Exemplo",
+        "brandId": "2000000",
+        "categoriesIds": "/4/6/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 0.5625,
+          "height": 15.0,
+          "length": 15.0,
+          "weight": 100.0,
+          "width": 15.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 8000,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    },
+    {
+      "uniqueId": "23259D95078745AC9463364C968D9D41",
+      "id": "26",
+      "productId": "15",
+      "ean": "Sku anexo obrigatorio",
+      "lockId": "606d3fdf0b5e49d7991bc58fed73d830",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [
+        { "name": "Principa2", "content": { "periodo": "1 semana" } }
+      ],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Produto com anexo obrigatorio Sku anexo obrigatorio",
+      "refId": null,
+      "price": 820,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155363-55-55/Produto-com-item-attachment-obrigatorio.png",
+      "detailUrl": "/produto-com-anexo-obrigatorio/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "26",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca 2",
+        "brandId": "2000002",
+        "categoriesIds": "/1/2/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 10.6667,
+          "height": 40.0,
+          "length": 40.0,
+          "weight": 40.0,
+          "width": 40.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 820,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    },
+    {
+      "uniqueId": "22315A5FB0D74952900B453A2032681C",
+      "id": "30",
+      "productId": "19",
+      "ean": "Sku Entrega Agendada",
+      "lockId": "606d3fdf0b5e49d7991bc58fed73d830",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Produto Entrega Agendada Sku Entrega Agendada",
+      "refId": null,
+      "price": 250,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [
+        {
+          "name":
+            "tax@shipping-64923ac1-c3d9-4a01-80a6-abbe386603f6#037ae63d-aec6-4ea4-87c7-456debd2be5d",
+          "value": 10,
+          "isPercentual": true,
+          "identifier": "64923ac1-c3d9-4a01-80a6-abbe386603f6",
+          "rawValue": 0.1
+        }
+      ],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155368-55-55/Produto-com-entrega-agendada.png",
+      "detailUrl": "/produto-entregaga-agendada/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "30",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca 2",
+        "brandId": "2000002",
+        "categoriesIds": "/4/7/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 20.25,
+          "height": 45.0,
+          "length": 60.0,
+          "weight": 45.0,
+          "width": 45.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 250,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    },
+    {
+      "uniqueId": "E44FF364F94E40F8AEBF5209555A78A0",
+      "id": "12",
+      "productId": "3",
+      "ean": "SKUVRCOR2TAM5",
+      "lockId": "606d3fdf0b5e49d7991bc58fed73d830",
+      "itemAttachment": { "content": {}, "name": null },
+      "attachments": [],
+      "quantity": 1,
+      "seller": "1",
+      "name": "Produto Variação Cor e Tam SKU Variação Cor2 e Tam 5",
+      "refId": null,
+      "price": 4099,
+      "listPrice": null,
+      "manualPrice": null,
+      "priceTags": [],
+      "imageUrl":
+        "http://qamarketplace.vteximg.com.br/arquivos/ids/155388-55-55/ProdutoVariacaoCorTamanho.png",
+      "detailUrl": "/produto-variacao-cor-e-tam/p",
+      "components": [],
+      "bundleItems": [],
+      "params": [],
+      "offerings": [],
+      "sellerSku": "12",
+      "priceValidUntil": null,
+      "commission": 0,
+      "tax": 0,
+      "preSaleDate": null,
+      "additionalInfo": {
+        "brandName": "Marca Exemplo",
+        "brandId": "2000000",
+        "categoriesIds": "/4/5/",
+        "productClusterId": "135",
+        "commercialConditionId": "1",
+        "dimension": {
+          "cubicweight": 0.5625,
+          "height": 15.0,
+          "length": 15.0,
+          "weight": 100.0,
+          "width": 15.0
+        },
+        "offeringInfo": null,
+        "offeringType": null,
+        "offeringTypeId": null
+      },
+      "measurementUnit": "un",
+      "unitMultiplier": 1.0,
+      "sellingPrice": 4099,
+      "isGift": false,
+      "shippingPrice": null,
+      "rewardValue": 0,
+      "freightCommission": 0
+    }
+  ],
+  "shippingData": {
+    "id": "shippingData",
+    "address": {
+      "addressType": "residential",
+      "receiverName": "auto auto",
+      "addressId": "-1456253174642",
+      "postalCode": "22251-030",
+      "city": "Rio de Janeiro",
+      "state": "RJ",
+      "country": "BRA",
+      "street": "Rua Assunção",
+      "number": "2",
+      "neighborhood": "Botafogo",
+      "complement": null,
+      "reference": null,
+      "geoCoordinates": []
+    },
+    "logisticsInfo": [
+      {
+        "itemIndex": 0,
+        "selectedSla": "Normal",
+        "lockTTL": "8d",
+        "price": 136,
+        "listPrice": 136,
+        "sellingPrice": 136,
+        "deliveryWindow": null,
+        "deliveryCompany": "Transportadora",
+        "shippingEstimate": "8d",
+        "shippingEstimateDate": "2017-10-19T14:45:00.0839018+00:00",
+        "slas": [
+          {
+            "id": "Produto em mãos",
+            "name": "Produto em mãos",
+            "shippingEstimate": "0bd",
+            "deliveryWindow": null,
+            "price": 0,
+            "deliveryChannel": "pickup-in-point",
+            "pickupStoreInfo": {
+              "additionalInfo": "Retirada na hora inStore",
+              "address": {
+                "addressType": "pickup",
+                "receiverName": null,
+                "addressId": "719544",
+                "postalCode": "22250-040",
+                "city": "Rua dos Bobos",
+                "state": "RJ",
+                "country": "BRA",
+                "street": "Rua dos Bobos",
+                "number": "0",
+                "neighborhood": "Botafogo",
+                "complement": "13",
+                "reference": null,
+                "geoCoordinates": []
+              },
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": true
+            }
+          },
+          {
+            "id": "Normal",
+            "name": "Normal",
+            "shippingEstimate": "8d",
+            "deliveryWindow": null,
+            "price": 136,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "1",
+            "courierName": "Transportadora",
+            "dockId": "1",
+            "quantity": 1,
+            "warehouseId": "169cdbc"
+          }
+        ],
+        "deliveryChannel": "delivery",
+        "pickupStoreInfo": {
+          "additionalInfo": null,
+          "address": null,
+          "dockId": null,
+          "friendlyName": null,
+          "isPickupStore": false
+        },
+        "addressId": "-1456253174642"
+      },
+      {
+        "itemIndex": 1,
+        "selectedSla": "pickupPoint (1138183)",
+        "lockTTL": "8d",
+        "price": 1205,
+        "listPrice": 216,
+        "sellingPrice": 216,
+        "deliveryWindow": null,
+        "deliveryCompany": "pickupPoint (1138183)",
+        "shippingEstimate": "4bd",
+        "shippingEstimateDate": "2017-10-17T14:45:00.4699353+00:00",
+        "slas": [
+          {
+            "id": "Normal",
+            "name": "Normal",
+            "shippingEstimate": "82bd",
+            "deliveryWindow": null,
+            "price": 200,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          },
+          {
+            "id": "pickupPoint (1138183)",
+            "name": "pickupPoint (1138183)",
+            "shippingEstimate": "4bd",
+            "deliveryWindow": null,
+            "price": 1205,
+            "deliveryChannel": "pickup-in-point",
+            "pickupStoreInfo": {
+              "additionalInfo": "",
+              "address": {
+                "addressType": "pickup",
+                "receiverName": null,
+                "addressId": "1138183",
+                "postalCode": "22220070",
+                "city": "Rio de Janeiro",
+                "state": "RJ",
+                "country": "BRA",
+                "street": "Rua Artur Bernardes",
+                "number": "",
+                "neighborhood": "Catete",
+                "complement": "",
+                "reference": null,
+                "geoCoordinates": [-43.177944183349609, -22.928609848022461]
+              },
+              "dockId": "pickupPoint",
+              "friendlyName": "Loja Catete",
+              "isPickupStore": true
+            }
+          },
+          {
+            "id": "pickupPoint (1c89bef)",
+            "name": "pickupPoint (1c89bef)",
+            "shippingEstimate": "4bd",
+            "deliveryWindow": null,
+            "price": 1205,
+            "deliveryChannel": "pickup-in-point",
+            "pickupStoreInfo": {
+              "additionalInfo": "Loja Botafogo",
+              "address": {
+                "addressType": "pickup",
+                "receiverName": null,
+                "addressId": "1c89bef",
+                "postalCode": "22250040",
+                "city": "Rio de Janeiro",
+                "state": "RJ",
+                "country": "BRA",
+                "street": "Praia de Botafogo",
+                "number": "300",
+                "neighborhood": "Botafogo",
+                "complement": "Loja Botafogo",
+                "reference": null,
+                "geoCoordinates": [-43.1822668, -22.9459863]
+              },
+              "dockId": "pickupPoint",
+              "friendlyName": "Loja Botafogo",
+              "isPickupStore": true
+            }
+          },
+          {
+            "id": "pickupPoint (1efe51a)",
+            "name": "pickupPoint (1efe51a)",
+            "shippingEstimate": "4bd",
+            "deliveryWindow": null,
+            "price": 1205,
+            "deliveryChannel": "pickup-in-point",
+            "pickupStoreInfo": {
+              "additionalInfo": "",
+              "address": {
+                "addressType": "pickup",
+                "receiverName": null,
+                "addressId": "1efe51a",
+                "postalCode": "22010000",
+                "city": "Rio de Janeiro",
+                "state": "RJ",
+                "country": "BRA",
+                "street": "Avenida Atlântica",
+                "number": "",
+                "neighborhood": "Copacabana",
+                "complement": "",
+                "reference": null,
+                "geoCoordinates": [-43.186859200000015, -22.9697777]
+              },
+              "dockId": "pickupPoint",
+              "friendlyName": "Loja Copacabana",
+              "isPickupStore": true
+            }
+          },
+          {
+            "id": "Sedex",
+            "name": "Sedex",
+            "shippingEstimate": "7bd",
+            "deliveryWindow": null,
+            "price": 11870,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "pickup",
+            "courierName": "pickupPoint (1138183)",
+            "dockId": "pickupPoint",
+            "quantity": 1,
+            "warehouseId": "pickup"
+          }
+        ],
+        "deliveryChannel": "pickup-in-point",
+        "pickupStoreInfo": {
+          "additionalInfo": null,
+          "address": null,
+          "dockId": null,
+          "friendlyName": null,
+          "isPickupStore": false
+        },
+        "addressId": "1138183"
+      },
+      {
+        "itemIndex": 2,
+        "selectedSla": "Entrega Agendada",
+        "lockTTL": "8d",
+        "price": 216,
+        "listPrice": 216,
+        "sellingPrice": 216,
+        "deliveryWindow": {
+          "startDateUtc": "2017-10-16T17:00:00+00:00",
+          "endDateUtc": "2017-10-16T22:00:00+00:00",
+          "price": 200
+        },
+        "deliveryCompany": "Transportadadora Entrega Agendada",
+        "shippingEstimate": "3bd",
+        "shippingEstimateDate": "2017-10-16T17:00:00.0000000+00:00",
+        "slas": [
+          {
+            "id": "Normal",
+            "name": "Normal",
+            "shippingEstimate": "82d",
+            "deliveryWindow": null,
+            "price": 429,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          },
+          {
+            "id": "Entrega Agendada",
+            "name": "Entrega Agendada",
+            "shippingEstimate": "3bd",
+            "deliveryWindow": {
+              "startDateUtc": "2017-10-16T17:00:00+00:00",
+              "endDateUtc": "2017-10-16T22:00:00+00:00",
+              "price": 200
+            },
+            "price": 216,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "19029e0",
+            "courierName": "Transportadadora Entrega Agendada",
+            "dockId": "1befa63",
+            "quantity": 1,
+            "warehouseId": "19a797c"
+          }
+        ],
+        "deliveryChannel": "delivery",
+        "pickupStoreInfo": {
+          "additionalInfo": null,
+          "address": null,
+          "dockId": null,
+          "friendlyName": null,
+          "isPickupStore": false
+        },
+        "addressId": "-1456253174642"
+      },
+      {
+        "itemIndex": 3,
+        "selectedSla": "Entrega Agendada",
+        "lockTTL": "8d",
+        "price": 216,
+        "listPrice": 0,
+        "sellingPrice": 0,
+        "deliveryWindow": {
+          "startDateUtc": "2017-10-16T17:00:00+00:00",
+          "endDateUtc": "2017-10-16T22:00:00+00:00",
+          "price": 200
+        },
+        "deliveryCompany": "Transportadadora Entrega Agendada",
+        "shippingEstimate": "3bd",
+        "shippingEstimateDate": "2017-10-16T17:00:00.0000000+00:00",
+        "slas": [
+          {
+            "id": "Normal",
+            "name": "Normal",
+            "shippingEstimate": "82d",
+            "deliveryWindow": null,
+            "price": 429,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          },
+          {
+            "id": "Entrega Agendada",
+            "name": "Entrega Agendada",
+            "shippingEstimate": "3bd",
+            "deliveryWindow": {
+              "startDateUtc": "2017-10-16T17:00:00+00:00",
+              "endDateUtc": "2017-10-16T22:00:00+00:00",
+              "price": 200
+            },
+            "price": 216,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "19029e0",
+            "courierName": "Transportadadora Entrega Agendada",
+            "dockId": "1befa63",
+            "quantity": 1,
+            "warehouseId": "19a797c"
+          }
+        ],
+        "deliveryChannel": "delivery",
+        "pickupStoreInfo": {
+          "additionalInfo": null,
+          "address": null,
+          "dockId": null,
+          "friendlyName": null,
+          "isPickupStore": false
+        },
+        "addressId": "-1456253174642"
+      },
+      {
+        "itemIndex": 4,
+        "selectedSla": "PAC",
+        "lockTTL": "8d",
+        "price": 0,
+        "listPrice": 97,
+        "sellingPrice": 97,
+        "deliveryWindow": null,
+        "deliveryCompany": "[Teste QA] Nao Mexer",
+        "shippingEstimate": "3bd",
+        "shippingEstimateDate": "2017-10-16T14:45:00.0858904+00:00",
+        "slas": [
+          {
+            "id": "PAC",
+            "name": "PAC",
+            "shippingEstimate": "3bd",
+            "deliveryWindow": null,
+            "price": 0,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          },
+          {
+            "id": "Normal",
+            "name": "Normal",
+            "shippingEstimate": "82d",
+            "deliveryWindow": null,
+            "price": 171,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          },
+          {
+            "id": "Entrega Agendada",
+            "name": "Entrega Agendada",
+            "shippingEstimate": "3bd",
+            "deliveryWindow": null,
+            "price": 74,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          },
+          {
+            "id": "Sedex",
+            "name": "Sedex",
+            "shippingEstimate": "7bd",
+            "deliveryWindow": null,
+            "price": 4748,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "155ad08",
+            "courierName": "[Teste QA] Nao Mexer",
+            "dockId": "1125a08",
+            "quantity": 1,
+            "warehouseId": "1f995ee"
+          }
+        ],
+        "deliveryChannel": "delivery",
+        "pickupStoreInfo": {
+          "additionalInfo": null,
+          "address": null,
+          "dockId": null,
+          "friendlyName": null,
+          "isPickupStore": false
+        },
+        "addressId": "-1456253174642"
+      },
+      {
+        "itemIndex": 5,
+        "selectedSla": "Entrega Agendada",
+        "lockTTL": "8d",
+        "price": 97,
+        "listPrice": 1364,
+        "sellingPrice": 1364,
+        "deliveryWindow": {
+          "startDateUtc": "2017-10-16T17:00:00+00:00",
+          "endDateUtc": "2017-10-16T22:00:00+00:00",
+          "price": 200
+        },
+        "deliveryCompany": "Transportadadora Entrega Agendada",
+        "shippingEstimate": "3bd",
+        "shippingEstimateDate": "2017-10-16T17:00:00.0000000+00:00",
+        "slas": [
+          {
+            "id": "Entrega Agendada",
+            "name": "Entrega Agendada",
+            "shippingEstimate": "3bd",
+            "deliveryWindow": {
+              "startDateUtc": "2017-10-16T17:00:00+00:00",
+              "endDateUtc": "2017-10-16T22:00:00+00:00",
+              "price": 200
+            },
+            "price": 97,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "19029e0",
+            "courierName": "Transportadadora Entrega Agendada",
+            "dockId": "1befa63",
+            "quantity": 1,
+            "warehouseId": "19a797c"
+          }
+        ],
+        "deliveryChannel": "delivery",
+        "pickupStoreInfo": {
+          "additionalInfo": null,
+          "address": null,
+          "dockId": null,
+          "friendlyName": null,
+          "isPickupStore": false
+        },
+        "addressId": "-1456253174642"
+      },
+      {
+        "itemIndex": 6,
+        "selectedSla": "Normal",
+        "lockTTL": "8d",
+        "price": 1364,
+        "listPrice": 1205,
+        "sellingPrice": 1205,
+        "deliveryWindow": null,
+        "deliveryCompany": "Transportadora",
+        "shippingEstimate": "8d",
+        "shippingEstimateDate": "2017-10-19T14:45:00.0858904+00:00",
+        "slas": [
+          {
+            "id": "Normal",
+            "name": "Normal",
+            "shippingEstimate": "8d",
+            "deliveryWindow": null,
+            "price": 1364,
+            "deliveryChannel": "delivery",
+            "pickupStoreInfo": {
+              "additionalInfo": null,
+              "address": null,
+              "dockId": null,
+              "friendlyName": null,
+              "isPickupStore": false
+            }
+          }
+        ],
+        "shipsTo": ["BRA"],
+        "deliveryIds": [
+          {
+            "courierId": "1",
+            "courierName": "Transportadora",
+            "dockId": "1",
+            "quantity": 1,
+            "warehouseId": "169cdbc"
+          }
+        ],
+        "deliveryChannel": "delivery",
+        "pickupStoreInfo": {
+          "additionalInfo": "",
+          "address": {
+            "addressType": "pickup",
+            "receiverName": null,
+            "addressId": "1138183",
+            "postalCode": "22220070",
+            "city": "Rio de Janeiro",
+            "state": "RJ",
+            "country": "BRA",
+            "street": "Rua Artur Bernardes",
+            "number": "",
+            "neighborhood": "Catete",
+            "complement": "",
+            "reference": null,
+            "geoCoordinates": [-43.177944183349609, -22.928609848022461]
+          },
+          "dockId": "pickupPoint",
+          "friendlyName": "Loja Catete",
+          "isPickupStore": true
+        },
+        "addressId": "-1456253174642"
+      }
+    ],
+    "trackingHints": null,
+    "selectedAddresses": [
+      {
+        "addressId": "-1456253174642",
+        "addressType": "residential",
+        "receiverName": "auto auto",
+        "street": "Rua Assunção",
+        "number": "2",
+        "complement": null,
+        "neighborhood": "Botafogo",
+        "postalCode": "22251-030",
+        "city": "Rio de Janeiro",
+        "state": "RJ",
+        "country": "BRA",
+        "reference": null,
+        "geoCoordinates": []
+      },
+      {
+        "addressId": "1138183",
+        "addressType": "pickup",
+        "receiverName": null,
+        "street": "Rua Artur Bernardes",
+        "number": "",
+        "complement": "",
+        "neighborhood": "Catete",
+        "postalCode": "22220070",
+        "city": "Rio de Janeiro",
+        "state": "RJ",
+        "country": "BRA",
+        "reference": null,
+        "geoCoordinates": [-43.177944183349609, -22.928609848022461]
+      }
+    ]
+  },
+  "packageAttachment": {
+    "packages": [
+      {
+        "items": [
+          { "itemIndex": 6, "quantity": 1, "price": 4099, "description": null }
+        ],
+        "courier": "Transportadora",
+        "invoiceNumber": "2434343",
+        "invoiceValue": 4099,
+        "invoiceUrl": "",
+        "issuanceDate": "2017-12-04T02:00:00.0000000+00:00",
+        "trackingNumber": "12346",
+        "invoiceKey": "123312",
+        "trackingUrl": null,
+        "embeddedInvoice": "",
+        "type": "Output",
+        "courierStatus": { "status": "unknown", "finished": false, "data": [] }
+      },
+      {
+        "items": [
+          { "itemIndex": 3, "quantity": 1, "price": 8000, "description": null }
+        ],
+        "courier": "Transportadora",
+        "invoiceNumber": "23423443",
+        "invoiceValue": 8000,
+        "invoiceUrl": null,
+        "issuanceDate": "2017-11-22T02:00:00.0000000+00:00",
+        "trackingNumber": "7687",
+        "invoiceKey": null,
+        "trackingUrl": "http://facebook.com.br",
+        "embeddedInvoice": "",
+        "type": "Output",
+        "courierStatus": { "status": "unknown", "finished": false, "data": [] }
+      },
+      {
+        "items": [
+          { "itemIndex": 5, "quantity": 1, "price": 250, "description": null }
+        ],
+        "courier": "Transportadora",
+        "invoiceNumber": "234343",
+        "invoiceValue": 250,
+        "invoiceUrl": "",
+        "issuanceDate": "2017-11-16T02:00:00.0000000+00:00",
+        "trackingNumber": "22226",
+        "invoiceKey": "21323123",
+        "trackingUrl": "http://uol.com.br",
+        "embeddedInvoice": "",
+        "type": "Output",
+        "courierStatus": { "status": "unknown", "finished": false, "data": [] }
+      },
+      {
+        "items": [
+          { "itemIndex": 4, "quantity": 1, "price": 820, "description": null }
+        ],
+        "courier": "[Teste QA] Nao Mexer",
+        "invoiceNumber": "123123",
+        "invoiceValue": 820,
+        "invoiceUrl": null,
+        "issuanceDate": "2017-10-11T03:00:00.0000000+00:00",
+        "trackingNumber": "123123",
+        "invoiceKey": "a",
+        "trackingUrl": null,
+        "embeddedInvoice": "",
+        "type": "Output",
+        "courierStatus": { "status": "unknown", "finished": false, "data": [] }
+      },
+      {
+        "items": [
+          { "itemIndex": 1, "quantity": 1, "price": 7000, "description": null }
+        ],
+        "courier": null,
+        "invoiceNumber": "1231239293",
+        "invoiceValue": 7000,
+        "invoiceUrl": null,
+        "issuanceDate": "2017-10-11T03:00:00.0000000+00:00",
+        "trackingNumber": null,
+        "invoiceKey": null,
+        "trackingUrl": null,
+        "embeddedInvoice": "",
+        "type": "Output",
+        "courierStatus": { "status": "unknown", "finished": false, "data": [] }
+      }
+    ]
+  },
+  "sellers": [{ "id": "1", "name": "qamarketplace", "logo": "" }]
+}

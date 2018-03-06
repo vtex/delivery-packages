@@ -11,6 +11,7 @@ const {
   createPackage,
   createItems,
 } = require('./mockGenerator')
+const orderMock = require('./Order')
 
 describe('has one package with all items', () => {
   it('should create one package', () => {
@@ -500,6 +501,48 @@ describe('has two deliveries', () => {
         )
 
         expect(result).toHaveLength(1)
+      })
+    })
+
+    describe.only('of the same sla options', () => {
+      const result = packagify(orderMock)
+
+      it.only('should have 7 packages since 5 packages were sent and there are two items left with different selected SLAs', () => {
+        console.log(result)
+        expect(result).toHaveLength(7)
+      })
+
+      it('should not have package information, since it was not sent yet ', () => {
+        expect(result[0].package).toEqual(null)
+      })
+
+      it('should return the correct package info, package sent with pickup-points', () => {
+        expect(result[1].package).toEqual({
+          ...orderMock.packageAttachment.packages[1],
+          index: 4,
+        })
+      })
+
+      it('should return the correct info', () => {
+        //this package split is very wrong, since it joined two sent packages and an item not sent just because they all have selectedSLA Entrega Agendada
+        expect(result[2].package).toEqual({
+          ...orderMock.packageAttachment.packages[3],
+          index: 3,
+        })
+      })
+
+      it('should return the correct package info, it was sent with courier TESTEQA and item is Produto com anexo obrigatorio Sku anexo obrigatorio ', () => {
+        expect(result[3].package).toEqual({
+          ...orderMock.packageAttachment.packages[3],
+          index: 3,
+        })
+      })
+
+      it('should return the correct package info, it was sent with courier TESTEQA and item is Produto Variação Cor e Tam SKU Variação Cor2 e Tam 5', () => {
+        expect(result[4].package).toEqual({
+          ...orderMock.packageAttachment.packages[0],
+          index: 0,
+        })
       })
     })
   })
