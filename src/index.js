@@ -161,7 +161,7 @@ function getDeliveredItems({ items, packages }) {
   const deliveredItems = items.reduce(
     (groups, item, index) => {
       const delivered = packages.findIndex(pack =>
-        pack.items.find((_, itemIndex) => itemIndex === index))
+        pack.items.find((item) => item.itemIndex === index))
 
       if (delivered !== -1) {
         groups.delivered = groups.delivered.concat({
