@@ -504,35 +504,26 @@ describe('has two deliveries', () => {
       })
     })
 
-    describe.only('of the same sla options', () => {
+    describe('Test an order with multiple items, some packages already sent and some are still on hold', () => {
       const result = packagify(orderMock)
 
-      it.only('should have 7 packages since 5 packages were sent and there are two items left with different selected SLAs', () => {
-        console.log(result)
+      it('should have 7 packages since 5 packages were sent and there are two items left with different selected SLAs', () => {
         expect(result).toHaveLength(7)
       })
 
       it('should not have package information, since it was not sent yet ', () => {
-        expect(result[0].package).toEqual(null)
+        expect(result[5].package).toEqual(undefined)
       })
 
       it('should return the correct package info, package sent with pickup-points', () => {
         expect(result[1].package).toEqual({
           ...orderMock.packageAttachment.packages[1],
-          index: 4,
-        })
-      })
-
-      it('should return the correct info', () => {
-        //this package split is very wrong, since it joined two sent packages and an item not sent just because they all have selectedSLA Entrega Agendada
-        expect(result[2].package).toEqual({
-          ...orderMock.packageAttachment.packages[3],
-          index: 3,
+          index: 1,
         })
       })
 
       it('should return the correct package info, it was sent with courier TESTEQA and item is Produto com anexo obrigatorio Sku anexo obrigatorio ', () => {
-        expect(result[3].package).toEqual({
+        expect(result[2].package).toEqual({
           ...orderMock.packageAttachment.packages[3],
           index: 3,
         })
