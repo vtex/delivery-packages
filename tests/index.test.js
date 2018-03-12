@@ -535,6 +535,16 @@ describe('has two deliveries', () => {
           index: 0,
         })
       })
+
+      it('should return correct package shippingEstimateDate', () => {
+        expect(result[0].shippingEstimateDate).toEqual('2017-10-17T14:45:00.4699353+00:00')
+        expect(result[1].shippingEstimateDate).toEqual('2017-10-16T17:00:00.0000000+00:00')
+        expect(result[2].shippingEstimateDate).toEqual('2017-10-16T14:45:00.0858904+00:00')
+        expect(result[3].shippingEstimateDate).toEqual('2017-10-16T17:00:00.0000000+00:00')
+        expect(result[4].shippingEstimateDate).toEqual('2017-10-19T14:45:00.0858904+00:00')
+        expect(result[5].shippingEstimateDate).toEqual('2017-10-19T14:45:00.0839018+00:00')
+        expect(result[6].shippingEstimateDate).toEqual('2017-10-16T17:00:00.0000000+00:00')
+      })
     })
   })
 })

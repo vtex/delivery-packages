@@ -234,9 +234,7 @@ function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
   return {
     selectedSla: logisticsInfo[itemIndex].selectedSla,
     shippingEstimate: selectedSla ? selectedSla.shippingEstimate : undefined,
-    shippingEstimateDate: selectedSla
-      ? selectedSla.shippingEstimateDate
-      : undefined,
+    shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate ? logisticsInfo[itemIndex].shippingEstimateDate : selectedSla ? selectedSla.shippingEstimateDate : undefined,
     deliveryChannel: logisticsInfo[itemIndex].selectedDeliveryChannel,
     deliveryWindow: logisticsInfo[itemIndex].deliveryWindow,
     slas: logisticsInfo[itemIndex].slas,
