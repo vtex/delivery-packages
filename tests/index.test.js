@@ -1,6 +1,5 @@
 const packagify = require('../src/index')
 const {
-  pickupPointAddress,
   residentialAddress,
   pickupSla,
   pickupNormalSla,
