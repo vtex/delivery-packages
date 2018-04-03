@@ -1,6 +1,5 @@
 const packagify = require('../src/index')
 const {
-  pickupPointAddress,
   residentialAddress,
   pickupSla,
   pickupNormalSla,
@@ -579,47 +578,74 @@ describe('has two deliveries', () => {
       })
     })
 
-    describe('Test an order with multiple items, some packages already sent and some are still on hold', () => {
-      const result = packagify(orderMock)
+    describe(
+      'Test an order with multiple items, some packages already sent and some are still on hold',
+      () => {
+        it('should have 7 packages since 5 packages were sent and there are two items left with different selected SLAs', () => {
+          const result = packagify(orderMock)
 
-      it('should have 7 packages since 5 packages were sent and there are two items left with different selected SLAs', () => {
-        expect(result).toHaveLength(7)
-      })
-
-      it('should not have package information, since it was not sent yet ', () => {
-        expect(result[5].package).toEqual(undefined)
-      })
-
-      it('should return the correct package info, package sent with pickup-points', () => {
-        expect(result[1].package).toEqual({
-          ...orderMock.packageAttachment.packages[1],
-          index: 1,
+          expect(result).toHaveLength(7)
         })
-      })
 
-      it('should return the correct package info, it was sent with courier TESTEQA and item is Produto com anexo obrigatorio Sku anexo obrigatorio ', () => {
-        expect(result[2].package).toEqual({
-          ...orderMock.packageAttachment.packages[3],
-          index: 3,
+        it('should not have package information, since it was not sent yet ', () => {
+          const result = packagify(orderMock)
+
+          expect(result[5].package).toEqual(undefined)
         })
-      })
 
-      it('should return the correct package info, it was sent with courier TESTEQA and item is Produto Variação Cor e Tam SKU Variação Cor2 e Tam 5', () => {
-        expect(result[4].package).toEqual({
-          ...orderMock.packageAttachment.packages[0],
-          index: 0,
+        it('should return the correct package info, package sent with pickup-points', () => {
+          const result = packagify(orderMock)
+
+          expect(result[1].package).toEqual({
+            ...orderMock.packageAttachment.packages[1],
+            index: 1,
+          })
         })
-      })
 
-      it('should return correct package shippingEstimateDate', () => {
-        expect(result[0].shippingEstimateDate).toEqual('2017-10-17T14:45:00.4699353+00:00')
-        expect(result[1].shippingEstimateDate).toEqual('2017-10-16T17:00:00.0000000+00:00')
-        expect(result[2].shippingEstimateDate).toEqual('2017-10-16T14:45:00.0858904+00:00')
-        expect(result[3].shippingEstimateDate).toEqual('2017-10-16T17:00:00.0000000+00:00')
-        expect(result[4].shippingEstimateDate).toEqual('2017-10-19T14:45:00.0858904+00:00')
-        expect(result[5].shippingEstimateDate).toEqual('2017-10-19T14:45:00.0839018+00:00')
-        expect(result[6].shippingEstimateDate).toEqual('2017-10-16T17:00:00.0000000+00:00')
-      })
-    })
+        it('should return the correct package info, it was sent with courier TESTEQA and item is Produto com anexo obrigatorio Sku anexo obrigatorio ', () => {
+          const result = packagify(orderMock)
+
+          expect(result[2].package).toEqual({
+            ...orderMock.packageAttachment.packages[3],
+            index: 3,
+          })
+        })
+
+        it('should return the correct package info, it was sent with courier TESTEQA and item is Produto Variação Cor e Tam SKU Variação Cor2 e Tam 5', () => {
+          const result = packagify(orderMock)
+
+          expect(result[4].package).toEqual({
+            ...orderMock.packageAttachment.packages[0],
+            index: 0,
+          })
+        })
+
+        it('should return correct package shippingEstimateDate', () => {
+          const result = packagify(orderMock)
+
+          expect(result[0].shippingEstimateDate).toEqual(
+            '2017-10-17T14:45:00.4699353+00:00'
+          )
+          expect(result[1].shippingEstimateDate).toEqual(
+            '2017-10-16T17:00:00.0000000+00:00'
+          )
+          expect(result[2].shippingEstimateDate).toEqual(
+            '2017-10-16T14:45:00.0858904+00:00'
+          )
+          expect(result[3].shippingEstimateDate).toEqual(
+            '2017-10-16T17:00:00.0000000+00:00'
+          )
+          expect(result[4].shippingEstimateDate).toEqual(
+            '2017-10-19T14:45:00.0858904+00:00'
+          )
+          expect(result[5].shippingEstimateDate).toEqual(
+            '2017-10-19T14:45:00.0839018+00:00'
+          )
+          expect(result[6].shippingEstimateDate).toEqual(
+            '2017-10-16T17:00:00.0000000+00:00'
+          )
+        })
+      }
+    )
   })
 })
