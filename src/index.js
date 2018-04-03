@@ -160,20 +160,47 @@ function addToPackage(items, criteria, fn) {
 function getDeliveredItems({ items, packages }) {
   const deliveredItems = items.reduce(
     (groups, item, index) => {
-      const delivered = packages.findIndex(pack =>
+      const packagesWithItem = packages.filter(pack =>
         pack.items.find((item) => item.itemIndex === index))
 
-      if (delivered !== -1) {
-        groups.delivered = groups.delivered.concat({
-          package: packages[delivered],
+      if (packagesWithItem.length === 0) {
+        groups.toBeDelivered = groups.toBeDelivered.concat({
           item,
         })
+
         return groups
       }
 
-      groups.toBeDelivered = groups.toBeDelivered.concat({
-        item,
+      const quantityInPackages = packagesWithItem.reduce((total, pack) => {
+        const packageItem = pack.items.find(packageItem =>
+          packageItem.itemIndex === item.index
+        )
+
+        return total + packageItem.quantity
+      }, 0)
+
+      const packageDeliveredAllItems = quantityInPackages === item.quantity
+
+      if (packageDeliveredAllItems === false) {
+        const quantityLeftToDeliver = item.quantity - quantityInPackages
+
+        groups.toBeDelivered = groups.toBeDelivered.concat({
+          item: Object.assign({}, item, { quantity: quantityLeftToDeliver }),
+        })
+      }
+
+      const delivered = packagesWithItem.map(pack => {
+        const packageItem = pack.items.find(packageItem =>
+          packageItem.itemIndex === item.index
+        )
+
+        return {
+          package: pack,
+          item: Object.assign({}, item, { quantity: packageItem.quantity }),
+        }
       })
+
+      groups.delivered = groups.delivered.concat(delivered)
 
       return groups
     },
