@@ -63,6 +63,81 @@ describe('has one package with all items', () => {
   })
 })
 
+describe(
+  'has an item with quantity 3 and only one unit is in a package',
+  () => {
+    it('should create one package and one delivery', () => {
+      const items = [{ id: 0, quantity: 3, seller: '1' }]
+      const packageAttachment = {
+        packages: [createPackage([{ itemIndex: 0, quantity: 1 }])],
+      }
+      const selectedAddresses = [residentialAddress]
+      const logisticsInfo = [
+        {
+          ...baseLogisticsInfo.express,
+          itemIndex: 0,
+          slas: [expressSla],
+        },
+      ]
+
+      const result = packagify({
+        items,
+        packageAttachment,
+        shippingData: {
+          selectedAddresses,
+          logisticsInfo,
+        },
+      })
+
+      expect(result).toHaveLength(2)
+      expect(result[0].items).toHaveLength(1)
+      expect(result[0].items[0].quantity).toBe(1)
+      expect(result[1].items).toHaveLength(1)
+      expect(result[1].items[0].quantity).toBe(2)
+    })
+  }
+)
+
+describe(
+  'has an item with quantity 3 and one unit is in a package and other unit in another',
+  () => {
+    it('should create two packages and one delivery', () => {
+      const items = [{ id: 0, quantity: 3, seller: '1' }]
+      const packageAttachment = {
+        packages: [
+          createPackage([{ itemIndex: 0, quantity: 1 }]),
+          createPackage([{ itemIndex: 0, quantity: 1 }]),
+        ],
+      }
+      const selectedAddresses = [residentialAddress]
+      const logisticsInfo = [
+        {
+          ...baseLogisticsInfo.express,
+          itemIndex: 0,
+          slas: [expressSla],
+        },
+      ]
+
+      const result = packagify({
+        items,
+        packageAttachment,
+        shippingData: {
+          selectedAddresses,
+          logisticsInfo,
+        },
+      })
+
+      expect(result).toHaveLength(3)
+      expect(result[0].items).toHaveLength(1)
+      expect(result[0].items[0].quantity).toBe(1)
+      expect(result[1].items).toHaveLength(1)
+      expect(result[1].items[0].quantity).toBe(1)
+      expect(result[2].items).toHaveLength(1)
+      expect(result[2].items[0].quantity).toBe(1)
+    })
+  }
+)
+
 describe('has one package and a delivery', () => {
   it('should create two packages', () => {
     const items = createItems(2)
