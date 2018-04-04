@@ -5,17 +5,12 @@
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "test": "jest",
     "prepublishOnly": "rollup -c"
   },
-  "keywords": [
-    "vtex",
-    "delivery"
-  ],
+  "keywords": ["vtex", "delivery"],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -35,6 +30,7 @@
     "eslint-plugin-jest": "^21.12.2",
     "jest": "^22.3.0",
     "rollup": "^0.56.2",
+    "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-node-resolve": "^3.0.3"
   },
@@ -42,9 +38,7 @@
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest"
     },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
-    ]
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"]
   },
   "dependencies": {
     "@vtex/estimate-calculator": "^1.0.0"
