@@ -1,4 +1,4 @@
-const packagify = require('../src/index')
+const parcelify = require('../src/index')
 const {
   residentialAddress,
   pickupSla,
@@ -13,7 +13,7 @@ const {
 const orderMock = require('./Order')
 
 describe('has one package with all items', () => {
-  it('should create one package', () => {
+  it('should create one parcel', () => {
     const items = createItems(2)
     const packageAttachment = {
       packages: [
@@ -46,7 +46,7 @@ describe('has one package with all items', () => {
       },
     }
 
-    const result = packagify(order)
+    const result = parcelify(order)
 
     expect(result).toHaveLength(1)
     expect(result[0].items).toHaveLength(2)
@@ -65,7 +65,7 @@ describe('has one package with all items', () => {
 describe(
   'has an item with quantity 3 and only one unit is in a package',
   () => {
-    it('should create one package and one delivery', () => {
+    it('should create two parcels, one with a package and one delivery', () => {
       const items = [{ id: 0, quantity: 3, seller: '1' }]
       const packageAttachment = {
         packages: [createPackage([{ itemIndex: 0, quantity: 1 }])],
@@ -79,7 +79,7 @@ describe(
         },
       ]
 
-      const result = packagify({
+      const result = parcelify({
         items,
         packageAttachment,
         shippingData: {
@@ -100,7 +100,7 @@ describe(
 describe(
   'has an item with quantity 3 and one unit is in a package and other unit in another',
   () => {
-    it('should create two packages and one delivery', () => {
+    it('should create three parcels, two with packages and one delivery', () => {
       const items = [{ id: 0, quantity: 3, seller: '1' }]
       const packageAttachment = {
         packages: [
@@ -117,7 +117,7 @@ describe(
         },
       ]
 
-      const result = packagify({
+      const result = parcelify({
         items,
         packageAttachment,
         shippingData: {
@@ -138,7 +138,7 @@ describe(
 )
 
 describe('has one package and a delivery', () => {
-  it('should create two packages', () => {
+  it('should create two parcels', () => {
     const items = createItems(2)
     const packageAttachment = {
       packages: [createPackage([{ itemIndex: 0, quantity: 1 }])],
@@ -157,7 +157,7 @@ describe('has one package and a delivery', () => {
       },
     ]
 
-    const result = packagify({
+    const result = parcelify({
       items,
       packageAttachment,
       shippingData: {
@@ -173,7 +173,7 @@ describe('has one package and a delivery', () => {
 })
 
 describe('has two packages with different shipping estimates', () => {
-  it('should create one package with the latest estimate', () => {
+  it('should create one parcel with the latest estimate', () => {
     const items = createItems(2)
     const packageAttachment = {
       packages: [
@@ -206,7 +206,7 @@ describe('has two packages with different shipping estimates', () => {
       },
     }
 
-    const result = packagify(order)
+    const result = parcelify(order)
 
     expect(result).toHaveLength(1)
     expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
@@ -240,7 +240,7 @@ describe('has two deliveries', () => {
       },
     }
 
-    const result = packagify(order)
+    const result = parcelify(order)
 
     expect(result).toHaveLength(1)
   })
@@ -270,8 +270,8 @@ describe('has two deliveries', () => {
         },
       }
 
-      it('should create two packages', () => {
-        const result = packagify(order)
+      it('should create two parcels', () => {
+        const result = parcelify(order)
 
         expect(result).toHaveLength(2)
         expect(result[0].shippingEstimate).toBe(
@@ -280,8 +280,8 @@ describe('has two deliveries', () => {
         expect(result[1].shippingEstimate).toBe(normalSla.shippingEstimate)
       })
 
-      it('should not create two packages if shippingEstimate criterion is false', () => {
-        const result = packagify(order, {
+      it('should not create two parcels if shippingEstimate criterion is false', () => {
+        const result = parcelify(order, {
           criteria: { shippingEstimate: false },
         })
 
@@ -326,16 +326,16 @@ describe('has two deliveries', () => {
         },
       }
 
-      it('should create two packages', () => {
-        const result = packagify(order)
+      it('should create two parcels', () => {
+        const result = parcelify(order)
 
         expect(result).toHaveLength(2)
         expect(result[0].seller).toBe(items[0].seller)
         expect(result[1].seller).toBe(items[1].seller)
       })
 
-      it('should not create two packages if seller criterion is false', () => {
-        const result = packagify(order, { criteria: { seller: false } })
+      it('should not create two parcels if seller criterion is false', () => {
+        const result = parcelify(order, { criteria: { seller: false } })
 
         expect(result).toHaveLength(1)
         expect(result[0].items).toHaveLength(2)
@@ -344,7 +344,7 @@ describe('has two deliveries', () => {
     })
 
     describe('of different delivery channels', () => {
-      it('should create two packages', () => {
+      it('should create two parcels', () => {
         const items = [
           {
             id: 0,
@@ -372,7 +372,7 @@ describe('has two deliveries', () => {
           },
         ]
 
-        const result = packagify({
+        const result = parcelify({
           items,
           shippingData: {
             selectedAddresses,
@@ -389,7 +389,7 @@ describe('has two deliveries', () => {
         )
       })
 
-      it("should separate packages only by deliveryChannel if it's the only criterion as true", () => {
+      it("should separate parcels only by deliveryChannel if it's the only criterion as true", () => {
         const items = createItems(3)
         const selectedAddresses = [residentialAddress]
         const logisticsInfo = [
@@ -418,7 +418,7 @@ describe('has two deliveries', () => {
           },
         }
 
-        const result = packagify(order, {
+        const result = parcelify(order, {
           criteria: {
             slaOptions: false,
             selectedSla: false,
@@ -467,7 +467,7 @@ describe('has two deliveries', () => {
           },
         ]
 
-        const result = packagify({
+        const result = parcelify({
           items,
           shippingData: {
             selectedAddresses,
@@ -489,7 +489,7 @@ describe('has two deliveries', () => {
       const items = createItems(2)
       const selectedAddresses = [residentialAddress]
 
-      it('should create two packages if slaOptions criterion is true', () => {
+      it('should create two parcels if slaOptions criterion is true', () => {
         const logisticsInfo = [
           {
             ...baseLogisticsInfo.normal,
@@ -503,7 +503,7 @@ describe('has two deliveries', () => {
           },
         ]
 
-        const result = packagify(
+        const result = parcelify(
           {
             items,
             shippingData: {
@@ -517,7 +517,7 @@ describe('has two deliveries', () => {
         expect(result).toHaveLength(2)
       })
 
-      it('should create one package if slaOptions criterion is false', () => {
+      it('should create one parcel if slaOptions criterion is false', () => {
         const logisticsInfo = [
           {
             ...baseLogisticsInfo.normal,
@@ -531,7 +531,7 @@ describe('has two deliveries', () => {
           },
         ]
 
-        const result = packagify(
+        const result = parcelify(
           {
             items,
             shippingData: {
@@ -547,7 +547,7 @@ describe('has two deliveries', () => {
     })
 
     describe('of the same sla options', () => {
-      it('should create one package if slaOptions criterion is true', () => {
+      it('should create one parcel if slaOptions criterion is true', () => {
         const items = createItems(2)
         const selectedAddresses = [residentialAddress]
         const logisticsInfo = [
@@ -563,7 +563,7 @@ describe('has two deliveries', () => {
           },
         ]
 
-        const result = packagify(
+        const result = parcelify(
           {
             items,
             shippingData: {
@@ -578,23 +578,22 @@ describe('has two deliveries', () => {
       })
     })
 
-    describe(
-      'Test an order with multiple items, some packages already sent and some are still on hold',
+    describe('an order with multiple items, some parcels already sent and some are still on hold',
       () => {
         it('should have 7 packages since 5 packages were sent and there are two items left with different selected SLAs', () => {
-          const result = packagify(orderMock)
+          const result = parcelify(orderMock)
 
           expect(result).toHaveLength(7)
         })
 
         it('should not have package information, since it was not sent yet ', () => {
-          const result = packagify(orderMock)
+          const result = parcelify(orderMock)
 
           expect(result[5].package).toEqual(undefined)
         })
 
         it('should return the correct package info, package sent with pickup-points', () => {
-          const result = packagify(orderMock)
+          const result = parcelify(orderMock)
 
           expect(result[1].package).toEqual({
             ...orderMock.packageAttachment.packages[1],
@@ -603,7 +602,7 @@ describe('has two deliveries', () => {
         })
 
         it('should return the correct package info, it was sent with courier TESTEQA and item is Produto com anexo obrigatorio Sku anexo obrigatorio ', () => {
-          const result = packagify(orderMock)
+          const result = parcelify(orderMock)
 
           expect(result[2].package).toEqual({
             ...orderMock.packageAttachment.packages[3],
@@ -612,7 +611,7 @@ describe('has two deliveries', () => {
         })
 
         it('should return the correct package info, it was sent with courier TESTEQA and item is Produto Variação Cor e Tam SKU Variação Cor2 e Tam 5', () => {
-          const result = packagify(orderMock)
+          const result = parcelify(orderMock)
 
           expect(result[4].package).toEqual({
             ...orderMock.packageAttachment.packages[0],
@@ -620,8 +619,8 @@ describe('has two deliveries', () => {
           })
         })
 
-        it('should return correct package shippingEstimateDate', () => {
-          const result = packagify(orderMock)
+        it('should return correct parcel shippingEstimateDate', () => {
+          const result = parcelify(orderMock)
 
           expect(result[0].shippingEstimateDate).toEqual(
             '2017-10-17T14:45:00.4699353+00:00'
