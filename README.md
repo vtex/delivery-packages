@@ -1,12 +1,12 @@
 # delivery-packages
 
-> Small library to separate items in packages
+> Small library to separate items in parcels
 
 ## Motivation
 
 The UX of displaying to the user how their items are going to be delivered can be tricky to be expressed and developed.
 
-There are many criteria to split items in different packages. They are:
+There are many criteria to split items in different parcels. They are:
 
 1. Seller
 2. SLAs options
@@ -26,9 +26,9 @@ $ npm install @vtex/delivery-packages
 ## Usage
 
 ```js
-const packagify = require('@vtex/delivery-packages')
+const parcelify = require('@vtex/delivery-packages')
 
-packagify(order)
+parcelify(order)
 // [
 //   {
 //     "seller": "1",
@@ -94,9 +94,9 @@ packagify(order)
 
 ## API
 
-### packagify(order, options)
+### parcelify(order, options)
 
-Returns an array of [Package](#Package)s.
+Returns an array of [Parcel](#Parcel)s.
 
 #### order
 
@@ -118,9 +118,9 @@ Default:<br/>
 
 This param will be merged with the default options.
 
-## Package
+## Parcel
 
-A Package object shape
+A Parcel object shape
 
 ```js
 {
@@ -139,19 +139,19 @@ A Package object shape
 
 #### address
 
-The `address` used for that package. If it is a pickup point, the address of the pickup point is returned.
+The `address` used for that parcel. If it is a pickup point, the address of the pickup point is returned.
 
 #### pickupFriendlyName
 
-If the package is delivered to a pickup point, this field has its friendly name.
+If the parcel is delivered to a pickup point, this field has its friendly name.
 
 #### items
 
-The items of the package.
+The items of the parcel.
 
 #### seller
 
-The seller of the package.
+The seller of the parcel.
 
 #### package
 
@@ -159,7 +159,7 @@ The `package` object from `packageAttachment`, if it is one.
 
 #### slas, selectedSla, shippingEstimate, shippingEstimateDate, deliveryChannel
 
-These properties are taken from the `logisticsInfo` of the package.
+These properties are taken from the `logisticsInfo` of the parcel.
 
 ## Example
 
@@ -218,7 +218,7 @@ const order = {
 }
 
 
-packagify(order, { criteria: { seller: false } })
+parcelify(order, { criteria: { seller: false } })
 // [
 //   {
 //     "package": {
