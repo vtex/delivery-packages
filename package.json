@@ -1,6 +1,6 @@
 {
   "name": "@vtex/delivery-packages",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -37,7 +37,8 @@
     "rollup": "^0.56.2",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.3.0",
-    "rollup-plugin-node-resolve": "^3.0.3"
+    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup-plugin-uglify": "^3.0.0"
   },
   "jest": {
     "transform": {
