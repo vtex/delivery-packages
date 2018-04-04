@@ -51,7 +51,6 @@ describe('has one package with all items', () => {
     expect(result).toHaveLength(1)
     expect(result[0].items).toHaveLength(2)
     expect(result[0].selectedSla).toBe(expressSla.id)
-    expect(result[0].deliveryIds).toBeDefined()
     expect(result[0].deliveryChannel).toBe(
       baseLogisticsInfo.express.selectedDeliveryChannel
     )
@@ -648,4 +647,36 @@ describe('has two deliveries', () => {
       }
     )
   })
+})
+
+it('should handle an order in OMS format', () => {
+  const items = createItems(1)
+  const packageAttachment = {
+    packages: [createPackage([{ itemIndex: 0, quantity: 1 }])],
+  }
+  const selectedAddresses = [residentialAddress]
+  const logisticsInfo = [
+    {
+      ...baseLogisticsInfo.normalOms,
+      itemIndex: 0,
+      slas: [normalSla],
+    },
+  ]
+
+  const order = {
+    items,
+    packageAttachment,
+    shippingData: {
+      selectedAddresses,
+      logisticsInfo,
+    },
+  }
+
+  const result = parcelify(order)
+
+  expect(result).toHaveLength(1)
+  expect(result[0].items).toHaveLength(1)
+  expect(result[0].selectedSla).toBe(normalSla.id)
+  expect(result[0].deliveryIds).toBeDefined()
+  expect(result[0].deliveryChannel).toBe(normalSla.deliveryChannel)
 })
