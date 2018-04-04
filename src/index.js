@@ -138,6 +138,7 @@ function addToPackage(items, criteria, fn) {
           seller: criteria.seller ? item.item.seller : undefined,
           address: criteria.selectedSla ? item.address : undefined,
           selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
+          deliveryIds: item.deliveryIds,
           deliveryChannel: criteria.deliveryChannel
             ? item.deliveryChannel
             : undefined,
@@ -264,6 +265,7 @@ function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
     shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate ? logisticsInfo[itemIndex].shippingEstimateDate : selectedSla ? selectedSla.shippingEstimateDate : undefined,
     deliveryChannel: logisticsInfo[itemIndex].selectedDeliveryChannel,
     deliveryWindow: logisticsInfo[itemIndex].deliveryWindow,
+    deliveryIds: logisticsInfo[itemIndex].deliveryIds,
     slas: logisticsInfo[itemIndex].slas,
   }
 }

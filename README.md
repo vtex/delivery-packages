@@ -134,6 +134,7 @@ A Parcel object shape
   shippingEstimate: String,
   shippingEstimateDate: String,
   deliveryChannel: String,
+  deliveryIds: [Object]
 }
 ```
 
@@ -157,7 +158,7 @@ The seller of the parcel.
 
 The `package` object from `packageAttachment`, if it is one.
 
-#### slas, selectedSla, shippingEstimate, shippingEstimateDate, deliveryChannel
+#### slas, selectedSla, shippingEstimate, shippingEstimateDate, deliveryChannel, deliveryIds
 
 These properties are taken from the `logisticsInfo` of the parcel.
 

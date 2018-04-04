@@ -104,6 +104,7 @@ const baseLogisticsInfo = {
     addressId: residentialAddress.addressId,
     selectedSla: expressSla.id,
     selectedDeliveryChannel: 'delivery',
+    deliveryIds: [{ courierId: '123' }],
   },
   normal: {
     addressId: residentialAddress.addressId,
