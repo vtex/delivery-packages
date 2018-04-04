@@ -72,8 +72,8 @@
     to-fast-properties "^2.0.0"
 
 "@vtex/estimate-calculator@^1.0.0":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@vtex/estimate-calculator/-/estimate-calculator-1.0.2.tgz#9d0c0410e2a6d03064e9a2a980f95366124ad429"
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@vtex/estimate-calculator/-/estimate-calculator-1.0.7.tgz#4b0da3acf8eb05ca47ca8dd25d4eb4d8370b987f"
   dependencies:
     lodash "^4.17.5"
 
