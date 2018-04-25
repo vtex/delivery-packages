@@ -680,3 +680,40 @@ it('should handle an order in OMS format', () => {
   expect(result[0].deliveryIds).toBeDefined()
   expect(result[0].deliveryChannel).toBe(normalSla.deliveryChannel)
 })
+
+it('should handle devolution packages', () => {
+  const items = createItems(1)
+  const packageAttachment = {
+    packages: [
+      {
+        ...createPackage([{ itemIndex: 0, quantity: 1 }]),
+        type: 'Output',
+      },
+      {
+        ...createPackage([{ itemIndex: 0, quantity: 1 }]),
+        type: 'Input',
+      },
+    ],
+  }
+  const selectedAddresses = [residentialAddress]
+  const logisticsInfo = [
+    {
+      ...baseLogisticsInfo.normalOms,
+      itemIndex: 0,
+      slas: [normalSla],
+    },
+  ]
+
+  const order = {
+    items,
+    packageAttachment,
+    shippingData: {
+      selectedAddresses,
+      logisticsInfo,
+    },
+  }
+
+  const result = parcelify(order)
+
+  expect(result).toHaveLength(2)
+})

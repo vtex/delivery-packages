@@ -181,10 +181,9 @@ function getDeliveredItems({ items, packages }) {
       }, 0)
 
       const packageDeliveredAllItems = quantityInPackages === item.quantity
+      const quantityLeftToDeliver = item.quantity - quantityInPackages
 
-      if (packageDeliveredAllItems === false) {
-        const quantityLeftToDeliver = item.quantity - quantityInPackages
-
+      if (packageDeliveredAllItems === false && quantityLeftToDeliver > 0) {
         groups.toBeDelivered = groups.toBeDelivered.concat({
           item: Object.assign({}, item, { quantity: quantityLeftToDeliver }),
         })
