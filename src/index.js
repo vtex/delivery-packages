@@ -1,6 +1,6 @@
-const {
+import {
   getShippingEstimateQuantityInSeconds,
-} = require('@vtex/estimate-calculator')
+} from '@vtex/estimate-calculator'
 
 const defaultCriteria = {
   slaOptions: false,
@@ -11,7 +11,13 @@ const defaultCriteria = {
 }
 
 module.exports = function(order, options = {}) {
-  const { items = [], packageAttachment = {}, shippingData = {} } = order
+  const {
+    items = [],
+    packageAttachment = {},
+    shippingData = {},
+    changesAttachment = {},
+  } = order
+
   const criteria = {
     ...defaultCriteria,
     ...(options.criteria ? options.criteria : {}),
@@ -26,12 +32,17 @@ module.exports = function(order, options = {}) {
   const selectedAddresses = shippingData && shippingData.selectedAddresses
     ? shippingData.selectedAddresses
     : []
+  const changes = changesAttachment && changesAttachment.changesData
+    ? changesAttachment.changesData
+    : []
 
   const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
   const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
 
+  const itemsCleaned = applyOrderChanges(itemsWithIndex, changes)
+
   const deliveredItems = getDeliveredItems({
-    items: itemsWithIndex,
+    items: itemsCleaned,
     packages: packagesWithIndex,
   })
 
@@ -52,6 +63,40 @@ module.exports = function(order, options = {}) {
   )
 
   return deliveredPackages.concat(toBeDeliveredPackages)
+}
+
+function applyOrderChanges(items, changes) {
+  const addedSkusFromChanges = changes.reduce(
+    (acc, change) => acc.concat(change.itemsAdded || []), []
+  )
+
+  const removedSkusFromChanges = changes
+    .reduce((acc, change) => acc.concat(change.itemsRemoved || []), [])
+    .map(item => ({
+      ...item,
+      // Change removedItems to negative quantity so we can sum it later
+      quantity: item.quantity * -1,
+    }))
+
+  const itemsChanged = [
+    ...addedSkusFromChanges,
+    ...removedSkusFromChanges,
+  ]
+
+  return items.reduce((acc, item) => {
+    const itemChanges = itemsChanged.filter(
+      (changedItem) => changedItem.id === item.id
+    )
+
+    const newItem = itemChanges.reduce((newItem, changedItem) => ({
+      ...newItem,
+      quantity: newItem.quantity + changedItem.quantity,
+    }), item)
+
+    if (newItem.quantity <= 0) return acc
+
+    return acc.concat(newItem)
+  }, [])
 }
 
 function groupPackages(items, criteria) {

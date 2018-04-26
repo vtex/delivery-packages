@@ -83,7 +83,7 @@ const normalFastestSla = {
 
 const createItems = quantity => {
   return Array.from(Array(quantity), (_, index) => ({
-    id: index,
+    id: `${index}`,
     quantity: 1,
     seller: '1',
   }))
