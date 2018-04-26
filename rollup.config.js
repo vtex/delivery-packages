@@ -13,17 +13,14 @@ export default [
       file: pkg.browser,
       format: 'umd',
       sourcemap: true,
-      globals: {
-        '@vtex/estimate-calculator': 'vtex.EstimateCalculator',
-      },
     },
     plugins: [
-      resolve(), // so Rollup can find `ms`
+      resolve(),
       babel({
-        exclude: 'node_modules/**', // only transpile our source code
+        exclude: 'node_modules/**',
       }),
       uglify(),
-      commonjs(), // so Rollup can convert `ms` to an ES module
+      commonjs(),
     ],
   },
 
@@ -35,7 +32,13 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.js',
-    external: ['ms'],
+    plugins: [
+      resolve(),
+      babel({
+        exclude: 'node_modules/**',
+      }),
+      commonjs(),
+    ],
     output: [
       { file: pkg.main, format: 'cjs', sourcemap: true },
       { file: pkg.module, format: 'es', sourcemap: true },
