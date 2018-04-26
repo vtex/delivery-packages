@@ -12,11 +12,10 @@ const defaultCriteria = {
 
 module.exports = function(order, options = {}) {
   const { items = [], packageAttachment = {}, shippingData = {} } = order
-  const criteria = Object.assign(
-    {},
-    defaultCriteria,
-    options.criteria ? options.criteria : {}
-  )
+  const criteria = {
+    ...defaultCriteria,
+    ...(options.criteria ? options.criteria : {}),
+  }
 
   const packages = packageAttachment && packageAttachment.packages
     ? packageAttachment.packages
@@ -28,10 +27,8 @@ module.exports = function(order, options = {}) {
     ? shippingData.selectedAddresses
     : []
 
-  const itemsWithIndex = items.map((item, index) =>
-    Object.assign({}, item, { index }))
-  const packagesWithIndex = packages.map((pack, index) =>
-    Object.assign({}, pack, { index }))
+  const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
+  const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
 
   const deliveredItems = getDeliveredItems({
     items: itemsWithIndex,
@@ -126,31 +123,28 @@ function addToPackage(items, criteria, fn) {
         return packages
       }
 
-      const newPackage = Object.assign(
-        {},
-        {
-          items: [item.item],
-          package: item.package,
-          slas: item.slas,
-          pickupFriendlyName: criteria.selectedSla
-            ? item.pickupFriendlyName
-            : undefined,
-          seller: criteria.seller ? item.item.seller : undefined,
-          address: criteria.selectedSla ? item.address : undefined,
-          selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
-          deliveryIds: item.deliveryIds,
-          deliveryChannel: criteria.deliveryChannel
-            ? item.deliveryChannel
-            : undefined,
-          shippingEstimate: criteria.selectedSla
-            ? item.shippingEstimate
-            : undefined,
-          shippingEstimateDate: criteria.selectedSla
-            ? item.shippingEstimateDate
-            : undefined,
-          item: undefined,
-        }
-      )
+      const newPackage = {
+        items: [item.item],
+        package: item.package,
+        slas: item.slas,
+        pickupFriendlyName: criteria.selectedSla
+          ? item.pickupFriendlyName
+          : undefined,
+        seller: criteria.seller ? item.item.seller : undefined,
+        address: criteria.selectedSla ? item.address : undefined,
+        selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
+        deliveryIds: item.deliveryIds,
+        deliveryChannel: criteria.deliveryChannel
+          ? item.deliveryChannel
+          : undefined,
+        shippingEstimate: criteria.selectedSla
+          ? item.shippingEstimate
+          : undefined,
+        shippingEstimateDate: criteria.selectedSla
+          ? item.shippingEstimateDate
+          : undefined,
+        item: undefined,
+      }
 
       return packages.concat(newPackage)
     },
@@ -185,7 +179,7 @@ function getDeliveredItems({ items, packages }) {
 
       if (packageDeliveredAllItems === false && quantityLeftToDeliver > 0) {
         groups.toBeDelivered = groups.toBeDelivered.concat({
-          item: Object.assign({}, item, { quantity: quantityLeftToDeliver }),
+          item: { ...item, quantity: quantityLeftToDeliver },
         })
       }
 
@@ -196,7 +190,7 @@ function getDeliveredItems({ items, packages }) {
 
         return {
           package: pack,
-          item: Object.assign({}, item, { quantity: packageItem.quantity }),
+          item: { ...item, quantity: packageItem.quantity },
         }
       })
 
@@ -214,25 +208,22 @@ function createEnhancePackageFn({ logisticsInfo, selectedAddresses }) {
   return pack => {
     const itemIndex = pack.item.index
 
-    return Object.assign(
-      {},
-      pack,
-      {
-        address: getAddress({
-          itemIndex,
-          logisticsInfo,
-          selectedAddresses,
-        }),
-        pickupFriendlyName: getPickupFriendlyName({
-          itemIndex,
-          logisticsInfo,
-        }),
-      },
-      getLogisticsInfoData({
+    return {
+      ...pack,
+      address: getAddress({
         itemIndex,
         logisticsInfo,
-      })
-    )
+        selectedAddresses,
+      }),
+      pickupFriendlyName: getPickupFriendlyName({
+        itemIndex,
+        logisticsInfo,
+      }),
+      ...getLogisticsInfoData({
+        itemIndex,
+        logisticsInfo,
+      }),
+    }
   }
 }
 
