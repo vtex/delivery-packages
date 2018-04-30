@@ -1,5 +1,5 @@
-const parcelify = require('../src/index')
-const {
+import parcelify from '../src/index'
+import {
   residentialAddress,
   pickupSla,
   pickupNormalSla,
@@ -9,8 +9,8 @@ const {
   baseLogisticsInfo,
   createPackage,
   createItems,
-} = require('./mockGenerator')
-const orderMock = require('./Order')
+} from './mockGenerator'
+import orderMock from './Order'
 
 describe('has one package with all items', () => {
   it('should create one parcel', () => {

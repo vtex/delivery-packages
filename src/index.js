@@ -10,7 +10,7 @@ const defaultCriteria = {
   deliveryChannel: true,
 }
 
-module.exports = function(order, options = {}) {
+export default function parcelify(order, options = {}) {
   const {
     items = [],
     packageAttachment = {},
