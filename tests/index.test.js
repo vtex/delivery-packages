@@ -717,3 +717,115 @@ it('should handle devolution packages', () => {
 
   expect(result).toHaveLength(2)
 })
+
+describe('the order has changes', () => {
+  it('should remove the item completely when the change has all the quantity', () => {
+    const items = createItems(1)
+    const packageAttachment = { packages: [] }
+    const changesAttachment = {
+      changesData: [
+        {
+          itemsRemoved: [
+            { id: '0', quantity: 1 },
+          ],
+        },
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.normalOms,
+        itemIndex: 0,
+        slas: [normalSla],
+      },
+    ]
+
+    const order = {
+      items,
+      packageAttachment,
+      changesAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    }
+
+    const result = parcelify(order)
+
+    expect(result).toHaveLength(0)
+  })
+
+  it('should remove the right quantity from the item', () => {
+    const items = [{ id: '0', quantity: 2, seller: '1' }]
+    const packageAttachment = { packages: [] }
+    const changesAttachment = {
+      changesData: [
+        {
+          itemsRemoved: [
+            { id: '0', quantity: 1 },
+          ],
+        },
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.normalOms,
+        itemIndex: 0,
+        slas: [normalSla],
+      },
+    ]
+
+    const order = {
+      items,
+      packageAttachment,
+      changesAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    }
+
+    const result = parcelify(order)
+
+    expect(result).toHaveLength(1)
+    expect(result[0].items[0].quantity).toBe(1)
+  })
+
+  it('should add the right quantity to the item', () => {
+    const items = createItems(1)
+    const packageAttachment = { packages: [] }
+    const changesAttachment = {
+      changesData: [
+        {
+          itemsAdded: [
+            { id: '0', quantity: 1 },
+          ],
+        },
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.normalOms,
+        itemIndex: 0,
+        slas: [normalSla],
+      },
+    ]
+
+    const order = {
+      items,
+      packageAttachment,
+      changesAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    }
+
+    const result = parcelify(order)
+
+    expect(result).toHaveLength(1)
+    expect(result[0].items[0].quantity).toBe(2)
+  })
+})

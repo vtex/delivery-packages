@@ -1,10 +1,20 @@
 {
-  "presets": [
-    [
-      "env",
-      {
-        "modules": false
-      }
-    ]
-  ]
+  "plugins": [
+    "babel-plugin-transform-object-rest-spread"
+  ],
+  "env": {
+    "test": {
+      "presets": ["env"]
+    },
+    "production": {
+      "presets": [
+        [
+          "env",
+          {
+            "modules": false
+          }
+        ]
+      ]
+    }
+  }
 }

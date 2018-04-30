@@ -1,6 +1,6 @@
 {
   "name": "@vtex/delivery-packages",
-  "version": "2.1.8",
+  "version": "2.2.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -9,8 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "test": "jest",
-    "prepublishOnly": "rollup -c"
+    "test": "cross-env NODE_ENV=test jest",
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "vtex",
@@ -29,7 +30,9 @@
     "babel-core": "6",
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.2.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.4",
     "eslint": "^4.18.0",
     "eslint-config-vtex": "^8.0.0",
     "eslint-plugin-jest": "^21.12.2",
@@ -49,6 +52,6 @@
     ]
   },
   "dependencies": {
-    "@vtex/estimate-calculator": "^1.0.0"
+    "@vtex/estimate-calculator": "^1.0.8"
   }
 }
