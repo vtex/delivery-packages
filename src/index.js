@@ -1,6 +1,4 @@
-import {
-  getShippingEstimateQuantityInSeconds,
-} from '@vtex/estimate-calculator'
+import { getShippingEstimateQuantityInSeconds } from '@vtex/estimate-calculator'
 
 const defaultCriteria = {
   slaOptions: false,
@@ -23,18 +21,20 @@ export default function parcelify(order, options = {}) {
     ...(options.criteria ? options.criteria : {}),
   }
 
-  const packages = packageAttachment && packageAttachment.packages
-    ? packageAttachment.packages
-    : []
-  const logisticsInfo = shippingData && shippingData.logisticsInfo
-    ? shippingData.logisticsInfo
-    : []
-  const selectedAddresses = shippingData && shippingData.selectedAddresses
-    ? shippingData.selectedAddresses
-    : []
-  const changes = changesAttachment && changesAttachment.changesData
-    ? changesAttachment.changesData
-    : []
+  const packages =
+    packageAttachment && packageAttachment.packages
+      ? packageAttachment.packages
+      : []
+  const logisticsInfo =
+    shippingData && shippingData.logisticsInfo ? shippingData.logisticsInfo : []
+  const selectedAddresses =
+    shippingData && shippingData.selectedAddresses
+      ? shippingData.selectedAddresses
+      : []
+  const changes =
+    changesAttachment && changesAttachment.changesData
+      ? changesAttachment.changesData
+      : []
 
   const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
   const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
@@ -67,7 +67,8 @@ export default function parcelify(order, options = {}) {
 
 function applyOrderChanges(items, changes) {
   const addedSkusFromChanges = changes.reduce(
-    (acc, change) => acc.concat(change.itemsAdded || []), []
+    (acc, change) => acc.concat(change.itemsAdded || []),
+    []
   )
 
   const removedSkusFromChanges = changes
@@ -78,20 +79,20 @@ function applyOrderChanges(items, changes) {
       quantity: item.quantity * -1,
     }))
 
-  const itemsChanged = [
-    ...addedSkusFromChanges,
-    ...removedSkusFromChanges,
-  ]
+  const itemsChanged = [...addedSkusFromChanges, ...removedSkusFromChanges]
 
   return items.reduce((acc, item) => {
     const itemChanges = itemsChanged.filter(
-      (changedItem) => changedItem.id === item.id
+      changedItem => changedItem.id === item.id
     )
 
-    const newItem = itemChanges.reduce((newItem, changedItem) => ({
-      ...newItem,
-      quantity: newItem.quantity + changedItem.quantity,
-    }), item)
+    const newItem = itemChanges.reduce(
+      (newItem, changedItem) => ({
+        ...newItem,
+        quantity: newItem.quantity + changedItem.quantity,
+      }),
+      item
+    )
 
     if (newItem.quantity <= 0) return acc
 
@@ -133,6 +134,21 @@ function groupDeliveries(items, criteria) {
         return false
       }
 
+      const hasDeliveryWindow = pack.deliveryWindow && item.deliveryWindow
+
+      const areWindowsDifferent =
+        hasDeliveryWindow &&
+        pack.deliveryWindow.startDateUtc !== item.deliveryWindow.startDateUtc &&
+        pack.deliveryWindow.endDateUtc !== item.deliveryWindow.endDateUtc
+
+      if (
+        criteria.selectedSla &&
+        ((hasDeliveryWindow && areWindowsDifferent) ||
+          !!pack.deliveryWindow !== !!item.deliveryWindow)
+      ) {
+        return false
+      }
+
       if (
         criteria.deliveryChannel &&
         pack.deliveryChannel !== item.deliveryChannel
@@ -146,62 +162,60 @@ function groupDeliveries(items, criteria) {
 }
 
 function addToPackage(items, criteria, fn) {
-  return items.reduce(
-    (packages, item) => {
-      const pack = fn(packages, item)
-
-      if (pack) {
-        if (
-          criteria.selectedSla &&
-          getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
-            getShippingEstimateQuantityInSeconds(item.shippingEstimate)
-        ) {
-          pack.shippingEstimate = item.shippingEstimate
-          pack.shippingEstimateDate = item.shippingEstimateDate
-        }
-
-        if (!criteria.selectedSla) {
-          pack.slas = pack.slas.concat(item.slas)
-        }
-
-        pack.items = pack.items.concat(item.item)
-        return packages
+  return items.reduce((packages, item) => {
+    const pack = fn(packages, item)
+    if (pack) {
+      if (
+        criteria.selectedSla &&
+        getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
+          getShippingEstimateQuantityInSeconds(item.shippingEstimate)
+      ) {
+        pack.shippingEstimate = item.shippingEstimate
+        pack.shippingEstimateDate = item.shippingEstimateDate
       }
 
-      const newPackage = {
-        items: [item.item],
-        package: item.package,
-        slas: item.slas,
-        pickupFriendlyName: criteria.selectedSla
-          ? item.pickupFriendlyName
-          : undefined,
-        seller: criteria.seller ? item.item.seller : undefined,
-        address: criteria.selectedSla ? item.address : undefined,
-        selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
-        deliveryIds: item.deliveryIds,
-        deliveryChannel: criteria.deliveryChannel
-          ? item.deliveryChannel
-          : undefined,
-        shippingEstimate: criteria.selectedSla
-          ? item.shippingEstimate
-          : undefined,
-        shippingEstimateDate: criteria.selectedSla
-          ? item.shippingEstimateDate
-          : undefined,
-        item: undefined,
+      if (!criteria.selectedSla) {
+        pack.slas = pack.slas.concat(item.slas)
       }
 
-      return packages.concat(newPackage)
-    },
-    []
-  )
+      pack.items = pack.items.concat(item.item)
+      return packages
+    }
+
+    const newPackage = {
+      items: [item.item],
+      package: item.package,
+      slas: item.slas,
+      pickupFriendlyName: criteria.selectedSla
+        ? item.pickupFriendlyName
+        : undefined,
+      seller: criteria.seller ? item.item.seller : undefined,
+      address: criteria.selectedSla ? item.address : undefined,
+      selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
+      deliveryIds: item.deliveryIds,
+      deliveryChannel: criteria.deliveryChannel
+        ? item.deliveryChannel
+        : undefined,
+      deliveryWindow: criteria.selectedSla ? item.deliveryWindow : undefined,
+      shippingEstimate: criteria.selectedSla
+        ? item.shippingEstimate
+        : undefined,
+      shippingEstimateDate: criteria.selectedSla
+        ? item.shippingEstimateDate
+        : undefined,
+      item: undefined,
+    }
+
+    return packages.concat(newPackage)
+  }, [])
 }
 
 function getDeliveredItems({ items, packages }) {
   const deliveredItems = items.reduce(
     (groups, item, index) => {
       const packagesWithItem = packages.filter(pack =>
-        pack.items.find((item) => item.itemIndex === index))
+        pack.items.find(item => item.itemIndex === index)
+      )
 
       if (packagesWithItem.length === 0) {
         groups.toBeDelivered = groups.toBeDelivered.concat({
@@ -212,8 +226,8 @@ function getDeliveredItems({ items, packages }) {
       }
 
       const quantityInPackages = packagesWithItem.reduce((total, pack) => {
-        const packageItem = pack.items.find(packageItem =>
-          packageItem.itemIndex === item.index
+        const packageItem = pack.items.find(
+          packageItem => packageItem.itemIndex === item.index
         )
 
         return total + packageItem.quantity
@@ -229,8 +243,8 @@ function getDeliveredItems({ items, packages }) {
       }
 
       const delivered = packagesWithItem.map(pack => {
-        const packageItem = pack.items.find(packageItem =>
-          packageItem.itemIndex === item.index
+        const packageItem = pack.items.find(
+          packageItem => packageItem.itemIndex === item.index
         )
 
         return {
@@ -297,9 +311,17 @@ function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
   return {
     selectedSla: logisticsInfo[itemIndex].selectedSla,
     shippingEstimate: selectedSla ? selectedSla.shippingEstimate : undefined,
-    shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate ? logisticsInfo[itemIndex].shippingEstimateDate : selectedSla ? selectedSla.shippingEstimateDate : undefined,
-    deliveryChannel: logisticsInfo[itemIndex].selectedDeliveryChannel ? logisticsInfo[itemIndex].selectedDeliveryChannel : selectedSla ? selectedSla.deliveryChannel : undefined,
-    deliveryWindow: logisticsInfo[itemIndex].deliveryWindow,
+    deliveryWindow: selectedSla ? selectedSla.deliveryWindow : undefined,
+    shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate
+      ? logisticsInfo[itemIndex].shippingEstimateDate
+      : selectedSla
+        ? selectedSla.shippingEstimateDate
+        : undefined,
+    deliveryChannel: logisticsInfo[itemIndex].selectedDeliveryChannel
+      ? logisticsInfo[itemIndex].selectedDeliveryChannel
+      : selectedSla
+        ? selectedSla.deliveryChannel
+        : undefined,
     deliveryIds: logisticsInfo[itemIndex].deliveryIds,
     slas: logisticsInfo[itemIndex].slas,
   }
