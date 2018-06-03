@@ -11,7 +11,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
     "build": "cross-env NODE_ENV=production rollup -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix --max-warnings 0"
   },
   "keywords": [
     "vtex",
