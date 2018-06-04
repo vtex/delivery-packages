@@ -44,7 +44,7 @@ export function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
   }
 
   const addressId = logisticsInfo[itemIndex].addressId
-  return selectedAddresses.find(address => address.addressId === addressId)
+  return selectedAddresses.filter(address => address.addressId === addressId)[0]
 }
 
 export function hydratePackageWithLogisticsExtraInfo(

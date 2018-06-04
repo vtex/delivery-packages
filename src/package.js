@@ -6,13 +6,13 @@ import { DEFAULT_CRITERIA } from './constants'
 
 export function groupPackages(items, criteria) {
   return addToPackage(items, criteria, (packages, item) => {
-    return packages.find(pack => pack.package.index === item.package.index)
+    return packages.filter(pack => pack.package.index === item.package.index)[0]
   })
 }
 
 export function groupDeliveries(items, criteria) {
   return addToPackage(items, criteria, (packages, item) => {
-    return packages.find(pack => {
+    return packages.filter(pack => {
       if (
         criteria.shippingEstimate &&
         criteria.selectedSla &&
@@ -61,7 +61,7 @@ export function groupDeliveries(items, criteria) {
       }
 
       return true
-    })
+    })[0]
   })
 }
 

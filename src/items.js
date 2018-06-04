@@ -37,7 +37,7 @@ export function getDeliveredItems({ items, packages }) {
   const deliveredItems = items.reduce(
     (groups, item, index) => {
       const packagesWithItem = packages.filter(pack =>
-        pack.items.find(item => item.itemIndex === index)
+        pack.items.filter(item => item.itemIndex === index)[0]
       )
 
       if (packagesWithItem.length === 0) {
@@ -49,9 +49,9 @@ export function getDeliveredItems({ items, packages }) {
       }
 
       const quantityInPackages = packagesWithItem.reduce((total, pack) => {
-        const packageItem = pack.items.find(
+        const packageItem = pack.items.filter(
           packageItem => packageItem.itemIndex === item.index
-        )
+        )[0]
 
         return total + packageItem.quantity
       }, 0)
@@ -66,9 +66,9 @@ export function getDeliveredItems({ items, packages }) {
       }
 
       const delivered = packagesWithItem.map(pack => {
-        const packageItem = pack.items.find(
+        const packageItem = pack.items.filter(
           packageItem => packageItem.itemIndex === item.index
-        )
+        )[0]
 
         return {
           package: pack,
