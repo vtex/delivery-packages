@@ -1,17 +1,23 @@
+import parcelify from '../src/index'
+
 import {
   baseLogisticsInfo,
   createItems,
   createPackage,
+  slas,
+  addresses,
+} from './mockGenerator'
+import orderMock from './Order'
+
+const {
   expressSla,
   normalFastestSla,
   normalSla,
   pickupNormalSla,
   pickupSla,
-  residentialAddress,
-} from './mockGenerator'
+} = slas
 
-import orderMock from './Order'
-import parcelify from '../src/index'
+const { residentialAddress } = addresses
 
 describe('has one package with all items', () => {
   it('should create one parcel', () => {
@@ -255,7 +261,7 @@ describe("has two packages one with deliveryWindow and the other don't", () => {
     expect(result[1].slas[0].id).toBe(normalSla.id)
     expect(result[1].slas[0].id).toBe(normalSla.id)
     expect(result[0].deliveryWindow).toEqual({})
-    expect(result[1].deliveryWindow).toBeUndefined()
+    expect(result[1].deliveryWindow).toBeNull()
   })
 })
 
