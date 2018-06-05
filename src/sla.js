@@ -24,18 +24,19 @@ export function getSelectedSla(params) {
     return null
   }
 
-  const { itemIndex, logisticsInfo } = params
+  const { itemIndex, selectedSla: paramSelectedSla, logisticsInfo } = params
 
-  if (
-    !logisticsInfo ||
-    !logisticsInfo[itemIndex] ||
-    !logisticsInfo[itemIndex].selectedSla
-  ) {
+  if (!logisticsInfo || (!logisticsInfo[itemIndex] && !paramSelectedSla)) {
     return null
   }
 
   const logisticInfo = logisticsInfo[itemIndex]
-  const selectedSla = logisticInfo.selectedSla
+  const selectedSla =
+    paramSelectedSla || (logisticInfo && logisticInfo.selectedSla)
 
-  return logisticInfo.slas.filter(sla => sla.id === selectedSla)[0]
+  if (!selectedSla || !logisticInfo.slas || logisticInfo.slas.length === 0) {
+    return null
+  }
+
+  return logisticInfo.slas.filter(sla => sla && sla.id === selectedSla)[0]
 }

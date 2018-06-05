@@ -1,15 +1,8 @@
 // import {
 //   baseLogisticsInfo,
-//   createItems,
-//   createPackage,
-//   expressSla,
-//   normalFastestSla,
 //   normalSla,
-//   pickupNormalSla,
-//   pickupSla,
-//   residentialAddress,
 // } from './mockGenerator'
-//
+
 // import orderMock from './Order'
 import { getSelectedSla } from '../src/sla'
 
@@ -21,5 +14,9 @@ describe('Sla', () => {
       expect(selectedSla1).toBeNull()
       expect(selectedSla2).toBeNull()
     })
+    //
+    // it('should correct logisticInfo if valid selectedSla is passed', () => {
+    //   const selectedSla = ''
+    // })
   })
 })
