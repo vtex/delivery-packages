@@ -9,6 +9,7 @@ import {
   findSlaWithChannel,
   getSelectedSlaInSlas,
   hasDeliveryWindows,
+  hasSLAs,
 } from '../src/sla'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
 
@@ -188,6 +189,34 @@ describe('Sla', () => {
       })
 
       expect(hasDeliveryWindow).toBeTruthy()
+    })
+  })
+
+  describe('hasSLAs', () => {
+    it('should return false if empty params are passed', () => {
+      const hasSLAs1 = hasSLAs()
+      const hasSLAs2 = hasSLAs(null)
+      const hasSLAs3 = hasSLAs([])
+
+      expect(hasSLAs1).toBeFalsy()
+      expect(hasSLAs2).toBeFalsy()
+      expect(hasSLAs3).toBeFalsy()
+    })
+
+    it('should return false if object with empty slas is passed', () => {
+      const hasSLAs1 = hasSLAs({ slas: [] })
+
+      expect(hasSLAs1).toBeFalsy()
+    })
+
+    it('should return true if object with valid slas is passed', () => {
+      const hasSLAs1 = hasSLAs({
+        slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
+      })
+      const hasSLAs2 = hasSLAs({ slas: [slas.pickupSla] })
+
+      expect(hasSLAs1).toBeTruthy()
+      expect(hasSLAs2).toBeTruthy()
     })
   })
 })

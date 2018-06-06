@@ -2,9 +2,9 @@ import { isCurrentChannel } from './delivery-channel'
 
 export function hasSLAs(slasSource) {
   if (slasSource && slasSource.slas) {
-    return slasSource.slas.length > 0
+    return !!(slasSource.slas.length > 0)
   }
-  return slasSource && slasSource.length > 0
+  return !!(slasSource && slasSource.length > 0)
 }
 
 export function hasDeliveryWindows(sla) {
