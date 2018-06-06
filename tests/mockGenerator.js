@@ -131,6 +131,65 @@ const baseLogisticsInfo = {
   },
 }
 
+const availableDeliveryWindows = [
+  {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-26T12:00:00+00:00',
+    endDateUtc: '2018-05-26T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-27T09:00:00+00:00',
+    endDateUtc: '2018-05-27T21:00:00+00:00',
+    price: 1000,
+    lisPrice: 1000,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-27T12:00:00+00:00',
+    endDateUtc: '2018-05-27T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-28T09:00:00+00:00',
+    endDateUtc: '2018-05-28T21:00:00+00:00',
+    price: 1000,
+    lisPrice: 1000,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-28T12:00:00+00:00',
+    endDateUtc: '2018-05-28T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-29T09:00:00+00:00',
+    endDateUtc: '2018-05-29T21:00:00+00:00',
+    price: 1000,
+    lisPrice: 1000,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-29T12:00:00+00:00',
+    endDateUtc: '2018-05-29T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+]
+
 const createItems = quantity => {
   return Array.from(Array(quantity), (_, index) => ({
     id: `${index}`,
@@ -175,6 +234,7 @@ const createLogisticsInfo = (slaTypes, quantity) => {
 module.exports = {
   addresses,
   slas,
+  availableDeliveryWindows,
   baseLogisticsInfo,
   createPackage,
   createItems,

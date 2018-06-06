@@ -1,4 +1,8 @@
-import { createLogisticsInfo, slas } from './mockGenerator'
+import {
+  createLogisticsInfo,
+  slas,
+  availableDeliveryWindows,
+} from './mockGenerator'
 
 import {
   getSelectedSla,
@@ -168,6 +172,22 @@ describe('Sla', () => {
       expect(hasDeliveryWindow1).toBeFalsy()
       expect(hasDeliveryWindow2).toBeFalsy()
       expect(hasDeliveryWindow3).toBeFalsy()
+    })
+
+    it('should return false if empty availableDeliveryWindows is passed', () => {
+      const hasDeliveryWindow = hasDeliveryWindows({
+        availableDeliveryWindows: [],
+      })
+
+      expect(hasDeliveryWindow).toBeFalsy()
+    })
+
+    it('should return true if valid sla is passed', () => {
+      const hasDeliveryWindow = hasDeliveryWindows({
+        availableDeliveryWindows,
+      })
+
+      expect(hasDeliveryWindow).toBeTruthy()
     })
   })
 })
