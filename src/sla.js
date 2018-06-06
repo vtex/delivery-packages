@@ -8,11 +8,21 @@ export function hasSLAs(slasSource) {
 }
 
 export function hasDeliveryWindows(sla) {
-  return sla && sla.availableDeliveryWindows.length > 0
+  return !!(
+    sla &&
+    sla.availableDeliveryWindows &&
+    sla.availableDeliveryWindows.length > 0
+  )
 }
 
-export function getSelectedSlaInSlas(item) {
-  return item.slas && item.slas.filter(sla => sla.id === item.selectedSla)[0]
+export function getSelectedSlaInSlas(item, selectedSla = null) {
+  selectedSla = selectedSla || (item && item.selectedSla)
+
+  if (!item || !item.slas || item.slas.length === 0 || !selectedSla) {
+    return null
+  }
+
+  return item.slas && item.slas.filter(sla => sla.id === selectedSla)[0]
 }
 
 export function findSlaWithChannel(item, channel) {
@@ -33,13 +43,13 @@ export function getSelectedSla(params) {
     return null
   }
 
-  const logisticInfo = logisticsInfo[itemIndex]
-  const selectedSla =
-    paramSelectedSla || (logisticInfo && logisticInfo.selectedSla)
+  const item = logisticsInfo[itemIndex]
 
-  if (!selectedSla || !logisticInfo.slas || logisticInfo.slas.length === 0) {
+  const selectedSla = paramSelectedSla || (item && item.selectedSla)
+
+  if (!selectedSla || !item.slas || item.slas.length === 0) {
     return null
   }
 
-  return logisticInfo.slas.filter(sla => sla && sla.id === selectedSla)[0]
+  return getSelectedSlaInSlas(item, selectedSla)
 }

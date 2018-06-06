@@ -1,6 +1,11 @@
 import { createLogisticsInfo, slas } from './mockGenerator'
 
-import { getSelectedSla, findSlaWithChannel } from '../src/sla'
+import {
+  getSelectedSla,
+  findSlaWithChannel,
+  getSelectedSlaInSlas,
+  hasDeliveryWindows,
+} from '../src/sla'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
 
 describe('Sla', () => {
@@ -8,6 +13,7 @@ describe('Sla', () => {
     it('should return null if empty params are passed', () => {
       const selectedSla1 = getSelectedSla()
       const selectedSla2 = getSelectedSla({})
+
       expect(selectedSla1).toBeNull()
       expect(selectedSla2).toBeNull()
     })
@@ -60,6 +66,7 @@ describe('Sla', () => {
       const sla2 = findSlaWithChannel(null, null)
       const sla3 = findSlaWithChannel({}, '')
       const sla4 = findSlaWithChannel({ slas: [] }, DELIVERY)
+
       expect(sla1).toBeNull()
       expect(sla2).toBeNull()
       expect(sla3).toBeNull()
@@ -87,6 +94,80 @@ describe('Sla', () => {
       expect(slaDelivery).toEqual(slas.normalSla)
 
       expect(slaPickup).toEqual(slas.pickupSla)
+    })
+  })
+
+  describe('getSelectedSlaInSlas', () => {
+    it('should return null if empty params are passed', () => {
+      const sla1 = getSelectedSlaInSlas()
+      const sla2 = getSelectedSlaInSlas(null, null)
+      const sla3 = getSelectedSlaInSlas({}, '')
+      const sla4 = getSelectedSlaInSlas({ slas: [] }, slas.expressSla)
+
+      expect(sla1).toBeNull()
+      expect(sla2).toBeNull()
+      expect(sla3).toBeNull()
+      expect(sla4).toBeNull()
+    })
+
+    it('should return correct sla if complete item is passed', () => {
+      const slaDelivery = getSelectedSlaInSlas({
+        slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
+        selectedSla: slas.normalSla.id,
+      })
+
+      const slaPickup = getSelectedSlaInSlas({
+        slas: [
+          slas.pickupSla,
+          slas.normalSla,
+          slas.expressSla,
+          slas.pickupNormalSla,
+        ],
+        selectedSla: slas.pickupSla.id,
+      })
+
+      expect(slaDelivery).toEqual(slas.normalSla)
+
+      expect(slaPickup).toEqual(slas.pickupSla)
+    })
+
+    it('should return correct sla if item and selectedSla are passed', () => {
+      const slaDelivery = getSelectedSlaInSlas(
+        {
+          slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
+          selectedSla: null,
+        },
+        slas.normalSla.id
+      )
+
+      const slaPickup = getSelectedSlaInSlas(
+        {
+          slas: [
+            slas.pickupSla,
+            slas.normalSla,
+            slas.expressSla,
+            slas.pickupNormalSla,
+          ],
+          selectedSla: null,
+        },
+        slas.pickupSla.id
+      )
+
+      expect(slaDelivery).toEqual(slas.normalSla)
+
+      expect(slaPickup).toEqual(slas.pickupSla)
+    })
+  })
+
+  describe('hasDeliveryWindows', () => {
+    it('should return false if empty params are passed', () => {
+      const hasDeliveryWindow1 = hasDeliveryWindows()
+      const hasDeliveryWindow2 = hasDeliveryWindows(null)
+      const hasDeliveryWindow3 = hasDeliveryWindows({})
+
+      expect(hasDeliveryWindow1).toBeFalsy()
+      expect(hasDeliveryWindow2).toBeFalsy()
+      expect(hasDeliveryWindow3).toBeFalsy()
     })
   })
 })
