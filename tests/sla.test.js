@@ -1,6 +1,7 @@
 import { createLogisticsInfo, slas } from './mockGenerator'
 
-import { getSelectedSla } from '../src/sla'
+import { getSelectedSla, findSlaWithChannel } from '../src/sla'
+import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
 
 describe('Sla', () => {
   describe('getSelectedSla', () => {
@@ -50,6 +51,42 @@ describe('Sla', () => {
       })
 
       expect(newSelectedSla).toEqual(expectedSelectedSla)
+    })
+  })
+
+  describe('findSlaWithChannel', () => {
+    it('should return null if empty params are passed', () => {
+      const sla1 = findSlaWithChannel()
+      const sla2 = findSlaWithChannel(null, null)
+      const sla3 = findSlaWithChannel({}, '')
+      const sla4 = findSlaWithChannel({ slas: [] }, DELIVERY)
+      expect(sla1).toBeNull()
+      expect(sla2).toBeNull()
+      expect(sla3).toBeNull()
+      expect(sla4).toBeNull()
+    })
+
+    it('should find correct first sla if valid params are passed', () => {
+      const slaDelivery = findSlaWithChannel(
+        { slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla] },
+        DELIVERY
+      )
+
+      const slaPickup = findSlaWithChannel(
+        {
+          slas: [
+            slas.pickupSla,
+            slas.normalSla,
+            slas.expressSla,
+            slas.pickupNormalSla,
+          ],
+        },
+        PICKUP_IN_STORE
+      )
+
+      expect(slaDelivery).toEqual(slas.normalSla)
+
+      expect(slaPickup).toEqual(slas.pickupSla)
     })
   })
 })

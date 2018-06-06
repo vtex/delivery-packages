@@ -16,6 +16,9 @@ export function getSelectedSlaInSlas(item) {
 }
 
 export function findSlaWithChannel(item, channel) {
+  if (!item || !item.slas || item.slas.length === 0 || !channel) {
+    return null
+  }
   return item.slas && item.slas.filter(sla => isCurrentChannel(sla, channel))[0]
 }
 
