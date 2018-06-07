@@ -340,5 +340,7 @@ function getPickupAddress({ itemIndex, logisticsInfo }) {
 function getSelectedSla({ itemIndex, logisticsInfo }) {
   const logisticInfo = logisticsInfo[itemIndex]
   const selectedSla = logisticInfo.selectedSla
-  return logisticInfo.slas.find(sla => sla.id === selectedSla)
+  return logisticInfo.slas
+    ? logisticInfo.slas.find(sla => sla.id === selectedSla)
+    : null
 }
