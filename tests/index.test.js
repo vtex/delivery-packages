@@ -722,6 +722,34 @@ describe('has two deliveries', () => {
         })
       })
 
+      it('should return shippingEstimate from logisticsInfo when it is null inside slas array', () => {
+        const items = createItems(1)
+        const packageAttachment = {
+          packages: [createPackage([{ itemIndex: 0, quantity: 1 }])],
+        }
+        const logisticsInfo = [
+          {
+            ...baseLogisticsInfo.express,
+            itemIndex: 0,
+            shippingEstimate: '8d',
+            slas: null,
+          },
+        ]
+
+        const order = {
+          items,
+          packageAttachment,
+          shippingData: {
+            logisticsInfo,
+          },
+        }
+
+        const result = parcelify(order)
+        expect(result[0].shippingEstimate).toBe(
+          logisticsInfo[0].shippingEstimate
+        )
+      })
+
       it('should return correct parcel shippingEstimateDate', () => {
         const result = parcelify(orderMock)
 
