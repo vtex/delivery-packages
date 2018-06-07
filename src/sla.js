@@ -32,6 +32,7 @@ export function findSlaWithChannel(item, channel) {
   return item.slas && item.slas.filter(sla => isCurrentChannel(sla, channel))[0]
 }
 
+/* params = {logisticsInfo, itemIndex, selectedSla} */
 export function getSelectedSla(params) {
   if (!params) {
     return null
@@ -39,7 +40,7 @@ export function getSelectedSla(params) {
 
   const { itemIndex, selectedSla: paramSelectedSla, logisticsInfo } = params
 
-  if (!logisticsInfo || (!logisticsInfo[itemIndex] && !paramSelectedSla)) {
+  if (!logisticsInfo || !logisticsInfo[itemIndex]) {
     return null
   }
 

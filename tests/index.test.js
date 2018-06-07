@@ -780,9 +780,7 @@ it('should return shippingEstimate from logisticsInfo when it is null inside sla
   }
 
   const result = parcelify(order)
-  expect(result[0].shippingEstimate).toBe(
-    logisticsInfo[0].shippingEstimate
-  )
+  expect(result[0].shippingEstimate).toBe(logisticsInfo[0].shippingEstimate)
 })
 
 it('should return the address even when it is null inside slas array', () => {

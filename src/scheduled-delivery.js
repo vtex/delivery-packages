@@ -1,12 +1,39 @@
 import { hasDeliveryWindows } from './sla'
 import { isDelivery } from './delivery-channel'
 
-function isFromCurrentSeller({ items, li, seller, sellerId }) {
-  const localSellerId = typeof sellerId === 'string' ? sellerId : seller.id
-  return items[li.itemIndex].seller === localSellerId
+export function areDeliveryWindowsEquals(deliveryWindow1, deliveryWindow2) {
+  return (
+    deliveryWindow1.startDateUtc === deliveryWindow2.startDateUtc &&
+    deliveryWindow1.endDateUtc === deliveryWindow2.endDateUtc &&
+    deliveryWindow1.price === deliveryWindow2.price &&
+    deliveryWindow1.lisPrice === deliveryWindow2.lisPrice &&
+    deliveryWindow1.tax === deliveryWindow2.tax
+  )
 }
 
-export function getSelectedSlaFromSlaOption(li, slaOption) {
+export function areAvailableDeliveryWindowsEquals(
+  availableDeliveryWindows1,
+  availableDeliveryWindows2
+) {
+  if (!availableDeliveryWindows1 || !availableDeliveryWindows2) {
+    return false
+  }
+
+  if (availableDeliveryWindows1.length !== availableDeliveryWindows2.length) {
+    return false
+  }
+
+  const deliveryWindowsThatAreEqual = availableDeliveryWindows1.filter(
+    (deliveryWindow1, index) => {
+      const deliveryWindow2 = availableDeliveryWindows2[index]
+      return areDeliveryWindowsEquals(deliveryWindow1, deliveryWindow2)
+    }
+  )
+
+  return deliveryWindowsThatAreEqual.length === availableDeliveryWindows1.length
+}
+
+export function getSelectedSlaIfMatchSlaOption(li, slaOption) {
   return li.slas.filter(
     sla => sla.id === slaOption && sla.id === li.selectedSla
   )[0]
@@ -24,31 +51,36 @@ export function checkIfHasDeliveryWindow(selectedSla, actionDeliveryWindow) {
   )
 }
 
-export function getDeliveryWindow(sla, selectedSla, deliveryWindow) {
-  return sla.id === selectedSla.id ? deliveryWindow : null
-}
-
+/* action = {sla, deliveryWindow} */
 export function selectDeliveryWindow(logisticsInfo, action) {
+  if (
+    !logisticsInfo ||
+    logisticsInfo.length === 0 ||
+    !action ||
+    (!action.slaOption && !action.sla) ||
+    !action.deliveryWindow
+  ) {
+    return null
+  }
+
   return logisticsInfo.map(li => {
-    const selectedSla = getSelectedSlaFromSlaOption(li, action.slaOption)
+    const slaOption = action.sla || action.slaOption
+    const { deliveryWindow } = action
+    const selectedSla = getSelectedSlaIfMatchSlaOption(li, slaOption)
 
     const hasDeliveryWindow = checkIfHasDeliveryWindow(
       selectedSla,
-      action.deliveryWindow
+      deliveryWindow
     )
 
-    if (selectedSla && action.deliveryWindow && hasDeliveryWindow) {
+    if (selectedSla && hasDeliveryWindow) {
       return {
         ...li,
         slas: li.slas.map(sla => ({
           ...sla,
-          deliveryWindow: getDeliveryWindow(
-            sla,
-            selectedSla,
-            action.deliveryWindow
-          ),
+          deliveryWindow: sla.id === selectedSla.id ? deliveryWindow : null,
         })),
-        deliveryWindow: action.deliveryWindow,
+        deliveryWindow: deliveryWindow,
       }
     }
 
@@ -56,80 +88,54 @@ export function selectDeliveryWindow(logisticsInfo, action) {
   })
 }
 
-export function getScheduledDeliverySLA(li) {
-  return li.slas.filter(sla => isDelivery(sla) && hasDeliveryWindows(sla))[0]
+export function filterSlaByAvailableDeliveryWindows(
+  sla,
+  availableDeliveryWindows
+) {
+  if (!availableDeliveryWindows) {
+    return true
+  }
+
+  return areAvailableDeliveryWindowsEquals(
+    sla.availableDeliveryWindows,
+    availableDeliveryWindows
+  )
 }
 
-export function getFirstScheduledDelivery(logisticsInfo, seller, items) {
-  let firstScheduledSlaSeller = null
+export function getScheduledDeliverySLA(li, availableDeliveryWindows) {
+  return li.slas.filter(
+    sla =>
+      isDelivery(sla) &&
+      hasDeliveryWindows(sla) &&
+      filterSlaByAvailableDeliveryWindows(sla, availableDeliveryWindows)
+  )[0]
+}
 
+export function getFirstScheduledDelivery(
+  logisticsInfo,
+  availableDeliveryWindows
+) {
   if (
     !logisticsInfo ||
     logisticsInfo.length === 0 ||
-    !seller ||
-    !seller.id ||
-    !items ||
-    items.length === 0
+    !availableDeliveryWindows ||
+    !availableDeliveryWindows.length === 0
   ) {
     return null
   }
 
+  let firstScheduledSla = null
+
   logisticsInfo.forEach(li => {
-    const firstScheduledDelivery = getScheduledDeliverySLA(li)
-
-    if (
-      isFromCurrentSeller({ items, li, seller }) &&
-      firstScheduledDelivery &&
-      !firstScheduledSlaSeller
-    ) {
-      firstScheduledSlaSeller = firstScheduledDelivery
-    }
-  })
-
-  return firstScheduledSlaSeller
-}
-
-export function getNewLogisticsInfo(
-  logisticsInfo,
-  firstScheduledSlaSeller,
-  seller,
-  items
-) {
-  return logisticsInfo.map(li => {
-    const hasScheduledDelivery = li.slas.filter(
-      sla => sla.id === firstScheduledSlaSeller.id
-    )[0]
-
-    if (items[li.itemIndex].seller !== seller.id || !hasScheduledDelivery) {
-      return li
-    }
-
-    return {
-      ...li,
-      selectedSla: firstScheduledSlaSeller.id,
-    }
-  })
-}
-
-export function selectScheduledDelivery({ logisticsInfo, items, sellers }) {
-  let newLogisticsInfo = [...logisticsInfo]
-
-  sellers.forEach(seller => {
-    const firstScheduledSlaSeller = getFirstScheduledDelivery(
-      newLogisticsInfo,
-      seller,
-      items
+    const firstScheduledDeliverySla = getScheduledDeliverySLA(
+      li,
+      availableDeliveryWindows
     )
 
-    if (firstScheduledSlaSeller) {
-      newLogisticsInfo = getNewLogisticsInfo(
-        logisticsInfo,
-        firstScheduledSlaSeller,
-        seller,
-        items
-      )
+    if (firstScheduledDeliverySla && !firstScheduledSla) {
+      firstScheduledSla = firstScheduledDeliverySla
     }
   })
 
-  return newLogisticsInfo
+  return firstScheduledSla
 }

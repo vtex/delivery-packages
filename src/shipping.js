@@ -1,4 +1,8 @@
-import { getSelectedSla } from './sla'
+import { hasDeliveryWindow, getSelectedSla } from './sla'
+import {
+  filterSlaByAvailableDeliveryWindows,
+  getFirstScheduledDelivery,
+} from './scheduled-delivery'
 
 export function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
   const selectedSla = getSelectedSla({
@@ -8,14 +12,22 @@ export function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
 
   return {
     selectedSla: logisticsInfo[itemIndex].selectedSla,
-    shippingEstimate: selectedSla ? selectedSla.shippingEstimate : undefined,
+    shippingEstimate: selectedSla
+      ? selectedSla.shippingEstimate
+      : logisticsInfo[itemIndex].shippingEstimate
+        ? logisticsInfo[itemIndex].shippingEstimate
+        : undefined,
     deliveryWindow: selectedSla ? selectedSla.deliveryWindow : undefined,
     shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate
       ? logisticsInfo[itemIndex].shippingEstimateDate
-      : selectedSla ? selectedSla.shippingEstimateDate : undefined,
+      : selectedSla
+        ? selectedSla.shippingEstimateDate
+        : undefined,
     deliveryChannel: logisticsInfo[itemIndex].selectedDeliveryChannel
       ? logisticsInfo[itemIndex].selectedDeliveryChannel
-      : selectedSla ? selectedSla.deliveryChannel : undefined,
+      : selectedSla
+        ? selectedSla.deliveryChannel
+        : undefined,
     deliveryIds: logisticsInfo[itemIndex].deliveryIds,
     slas: logisticsInfo[itemIndex].slas,
   }
@@ -37,9 +49,7 @@ export function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
     logisticsInfo,
   })
 
-  if (!selectedSla) return null
-
-  if (selectedSla.deliveryChannel === 'pickup-in-point') {
+  if (selectedSla && selectedSla.deliveryChannel === 'pickup-in-point') {
     return getPickupAddress({ itemIndex, logisticsInfo })
   }
 
@@ -70,4 +80,70 @@ export function hydratePackageWithLogisticsExtraInfo(
       logisticsInfo,
     }),
   }
+}
+
+export function getNewLogisticsInfo(
+  logisticsInfo,
+  selectedSla,
+  availableDeliveryWindows = null
+) {
+  selectedSla = selectedSla.id ? selectedSla.id : selectedSla
+
+  if (!selectedSla || !logisticsInfo || logisticsInfo.length === 0) {
+    return logisticsInfo
+  }
+
+  return logisticsInfo.map(li => {
+    const selectedSlaObj = getSelectedSla({
+      logisticsInfo,
+      itemIndex: li.itemIndex,
+      selectedSla,
+    })
+
+    if (
+      !selectedSlaObj ||
+      !filterSlaByAvailableDeliveryWindows(
+        selectedSlaObj,
+        availableDeliveryWindows
+      )
+    ) {
+      return li
+    }
+
+    return {
+      ...li,
+      selectedSla,
+      selectedDeliveryChannel: selectedSlaObj.deliveryChannel,
+    }
+  })
+}
+
+export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
+  let newLogisticsInfo = [...logisticsInfo]
+
+  newLogisticsInfo.forEach(li => {
+    const selectedSlaObj = getSelectedSla({
+      logisticsInfo: newLogisticsInfo,
+      itemIndex: li.itemIndex,
+    })
+
+    if (selectedSlaObj && hasDeliveryWindow(selectedSlaObj)) {
+      return
+    }
+
+    const firstScheduledSla = getFirstScheduledDelivery(
+      [li],
+      li.availableDeliveryWindows
+    )
+
+    if (firstScheduledSla) {
+      newLogisticsInfo = getNewLogisticsInfo(
+        logisticsInfo,
+        firstScheduledSla,
+        li.availableDeliveryWindows
+      )
+    }
+  })
+
+  return newLogisticsInfo
 }
