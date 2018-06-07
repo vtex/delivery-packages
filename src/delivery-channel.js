@@ -23,15 +23,24 @@ export function isCurrentChannel(deliveryChannelSource, currentChannel) {
 }
 
 export function isPickup(deliveryChannelSource) {
-  const deliveryChannel = getDeliveryChannel(deliveryChannelSource)
-  return deliveryChannel === PICKUP_IN_STORE
+  return isCurrentChannel(deliveryChannelSource, PICKUP_IN_STORE)
 }
 
 export function isDelivery(deliveryChannelSource) {
-  const deliveryChannel = getDeliveryChannel(deliveryChannelSource)
-  return deliveryChannel === DELIVERY
+  return isCurrentChannel(deliveryChannelSource, DELIVERY)
 }
 
-export function findChannelById(li, channel) {
-  return li.deliveryChannels.filter(liChannel => liChannel.id === channel)[0]
+export function findChannelById(logisticsInfoItem, deliveryChannel) {
+  if (
+    !logisticsInfoItem ||
+    !logisticsInfoItem.deliveryChannels ||
+    logisticsInfoItem.deliveryChannels.length === 0 ||
+    !deliveryChannel
+  ) {
+    return null
+  }
+
+  return logisticsInfoItem.deliveryChannels.filter(
+    liChannel => liChannel.id === deliveryChannel
+  )[0] || null
 }
