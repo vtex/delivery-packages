@@ -779,6 +779,34 @@ it('should return shippingEstimate from logisticsInfo when it is null inside sla
   )
 })
 
+it('should return the address even when it is null inside slas array', () => {
+  const items = createItems(1)
+  const packageAttachment = {
+    packages: [createPackage([{ itemIndex: 0, quantity: 1 }])],
+  }
+  const selectedAddresses = [residentialAddress]
+  const logisticsInfo = [
+    {
+      ...baseLogisticsInfo.express,
+      itemIndex: 0,
+      shippingEstimate: '8d',
+      slas: null,
+    },
+  ]
+
+  const order = {
+    items,
+    packageAttachment,
+    shippingData: {
+      logisticsInfo,
+      selectedAddresses,
+    },
+  }
+
+  const result = parcelify(order)
+  expect(result[0].address.addressId).toBe(residentialAddress.addressId)
+})
+
 it('should handle an order in OMS format', () => {
   const items = createItems(1)
   const packageAttachment = {

@@ -292,9 +292,7 @@ function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
     logisticsInfo,
   })
 
-  if (!selectedSla) return null
-
-  if (selectedSla.deliveryChannel === 'pickup-in-point') {
+  if (selectedSla && selectedSla.deliveryChannel === 'pickup-in-point') {
     return getPickupAddress({ itemIndex, logisticsInfo })
   }
 
