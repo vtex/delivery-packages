@@ -37,12 +37,21 @@ export function getNewItems(items, changes) {
   }, [])
 }
 
-export function getDeliveredItems({ items, packages }) {
-  const deliveredItems = items && items.reduce(
+/* params: { items, packages } */
+export function getDeliveredItems(params) {
+  if (!params || !params.items) {
+    return null
+  }
+
+  const { items, packages } = params
+
+  const deliveredItems = items.reduce(
     (groups, item, index) => {
-      const packagesWithItem = packages && packages.filter(
-        pack => pack.items.filter(item => item.itemIndex === index)[0]
-      )
+      const packagesWithItem =
+        packages &&
+        packages.filter(
+          pack => pack.items.filter(item => item.itemIndex === index)[0]
+        )
 
       if (packagesWithItem.length === 0) {
         groups.toBeDelivered = groups.toBeDelivered.concat({

@@ -1,6 +1,6 @@
-import { getNewItems } from '../src/items'
+import { getNewItems, getDeliveredItems } from '../src/items'
 
-import { createItems } from './mockGenerator'
+import { createItems, createPackage } from './mockGenerator'
 
 describe('Items', () => {
   describe('getNewItems', () => {
@@ -108,6 +108,111 @@ describe('Items', () => {
       const newItems = getNewItems(items, changes)
 
       expect(newItems).toEqual(expectedFinalItems)
+    })
+  })
+  describe('getDeliveredItems', () => {
+    it('should return null if invalid items and packages are passed', () => {
+      const deliveredItems1 = getDeliveredItems()
+      const deliveredItems2 = getDeliveredItems({ items: null, packages: null })
+
+      expect(deliveredItems1).toBeNull()
+      expect(deliveredItems2).toBeNull()
+    })
+
+    it('should return default empty object if empty items are passed', () => {
+      const expectedEmptyObj = { delivered: [], toBeDelivered: [] }
+
+      const deliveredItems = getDeliveredItems({ items: [], packages: null })
+
+      expect(deliveredItems).toEqual(expectedEmptyObj)
+    })
+
+    it('should return correct delivered packages if valid params are passed', () => {
+      const items = createItems(2)
+      const packages = [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 1, quantity: 1 },
+        ]),
+      ]
+
+      const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
+      const packagesWithIndex = packages.map((pack, index) => ({
+        ...pack,
+        index,
+      }))
+
+      const expectedObj = {
+        delivered: [
+          {
+            item: { id: '0', index: 0, quantity: 1, seller: '1' },
+            package: {
+              courierStatus: { finished: false },
+              index: 0,
+              invoiceNumber: '456',
+              items: [
+                { itemIndex: 0, quantity: 1 },
+                { itemIndex: 1, quantity: 1 },
+              ],
+              trackingNumber: '123',
+              trackingUrl: '',
+            },
+          },
+          {
+            item: { id: '1', index: 1, quantity: 1, seller: '1' },
+            package: {
+              courierStatus: { finished: false },
+              index: 0,
+              invoiceNumber: '456',
+              items: [
+                { itemIndex: 0, quantity: 1 },
+                { itemIndex: 1, quantity: 1 },
+              ],
+              trackingNumber: '123',
+              trackingUrl: '',
+            },
+          },
+        ],
+        toBeDelivered: [],
+      }
+
+      const deliveredItems = getDeliveredItems({
+        items: itemsWithIndex,
+        packages: packagesWithIndex,
+      })
+
+      expect(deliveredItems).toEqual(expectedObj)
+    })
+
+    it('should return correct to be delivered packages if valid params are passed', () => {
+      const items = createItems(2)
+      const packages = [
+        createPackage([
+          { itemIndex: 2, quantity: 1 },
+          { itemIndex: 3, quantity: 1 },
+        ]),
+      ]
+
+      const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
+      const packagesWithIndex = packages.map((pack, index) => ({
+        ...pack,
+        index,
+      }))
+
+      const expectedObj = {
+        delivered: [],
+        toBeDelivered: [
+          { item: { id: '0', index: 0, quantity: 1, seller: '1' } },
+          { item: { id: '1', index: 1, quantity: 1, seller: '1' } },
+        ],
+      }
+
+      const deliveredItems = getDeliveredItems({
+        items: itemsWithIndex,
+        packages: packagesWithIndex,
+      })
+
+      expect(deliveredItems).toEqual(expectedObj)
     })
   })
 })
