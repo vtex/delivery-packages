@@ -1,4 +1,8 @@
 export function getNewItems(items, changes) {
+  if (!items || items.length === 0 || !changes || changes.length === 0) {
+    return items || null
+  }
+
   const addedSkusFromChanges = changes.reduce(
     (acc, change) => acc.concat(change.itemsAdded || []),
     []
@@ -34,10 +38,10 @@ export function getNewItems(items, changes) {
 }
 
 export function getDeliveredItems({ items, packages }) {
-  const deliveredItems = items.reduce(
+  const deliveredItems = items && items.reduce(
     (groups, item, index) => {
-      const packagesWithItem = packages.filter(pack =>
-        pack.items.filter(item => item.itemIndex === index)[0]
+      const packagesWithItem = packages && packages.filter(
+        pack => pack.items.filter(item => item.itemIndex === index)[0]
       )
 
       if (packagesWithItem.length === 0) {

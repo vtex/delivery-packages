@@ -1,3 +1,5 @@
+import { getFirstScheduledDelivery } from '../src/scheduled-delivery'
+
 // import {
 //   baseLogisticsInfo,
 //   createItems,
@@ -11,7 +13,6 @@
 // } from './mockGenerator'
 //
 // import orderMock from './Order'
-import { getFirstScheduledDelivery } from '../src/scheduled-delivery'
 
 describe('Scheduled delivery', () => {
   describe('getFirstScheduledDelivery', () => {

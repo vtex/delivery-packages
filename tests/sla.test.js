@@ -1,10 +1,4 @@
 import {
-  createLogisticsInfo,
-  slas,
-  availableDeliveryWindows,
-} from './mockGenerator'
-
-import {
   getSelectedSla,
   findSlaWithChannel,
   getSelectedSlaInSlas,
@@ -12,6 +6,12 @@ import {
   hasSLAs,
 } from '../src/sla'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
+
+import {
+  createLogisticsInfo,
+  slas,
+  availableDeliveryWindows,
+} from './mockGenerator'
 
 describe('Sla', () => {
   describe('getSelectedSla', () => {

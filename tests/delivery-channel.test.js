@@ -1,5 +1,3 @@
-import { slas } from './mockGenerator'
-
 import {
   getDeliveryChannel,
   isCurrentChannel,
@@ -8,6 +6,8 @@ import {
   findChannelById,
 } from '../src/delivery-channel'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
+
+import { slas } from './mockGenerator'
 
 const deliveryChannelObj = { id: DELIVERY }
 const pickupChannelObj = { id: PICKUP_IN_STORE }

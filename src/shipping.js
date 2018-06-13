@@ -5,6 +5,10 @@ import {
 } from './scheduled-delivery'
 
 export function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return null
+  }
+
   const selectedSla = getSelectedSla({
     itemIndex,
     logisticsInfo,
@@ -119,6 +123,10 @@ export function getNewLogisticsInfo(
 }
 
 export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return null
+  }
+
   let newLogisticsInfo = [...logisticsInfo]
 
   newLogisticsInfo.forEach(li => {
