@@ -2,6 +2,7 @@ import {
   getSelectedSla,
   findSlaWithChannel,
   getSelectedSlaInSlas,
+  getSelectedSlaIfMatchSlaId,
   hasDeliveryWindows,
   hasSLAs,
 } from '../src/sla'
@@ -120,7 +121,6 @@ describe('Sla', () => {
         slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
         selectedSla: slas.normalSla.id,
       })
-
       const slaPickup = getSelectedSlaInSlas({
         slas: [
           slas.pickupSla,
@@ -132,7 +132,6 @@ describe('Sla', () => {
       })
 
       expect(slaDelivery).toEqual(slas.normalSla)
-
       expect(slaPickup).toEqual(slas.pickupSla)
     })
 
@@ -144,7 +143,6 @@ describe('Sla', () => {
         },
         slas.normalSla.id
       )
-
       const slaPickup = getSelectedSlaInSlas(
         {
           slas: [
@@ -159,7 +157,78 @@ describe('Sla', () => {
       )
 
       expect(slaDelivery).toEqual(slas.normalSla)
+      expect(slaPickup).toEqual(slas.pickupSla)
+    })
+  })
 
+  describe('getSelectedSlaIfMatchSlaId', () => {
+    it('should return null if empty params are passed', () => {
+      const sla1 = getSelectedSlaIfMatchSlaId()
+      const sla2 = getSelectedSlaIfMatchSlaId(null, null)
+      const sla3 = getSelectedSlaIfMatchSlaId({}, '')
+      const sla4 = getSelectedSlaIfMatchSlaId({ slas: [] }, slas.expressSla)
+      const sla5 = getSelectedSlaIfMatchSlaId(
+        {
+          slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
+          selectedSla: slas.normalSla.id,
+        },
+        ''
+      )
+
+      expect(sla1).toBeNull()
+      expect(sla2).toBeNull()
+      expect(sla3).toBeNull()
+      expect(sla4).toBeNull()
+      expect(sla5).toBeNull()
+    })
+
+    it('should return null if complete item but a no matching sla is passed', () => {
+      const slaDelivery = getSelectedSlaIfMatchSlaId(
+        {
+          slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
+          selectedSla: slas.normalSla.id,
+        },
+        slas.normalSla.id
+      )
+      const slaPickup = getSelectedSlaIfMatchSlaId(
+        {
+          slas: [
+            slas.pickupSla,
+            slas.normalSla,
+            slas.expressSla,
+            slas.pickupNormalSla,
+          ],
+          selectedSla: slas.pickupSla.id,
+        },
+        slas.pickupSla.id
+      )
+
+      expect(slaDelivery).toEqual(slas.normalSla)
+      expect(slaPickup).toEqual(slas.pickupSla)
+    })
+
+    it('should return correct sla if complete item and matching sla is passed', () => {
+      const slaDelivery = getSelectedSlaIfMatchSlaId(
+        {
+          slas: [slas.pickupSla, slas.normalSla, slas.pickupNormalSla],
+          selectedSla: slas.normalSla.id,
+        },
+        slas.normalSla.id
+      )
+      const slaPickup = getSelectedSlaIfMatchSlaId(
+        {
+          slas: [
+            slas.pickupSla,
+            slas.normalSla,
+            slas.expressSla,
+            slas.pickupNormalSla,
+          ],
+          selectedSla: slas.pickupSla.id,
+        },
+        slas.pickupSla.id
+      )
+
+      expect(slaDelivery).toEqual(slas.normalSla)
       expect(slaPickup).toEqual(slas.pickupSla)
     })
   })

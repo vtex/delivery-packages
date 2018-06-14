@@ -25,6 +25,18 @@ export function getSelectedSlaInSlas(item, selectedSla = null) {
   return item.slas && item.slas.filter(sla => sla.id === selectedSla)[0]
 }
 
+export function getSelectedSlaIfMatchSlaId(item, slaId) {
+  if (!item || !item.slas || item.slas.length === 0 || !slaId) {
+    return null
+  }
+
+  return (
+    item.slas.filter(
+      sla => sla.id === slaId && sla.id === item.selectedSla
+    )[0] || null
+  )
+}
+
 export function findSlaWithChannel(item, channel) {
   if (!item || !item.slas || item.slas.length === 0 || !channel) {
     return null

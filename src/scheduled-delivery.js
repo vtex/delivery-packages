@@ -1,7 +1,11 @@
-import { hasDeliveryWindows } from './sla'
+import { hasDeliveryWindows, getSelectedSlaIfMatchSlaId } from './sla'
 import { isDelivery } from './delivery-channel'
 
 export function areDeliveryWindowsEquals(deliveryWindow1, deliveryWindow2) {
+  if (!deliveryWindow1 || !deliveryWindow2) {
+    return false
+  }
+
   return (
     deliveryWindow1.startDateUtc === deliveryWindow2.startDateUtc &&
     deliveryWindow1.endDateUtc === deliveryWindow2.endDateUtc &&
@@ -33,12 +37,6 @@ export function areAvailableDeliveryWindowsEquals(
   return deliveryWindowsThatAreEqual.length === availableDeliveryWindows1.length
 }
 
-export function getSelectedSlaIfMatchSlaOption(li, slaOption) {
-  return li.slas.filter(
-    sla => sla.id === slaOption && sla.id === li.selectedSla
-  )[0]
-}
-
 export function checkIfHasDeliveryWindow(selectedSla, actionDeliveryWindow) {
   return (
     selectedSla &&
@@ -66,7 +64,7 @@ export function selectDeliveryWindow(logisticsInfo, action) {
   return logisticsInfo.map(li => {
     const slaOption = action.sla || action.slaOption
     const { deliveryWindow } = action
-    const selectedSla = getSelectedSlaIfMatchSlaOption(li, slaOption)
+    const selectedSla = getSelectedSlaIfMatchSlaId(li, slaOption)
 
     const hasDeliveryWindow = checkIfHasDeliveryWindow(
       selectedSla,
