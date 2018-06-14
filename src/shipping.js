@@ -4,10 +4,13 @@ import {
   getFirstScheduledDelivery,
 } from './scheduled-delivery'
 
-export function getLogisticsInfoData({ itemIndex, logisticsInfo }) {
-  if (!logisticsInfo || logisticsInfo.length === 0) {
+// params: { itemIndex, logisticsInfo }
+export function getLogisticsInfoData(params) {
+  if (!params || !params.logisticsInfo || params.logisticsInfo.length === 0) {
     return null
   }
+
+  const { itemIndex, logisticsInfo } = params
 
   const selectedSla = getSelectedSla({
     itemIndex,
@@ -66,6 +69,16 @@ export function hydratePackageWithLogisticsExtraInfo(
   logisticsInfo,
   selectedAddresses
 ) {
+  if (
+    !pkg ||
+    !pkg.item ||
+    !logisticsInfo ||
+    logisticsInfo.length === 0 ||
+    !selectedAddresses
+  ) {
+    return pkg || null
+  }
+
   const itemIndex = pkg.item.index
 
   return {
@@ -91,10 +104,10 @@ export function getNewLogisticsInfo(
   selectedSla,
   availableDeliveryWindows = null
 ) {
-  selectedSla = selectedSla.id ? selectedSla.id : selectedSla
+  selectedSla = selectedSla && selectedSla.id ? selectedSla.id : selectedSla
 
   if (!selectedSla || !logisticsInfo || logisticsInfo.length === 0) {
-    return logisticsInfo
+    return logisticsInfo || null
   }
 
   return logisticsInfo.map(li => {

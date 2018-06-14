@@ -167,7 +167,7 @@ const slas = {
     tax: 0,
   },
   biggerWindowScheduledDeliverySla: {
-    id: 'Agendada',
+    id: 'SuperAgendada',
     shippingEstimate: '6bd',
     shippingEstimateDate: '2018-05-26T09:00:00+00:00',
     deliveryChannel: 'delivery',

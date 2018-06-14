@@ -94,8 +94,6 @@ describe('Scheduled delivery', () => {
     })
   })
 
-  /* action = {sla, deliveryWindow} */
-  // selectDeliveryWindow(logisticsInfo, action)
   describe('selectDeliveryWindow', () => {
     it('should return null if empty params are passed', () => {
       const newLogisticsInfo1 = selectDeliveryWindow()
