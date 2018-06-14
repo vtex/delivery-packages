@@ -78,7 +78,7 @@ export function selectDeliveryWindow(logisticsInfo, action) {
           ...sla,
           deliveryWindow: sla.id === selectedSla.id ? deliveryWindow : null,
         })),
-        deliveryWindow: deliveryWindow,
+        deliveryWindow,
       }
     }
 
@@ -100,25 +100,26 @@ export function filterSlaByAvailableDeliveryWindows(
   )
 }
 
-export function getScheduledDeliverySLA(li, availableDeliveryWindows) {
-  return li.slas.filter(
-    sla =>
-      isDelivery(sla) &&
-      hasDeliveryWindows(sla) &&
-      filterSlaByAvailableDeliveryWindows(sla, availableDeliveryWindows)
-  )[0]
+export function getScheduledDeliverySLA(li, availableDeliveryWindows = null) {
+  if (!li || !li.slas || li.slas.length === 0) {
+    return null
+  }
+
+  return (
+    li.slas.filter(
+      sla =>
+        isDelivery(sla) &&
+        hasDeliveryWindows(sla) &&
+        filterSlaByAvailableDeliveryWindows(sla, availableDeliveryWindows)
+    )[0] || null
+  )
 }
 
 export function getFirstScheduledDelivery(
   logisticsInfo,
-  availableDeliveryWindows
+  availableDeliveryWindows = null
 ) {
-  if (
-    !logisticsInfo ||
-    logisticsInfo.length === 0 ||
-    !availableDeliveryWindows ||
-    !availableDeliveryWindows.length === 0
-  ) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
     return null
   }
 

@@ -31,6 +31,65 @@ const addresses = {
   },
 }
 
+const availableDeliveryWindows = [
+  {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-26T12:00:00+00:00',
+    endDateUtc: '2018-05-26T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-27T09:00:00+00:00',
+    endDateUtc: '2018-05-27T21:00:00+00:00',
+    price: 1000,
+    lisPrice: 1000,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-27T12:00:00+00:00',
+    endDateUtc: '2018-05-27T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-28T09:00:00+00:00',
+    endDateUtc: '2018-05-28T21:00:00+00:00',
+    price: 1000,
+    lisPrice: 1000,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-28T12:00:00+00:00',
+    endDateUtc: '2018-05-28T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-29T09:00:00+00:00',
+    endDateUtc: '2018-05-29T21:00:00+00:00',
+    price: 1000,
+    lisPrice: 1000,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-29T12:00:00+00:00',
+    endDateUtc: '2018-05-29T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+]
+
 const slas = {
   pickupSla: {
     id: 'Retirada na loja (17c6a89)',
@@ -96,6 +155,28 @@ const slas = {
     listPrice: 20000,
     tax: 0,
   },
+  normalScheduledDeliverySla: {
+    id: 'Agendada',
+    shippingEstimate: '6bd',
+    shippingEstimateDate: '2018-05-26T09:00:00+00:00',
+    deliveryChannel: 'delivery',
+    deliveryWindow: null,
+    availableDeliveryWindows: availableDeliveryWindows.slice(0, 3),
+    price: 5000,
+    listPrice: 5000,
+    tax: 0,
+  },
+  biggerWindowScheduledDeliverySla: {
+    id: 'Agendada',
+    shippingEstimate: '6bd',
+    shippingEstimateDate: '2018-05-26T09:00:00+00:00',
+    deliveryChannel: 'delivery',
+    deliveryWindow: null,
+    availableDeliveryWindows,
+    price: 5000,
+    listPrice: 5000,
+    tax: 0,
+  },
 }
 
 const baseLogisticsInfo = {
@@ -130,65 +211,6 @@ const baseLogisticsInfo = {
     deliveryIds: [{ courierId: '123' }],
   },
 }
-
-const availableDeliveryWindows = [
-  {
-    startDateUtc: '2018-05-26T09:00:00+00:00',
-    endDateUtc: '2018-05-26T21:00:00+00:00',
-    price: 500,
-    lisPrice: 500,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-26T12:00:00+00:00',
-    endDateUtc: '2018-05-26T13:00:00+00:00',
-    price: 500,
-    lisPrice: 500,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-27T09:00:00+00:00',
-    endDateUtc: '2018-05-27T21:00:00+00:00',
-    price: 1000,
-    lisPrice: 1000,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-27T12:00:00+00:00',
-    endDateUtc: '2018-05-27T13:00:00+00:00',
-    price: 500,
-    lisPrice: 500,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-28T09:00:00+00:00',
-    endDateUtc: '2018-05-28T21:00:00+00:00',
-    price: 1000,
-    lisPrice: 1000,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-28T12:00:00+00:00',
-    endDateUtc: '2018-05-28T13:00:00+00:00',
-    price: 500,
-    lisPrice: 500,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-29T09:00:00+00:00',
-    endDateUtc: '2018-05-29T21:00:00+00:00',
-    price: 1000,
-    lisPrice: 1000,
-    tax: 0,
-  },
-  {
-    startDateUtc: '2018-05-29T12:00:00+00:00',
-    endDateUtc: '2018-05-29T13:00:00+00:00',
-    price: 500,
-    lisPrice: 500,
-    tax: 0,
-  },
-]
 
 const createItems = quantity => {
   return Array.from(Array(quantity), (_, index) => ({
