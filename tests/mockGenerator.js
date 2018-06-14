@@ -108,7 +108,7 @@ const slas = {
     },
   },
   pickupNormalSla: {
-    id: 'Normal',
+    id: 'Retirada normal',
     shippingEstimate: '6bd',
     shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
     deliveryChannel: 'pickup-in-point',
