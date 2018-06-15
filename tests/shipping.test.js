@@ -488,5 +488,55 @@ describe('Shipping', () => {
       expect(newLogisticsInfo1).toBeNull()
       expect(newLogisticsInfo2).toBeNull()
     })
+
+    it('should return logisticInfo with selectedSlas if valid scheduled delivery params are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'biggerWindowScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.biggerWindowScheduledDeliverySla.id,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalScheduledDeliverySla.id,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfoWithSelectedScheduled(
+        logisticsInfo
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
   })
 })

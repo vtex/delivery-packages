@@ -141,7 +141,7 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
     return null
   }
 
-  let newLogisticsInfo = [...logisticsInfo]
+  const newLogisticsInfo = [...logisticsInfo]
 
   newLogisticsInfo.forEach(li => {
     const selectedSlaObj = getSelectedSla({
@@ -158,12 +158,16 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
       li.availableDeliveryWindows
     )
 
+    if (window.debug) {
+      console.log('info', { firstScheduledSla, selectedSlaObj, slas: li.slas })
+    }
+
     if (firstScheduledSla) {
-      newLogisticsInfo = getNewLogisticsInfo(
+      newLogisticsInfo[li.itemIndex] = getNewLogisticsInfo(
         logisticsInfo,
         firstScheduledSla,
         li.availableDeliveryWindows
-      )
+      )[li.itemIndex]
     }
   })
 
