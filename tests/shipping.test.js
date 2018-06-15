@@ -180,7 +180,8 @@ describe('Shipping', () => {
         selectedSla: slas.normalScheduledDeliverySla.id,
         address: addresses.residentialAddress,
         shippingEstimate: slas.normalScheduledDeliverySla.shippingEstimate,
-        shippingEstimateDate: slas.normalScheduledDeliverySla.shippingEstimateDate,
+        shippingEstimateDate:
+          slas.normalScheduledDeliverySla.shippingEstimateDate,
         slas: logisticsInfo[0].slas,
       }
 
@@ -259,6 +260,222 @@ describe('Shipping', () => {
 
       expect(newLogisticsInfo1).toBeNull()
       expect(newLogisticsInfo2).toBeNull()
+    })
+
+    it('should return logisticInfo with selectedSlas if valid params are passed', () => {
+      const logisticsInfo = [
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
+        ...createLogisticsInfo(['normalSla', 'pickupSla'], 1),
+        ...createLogisticsInfo(['normalSla', 'normalScheduledDeliverySla'], 1),
+      ]
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfo(
+        logisticsInfo,
+        slas.normalSla.id
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return logisticInfo with selectedSlas if valid delivery params are passed', () => {
+      const logisticsInfo = [
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
+        ...createLogisticsInfo(['normalSla', 'pickupSla'], 1),
+        ...createLogisticsInfo(['normalSla', 'normalScheduledDeliverySla'], 1),
+      ]
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfo(
+        logisticsInfo,
+        slas.normalSla.id
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return logisticInfo with selectedSlas if valid scheduled delivery params are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalScheduledDeliverySla.id,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfo(
+        logisticsInfo,
+        slas.normalScheduledDeliverySla.id
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return logisticInfo with selectedSlas if scheduled delivery with specific deliveryWindows are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+      const selectDeliveryWindows = availableDeliveryWindows.slice(0, 2)
+      logisticsInfo[1].slas[1].availableDeliveryWindows = selectDeliveryWindows
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalScheduledDeliverySla.id,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfo(
+        logisticsInfo,
+        slas.normalScheduledDeliverySla.id,
+        selectDeliveryWindows
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return logisticInfo with selectedSlas if valid pickup params are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: 'pickup-in-point',
+          selectedSla: slas.pickupSla.id,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfo(
+        logisticsInfo,
+        slas.pickupSla.id
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
   })
 
