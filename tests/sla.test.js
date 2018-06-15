@@ -259,6 +259,18 @@ describe('Sla', () => {
 
       expect(hasDeliveryWindow).toBeTruthy()
     })
+
+    it('should return true if valid array of slas is passed', () => {
+      const hasDeliveryWindow = hasDeliveryWindows([
+        { availableDeliveryWindows: [] },
+        {},
+        {
+          availableDeliveryWindows,
+        },
+      ])
+
+      expect(hasDeliveryWindow).toBeTruthy()
+    })
   })
 
   describe('hasSLAs', () => {

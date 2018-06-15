@@ -8,11 +8,20 @@ export function hasSLAs(slasSource) {
   return !!(slasSource && slasSource.length > 0)
 }
 
-export function hasDeliveryWindows(sla) {
-  return !!(
-    sla &&
-    sla.availableDeliveryWindows &&
-    sla.availableDeliveryWindows.length > 0
+export function hasDeliveryWindows(slas) {
+  if (!slas) {
+    return false
+  }
+
+  if (!Array.isArray(slas)) {
+    slas = [slas]
+  }
+
+  return slas.some(
+    sla =>
+      sla &&
+      sla.availableDeliveryWindows &&
+      sla.availableDeliveryWindows.length > 0
   )
 }
 
@@ -32,9 +41,8 @@ export function getSelectedSlaIfMatchSlaId(item, slaId) {
   }
 
   return (
-    item.slas.find(
-      sla => sla.id === slaId && sla.id === item.selectedSla
-    ) || null
+    item.slas.find(sla => sla.id === slaId && sla.id === item.selectedSla) ||
+    null
   )
 }
 

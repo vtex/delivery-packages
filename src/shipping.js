@@ -158,10 +158,6 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
       li.availableDeliveryWindows
     )
 
-    if (window.debug) {
-      console.log('info', { firstScheduledSla, selectedSlaObj, slas: li.slas })
-    }
-
     if (firstScheduledSla) {
       newLogisticsInfo[li.itemIndex] = getNewLogisticsInfo(
         logisticsInfo,

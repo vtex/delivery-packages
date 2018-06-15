@@ -1,6 +1,7 @@
 import { getShippingEstimateQuantityInSeconds } from '@vtex/estimate-calculator'
 
 import './polyfills'
+import { hasDeliveryWindows } from './sla'
 import { getNewItems, getDeliveredItems } from './items'
 import { hydratePackageWithLogisticsExtraInfo } from './shipping'
 import { DEFAULT_CRITERIA } from './constants'
@@ -61,6 +62,13 @@ export function groupDeliveries(items, criteria) {
         return false
       }
 
+      if (
+        criteria.groupByAvailableDeliveryWindows &&
+        hasDeliveryWindows(item.slas)
+      ) {
+        return false
+      }
+
       return true
     })
   })
@@ -100,6 +108,9 @@ export function addToPackage(items, criteria, fn) {
       deliveryIds: item.deliveryIds,
       deliveryChannel: criteria.deliveryChannel
         ? item.deliveryChannel
+        : undefined,
+      hasAvailableDeliveryWindows: criteria.groupByAvailableDeliveryWindows
+        ? hasDeliveryWindows(item.slas)
         : undefined,
       deliveryWindow: criteria.selectedSla ? item.deliveryWindow : undefined,
       shippingEstimate: criteria.selectedSla

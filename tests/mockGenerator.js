@@ -205,6 +205,11 @@ const baseLogisticsInfo = {
     selectedSla: slas.normalFastestSla.id,
     selectedDeliveryChannel: 'delivery',
   },
+  scheduled: {
+    addressId: addresses.residentialAddress.addressId,
+    selectedSla: slas.normalScheduledDeliverySla.id,
+    selectedDeliveryChannel: 'delivery',
+  },
   normalOms: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalSla.id,

@@ -6,6 +6,7 @@ import {
   createPackage,
   slas,
   addresses,
+  createLogisticsInfo,
 } from './mockGenerator'
 import orderMock from './Order'
 
@@ -13,6 +14,7 @@ const {
   expressSla,
   normalFastestSla,
   normalSla,
+  normalScheduledDeliverySla,
   pickupNormalSla,
   pickupSla,
 } = slas
@@ -983,5 +985,147 @@ describe('the order has changes', () => {
 
     expect(result).toHaveLength(1)
     expect(result[0].items[0].quantity).toBe(2)
+  })
+})
+
+describe('has one package with scheduled delivery and the other with the normal delivery', () => {
+  it('should create two parcels with different selectedSla, one with a package and one delivery', () => {
+    const items = createItems(2)
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.scheduled,
+        itemIndex: 0,
+        slas: [expressSla, normalScheduledDeliverySla],
+      },
+      {
+        ...baseLogisticsInfo.express,
+        itemIndex: 1,
+        slas: [expressSla, normalScheduledDeliverySla],
+      },
+    ]
+
+    const expectedParcel1 = {
+      ...baseLogisticsInfo.scheduled,
+      deliveryIds: undefined,
+      deliveryWindow: null,
+      item: undefined,
+      deliveryChannel: 'delivery',
+      address: residentialAddress,
+      items: [{ ...items[0], index: 0 }],
+      slas: [expressSla, normalScheduledDeliverySla],
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      shippingEstimate: normalScheduledDeliverySla.shippingEstimate,
+      shippingEstimateDate: normalScheduledDeliverySla.shippingEstimateDate,
+    }
+    delete expectedParcel1.addressId
+    delete expectedParcel1.selectedDeliveryChannel
+    const expectedParcel2 = {
+      ...baseLogisticsInfo.express,
+      deliveryIds: undefined,
+      deliveryWindow: null,
+      item: undefined,
+      deliveryChannel: 'delivery',
+      address: residentialAddress,
+      items: [{ ...items[1], index: 1 }],
+      slas: [expressSla, normalScheduledDeliverySla],
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      shippingEstimate: expressSla.shippingEstimate,
+      shippingEstimateDate: expressSla.shippingEstimateDate,
+    }
+    delete expectedParcel2.addressId
+    delete expectedParcel2.selectedDeliveryChannel
+
+    const result = parcelify({
+      items,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    })
+
+    expect(result).toHaveLength(2)
+    expect(result[0]).toEqual(expectedParcel1)
+    expect(result[1]).toEqual(expectedParcel2)
+  })
+
+  it('should create two parcels with different selectedSla, one with a package and one delivery', () => {
+    const items = createItems(3)
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 0,
+        itemId: 0,
+      },
+      {
+        ...createLogisticsInfo(
+          ['normalSla', 'normalScheduledDeliverySla'],
+          1
+        )[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 1,
+        itemId: 1,
+      },
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 2,
+        itemId: 2,
+      },
+    ]
+
+    const expectedParcel1 = {
+      deliveryIds: undefined,
+      deliveryWindow: undefined,
+      item: undefined,
+      deliveryChannel: undefined,
+      address: residentialAddress,
+      items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
+      slas: [normalSla, expressSla],
+      hasAvailableDeliveryWindows: false,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: null,
+      shippingEstimate: undefined,
+      shippingEstimateDate: undefined,
+    }
+    const expectedParcel2 = {
+      deliveryIds: undefined,
+      deliveryWindow: undefined,
+      item: undefined,
+      deliveryChannel: undefined,
+      address: residentialAddress,
+      items: [{ ...items[1], index: 1 }],
+      slas: [normalSla, normalScheduledDeliverySla],
+      hasAvailableDeliveryWindows: true,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: null,
+      shippingEstimate: undefined,
+      shippingEstimateDate: undefined,
+    }
+
+    const result = parcelify(
+      {
+        items,
+        shippingData: {
+          selectedAddresses,
+          logisticsInfo,
+        },
+      },
+      { criteria: { groupByAvailableDeliveryWindows: true } }
+    )
+
+    expect(result).toHaveLength(2)
+    expect(result[0]).toEqual(expectedParcel1)
+    expect(result[1]).toEqual(expectedParcel2)
   })
 })

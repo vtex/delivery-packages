@@ -1,4 +1,5 @@
 export const DEFAULT_CRITERIA = {
+  groupByAvailableDeliveryWindows: false,
   slaOptions: false,
   selectedSla: true,
   seller: true,
