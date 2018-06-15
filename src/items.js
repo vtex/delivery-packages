@@ -1,3 +1,5 @@
+import './polyfills'
+
 export function getNewItems(items, changes) {
   if (!items || items.length === 0 || !changes || changes.length === 0) {
     return items || null
@@ -50,7 +52,7 @@ export function getDeliveredItems(params) {
       const packagesWithItem =
         packages &&
         packages.filter(
-          pack => pack.items.filter(item => item.itemIndex === index)[0]
+          pack => pack.items.some(item => item.itemIndex === index)
         )
 
       if (packagesWithItem.length === 0) {
@@ -62,9 +64,9 @@ export function getDeliveredItems(params) {
       }
 
       const quantityInPackages = packagesWithItem.reduce((total, pack) => {
-        const packageItem = pack.items.filter(
+        const packageItem = pack.items.find(
           packageItem => packageItem.itemIndex === item.index
-        )[0]
+        )
 
         return total + packageItem.quantity
       }, 0)
@@ -79,9 +81,9 @@ export function getDeliveredItems(params) {
       }
 
       const delivered = packagesWithItem.map(pack => {
-        const packageItem = pack.items.filter(
+        const packageItem = pack.items.find(
           packageItem => packageItem.itemIndex === item.index
-        )[0]
+        )
 
         return {
           package: pack,

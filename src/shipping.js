@@ -1,3 +1,4 @@
+import './polyfills'
 import { hasDeliveryWindow, getSelectedSla } from './sla'
 import {
   filterSlaByAvailableDeliveryWindows,
@@ -61,7 +62,7 @@ export function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
   }
 
   const addressId = logisticsInfo[itemIndex].addressId
-  return selectedAddresses.filter(address => address.addressId === addressId)[0]
+  return selectedAddresses.find(address => address.addressId === addressId)
 }
 
 export function hydratePackageWithLogisticsExtraInfo(

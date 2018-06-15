@@ -1,3 +1,4 @@
+import './polyfills'
 import { PICKUP_IN_STORE, DELIVERY } from './constants'
 
 export function getDeliveryChannel(deliveryChannelSource) {
@@ -40,7 +41,7 @@ export function findChannelById(logisticsInfoItem, deliveryChannel) {
     return null
   }
 
-  return logisticsInfoItem.deliveryChannels.filter(
+  return logisticsInfoItem.deliveryChannels.find(
     liChannel => liChannel.id === deliveryChannel
-  )[0] || null
+  ) || null
 }

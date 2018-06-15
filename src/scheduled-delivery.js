@@ -1,3 +1,4 @@
+import './polyfills'
 import { hasDeliveryWindows, getSelectedSlaIfMatchSlaId } from './sla'
 import { isDelivery } from './delivery-channel'
 
@@ -40,12 +41,12 @@ export function areAvailableDeliveryWindowsEquals(
 export function checkIfHasDeliveryWindow(selectedSla, actionDeliveryWindow) {
   return (
     selectedSla &&
-    selectedSla.availableDeliveryWindows.filter(
+    selectedSla.availableDeliveryWindows.find(
       deliveryWindow =>
         actionDeliveryWindow &&
         deliveryWindow.startDateUtc === actionDeliveryWindow.startDateUtc &&
         deliveryWindow.endDateUtc === actionDeliveryWindow.endDateUtc
-    )[0]
+    )
   )
 }
 
@@ -106,12 +107,12 @@ export function getScheduledDeliverySLA(li, availableDeliveryWindows = null) {
   }
 
   return (
-    li.slas.filter(
+    li.slas.find(
       sla =>
         isDelivery(sla) &&
         hasDeliveryWindows(sla) &&
         filterSlaByAvailableDeliveryWindows(sla, availableDeliveryWindows)
-    )[0] || null
+    ) || null
   )
 }
 

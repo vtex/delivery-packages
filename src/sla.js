@@ -1,3 +1,4 @@
+import './polyfills'
 import { isCurrentChannel } from './delivery-channel'
 
 export function hasSLAs(slasSource) {
@@ -22,7 +23,7 @@ export function getSelectedSlaInSlas(item, selectedSla = null) {
     return null
   }
 
-  return item.slas && item.slas.filter(sla => sla.id === selectedSla)[0]
+  return item.slas && item.slas.find(sla => sla.id === selectedSla)
 }
 
 export function getSelectedSlaIfMatchSlaId(item, slaId) {
@@ -31,9 +32,9 @@ export function getSelectedSlaIfMatchSlaId(item, slaId) {
   }
 
   return (
-    item.slas.filter(
+    item.slas.find(
       sla => sla.id === slaId && sla.id === item.selectedSla
-    )[0] || null
+    ) || null
   )
 }
 
@@ -41,7 +42,7 @@ export function findSlaWithChannel(item, channel) {
   if (!item || !item.slas || item.slas.length === 0 || !channel) {
     return null
   }
-  return item.slas && item.slas.filter(sla => isCurrentChannel(sla, channel))[0]
+  return item.slas && item.slas.find(sla => isCurrentChannel(sla, channel))
 }
 
 /* params = {logisticsInfo, itemIndex, selectedSla} */

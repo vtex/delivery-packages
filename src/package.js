@@ -1,18 +1,19 @@
 import { getShippingEstimateQuantityInSeconds } from '@vtex/estimate-calculator'
 
+import './polyfills'
 import { getNewItems, getDeliveredItems } from './items'
 import { hydratePackageWithLogisticsExtraInfo } from './shipping'
 import { DEFAULT_CRITERIA } from './constants'
 
 export function groupPackages(items, criteria) {
   return addToPackage(items, criteria, (packages, item) => {
-    return packages.filter(pack => pack.package.index === item.package.index)[0]
+    return packages.find(pack => pack.package.index === item.package.index)
   })
 }
 
 export function groupDeliveries(items, criteria) {
   return addToPackage(items, criteria, (packages, item) => {
-    return packages.filter(pack => {
+    return packages.find(pack => {
       if (
         criteria.shippingEstimate &&
         criteria.selectedSla &&
@@ -61,7 +62,7 @@ export function groupDeliveries(items, criteria) {
       }
 
       return true
-    })[0]
+    })
   })
 }
 
