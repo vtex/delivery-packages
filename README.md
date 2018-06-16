@@ -1,6 +1,6 @@
 # delivery-packages
 
-> Small library to separate items in parcels
+> Library of functions that help to separate items in parcels and select delivery items on UIs
 
 ## Motivation
 
@@ -14,8 +14,11 @@ There are many criteria to split items in different parcels. They are:
 4. Selected SLA Shipping Estimate
 5. Selected SLA Delivery Channel
 6. Packages already delivered (post purchase scenario)
+7. Group SLAs based on having a valid availableDeliveryWindows
 
 This module provides a consistent way to handle all those criteria.
+
+And provide also helper functions for other use cases.
 
 ## Install
 
@@ -108,6 +111,7 @@ Type: `Object`<br/>
 Default:<br/>
 ```js
 {
+  groupByAvailableDeliveryWindows: false,
   slaOptions: false,
   selectedSla: true,
   seller: true,
@@ -259,6 +263,96 @@ parcelify(order, { criteria: { seller: false } })
 //   }
 // ]
 ```
+
+## Other important functions
+
+See [src](./src/) folder to see all available functions and [tests](./tests/) folder for more examples.
+
+All functions also import some [polyfills](./src/polyfills) worth checking.
+
+### getDeliveryChannel
+
+params: deliveryChannelSource (object or string)
+
+return deliveryChannel (string)
+
+### isPickup
+
+params: deliveryChannelSource (object or string)
+
+return true or false
+
+### isDelivery
+
+params: deliveryChannelSource (object or string)
+
+return true or false
+
+### findChannelById
+
+params: logisticsInfoItem (object), deliveryChannel (string)
+
+return deliveryChannel (string) in logisticsInfoItem or null if doesn't find it
+
+### getNewItems
+
+params: items (array of objects), changes (array of objects)
+
+return the items received with the changes (itemsAdded and itemsRemoved) passed
+
+### getDeliveredItems
+
+params: { items, packages } (items and packages are array of objects)
+
+return object with items merged with packages and splitted by delivered and toBeDelivered
+
+### areAvailableDeliveryWindowsEquals
+
+params: availableDeliveryWindows1, availableDeliveryWindows2 (both arrays of deliveryWindow)
+
+return true or false
+
+### selectDeliveryWindow
+
+params: logisticsInfo (array of objects), { selectedSla, deliveryWindow } (selectedSla and deliveryWindow are strings)
+
+return new logisticsInfo selecting deliveryWindow on the selectedSla passed
+
+### getFirstScheduledDelivery
+
+params: logisticInfo (array of objects), availableDeliveryWindows (array of objects, default: null)
+
+return the first scheduled delivery sla with the availableDeliveryWindows passed (or the first scheduled delivery sla that exists if availableDeliveryWindows param is not passed)
+
+### getNewLogisticsInfo
+
+params: logisticsInfo (array of objects), selectedSla (string), availableDeliveryWindows (array of objects, default: null)
+
+return new logisticInfo with the selectedSla on all items that it can be selected and optionally only set the selectSla for the slas that match the availableDeliveryWindows passed
+
+### getNewLogisticsInfoWithSelectedScheduled
+
+params: logisticsInfo (array of objects)
+
+return new logisticInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered
+
+### hasSLAs
+
+param: slasSource (object with slas key or array of objects)
+
+return true or false
+
+### hasDeliveryWindows
+
+params: slas (array of objects)
+
+return true or false
+
+### getSelectedSla
+
+params: {logisticsInfo, itemIndex, selectedSla} (logisticInfo is an array of objects, itemIndex is a number and selectedSla is a string)
+
+return the selectedSla object on the logisticsInfoItem that itemIndex refer on logisticInfo and optionally using another selectedSla then the one on logisticsInfoItem
 
 ## License
 
