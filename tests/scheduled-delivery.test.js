@@ -140,7 +140,7 @@ describe('Scheduled delivery', () => {
       ]
 
       const newLogisticsInfo = selectDeliveryWindow(logisticsInfo, {
-        sla: 'Agendada',
+        selectedSla: 'Agendada',
         deliveryWindow,
       })
 

@@ -44,40 +44,39 @@ export function checkIfHasDeliveryWindow(selectedSla, actionDeliveryWindow) {
     selectedSla.availableDeliveryWindows.find(
       deliveryWindow =>
         actionDeliveryWindow &&
-        deliveryWindow.startDateUtc === actionDeliveryWindow.startDateUtc &&
-        deliveryWindow.endDateUtc === actionDeliveryWindow.endDateUtc
+        areDeliveryWindowsEquals(deliveryWindow, actionDeliveryWindow)
     )
   )
 }
 
-/* action = {sla, deliveryWindow} */
+/* action = {selectedSla, deliveryWindow} */
 export function selectDeliveryWindow(logisticsInfo, action) {
   if (
     !logisticsInfo ||
     logisticsInfo.length === 0 ||
     !action ||
-    (!action.slaOption && !action.sla) ||
+    (!action.slaOption && !action.selectedSla) ||
     !action.deliveryWindow
   ) {
     return null
   }
 
   return logisticsInfo.map(li => {
-    const slaOption = action.sla || action.slaOption
+    const selectedSlaId = action.selectedSla || action.slaOption
     const { deliveryWindow } = action
-    const selectedSla = getSelectedSlaIfMatchSlaId(li, slaOption)
+    const selectedSlaObj = getSelectedSlaIfMatchSlaId(li, selectedSlaId)
 
     const hasDeliveryWindow = checkIfHasDeliveryWindow(
-      selectedSla,
+      selectedSlaObj,
       deliveryWindow
     )
 
-    if (selectedSla && hasDeliveryWindow) {
+    if (selectedSlaObj && hasDeliveryWindow) {
       return {
         ...li,
         slas: li.slas.map(sla => ({
           ...sla,
-          deliveryWindow: sla.id === selectedSla.id ? deliveryWindow : null,
+          deliveryWindow: sla.id === selectedSlaObj.id ? deliveryWindow : null,
         })),
         deliveryWindow,
       }
