@@ -100,13 +100,20 @@ export function filterSlaByAvailableDeliveryWindows(
   )
 }
 
-export function getScheduledDeliverySLA(li, availableDeliveryWindows = null) {
-  if (!li || !li.slas || li.slas.length === 0) {
+export function getScheduledDeliverySLA(
+  logisticInfoItem,
+  availableDeliveryWindows = null
+) {
+  if (
+    !logisticInfoItem ||
+    !logisticInfoItem.slas ||
+    logisticInfoItem.slas.length === 0
+  ) {
     return null
   }
 
   return (
-    li.slas.find(
+    logisticInfoItem.slas.find(
       sla =>
         isDelivery(sla) &&
         hasDeliveryWindows(sla) &&
