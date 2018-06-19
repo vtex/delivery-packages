@@ -272,87 +272,115 @@ All functions also import some [polyfills](./src/polyfills) worth checking.
 
 ### getDeliveryChannel
 
-params: deliveryChannelSource (object or string)
+**import:** const { getDeliveryChannel } = require('@vtex/delivery-packages/delivery-channel')
 
-return deliveryChannel (string)
+**params:** deliveryChannelSource (object or string)
+
+**return** deliveryChannel (string)
 
 ### isPickup
 
-params: deliveryChannelSource (object or string)
+**import:** const { isPickup } = require('@vtex/delivery-packages/delivery-channel')
 
-return true or false
+**params:** deliveryChannelSource (object or string)
+
+**return** true or false
 
 ### isDelivery
 
-params: deliveryChannelSource (object or string)
+**import:** const { isDelivery } = require('@vtex/delivery-packages/delivery-channel')
 
-return true or false
+**params:** deliveryChannelSource (object or string)
+
+**return** true or false
 
 ### findChannelById
 
-params: logisticsInfoItem (object), deliveryChannel (string)
+**import:** const { findChannelById } = require('@vtex/delivery-packages/delivery-channel')
 
-return deliveryChannel (string) in logisticsInfoItem or null if doesn't find it
+**params:** logisticsInfoItem (object), deliveryChannel (string)
+
+**return** deliveryChannel (string) in logisticsInfoItem or null if doesn't find it
 
 ### getNewItems
 
-params: items (array of objects), changes (array of objects)
+**import:** const { findChannelById } = require('@vtex/delivery-packages/items')
 
-return the items received with the changes (itemsAdded and itemsRemoved) passed
+**params:** items (array of objects), changes (array of objects)
+
+**return** the items received with the changes (itemsAdded and itemsRemoved) passed
 
 ### getDeliveredItems
 
-params: { items, packages } (items and packages are array of objects)
+**import:** const { getDeliveredItems } = require('@vtex/delivery-packages/items')
 
-return object with items merged with packages and splitted by delivered and toBeDelivered
+**params:** { items, packages } (items and packages are array of objects)
+
+**return** object with items merged with packages and splitted by delivered and toBeDelivered
 
 ### areAvailableDeliveryWindowsEquals
 
-params: availableDeliveryWindows1, availableDeliveryWindows2 (both arrays of deliveryWindow)
+**import:** const { areAvailableDeliveryWindowsEquals } = require('@vtex/delivery-packages/scheduled-delivery')
 
-return true or false
+**params:** availableDeliveryWindows1, availableDeliveryWindows2 (both arrays of deliveryWindow)
+
+**return** true or false
 
 ### selectDeliveryWindow
 
-params: logisticsInfo (array of objects), { selectedSla, deliveryWindow } (selectedSla and deliveryWindow are strings)
+**import:** const { selectDeliveryWindow } = require('@vtex/delivery-packages/scheduled-delivery')
 
-return new logisticsInfo selecting deliveryWindow on the selectedSla passed
+**params:** logisticsInfo (array of objects), { selectedSla, deliveryWindow } (selectedSla and deliveryWindow are strings)
+
+**return** new logisticsInfo selecting deliveryWindow on the selectedSla passed
 
 ### getFirstScheduledDelivery
 
-params: logisticInfo (array of objects), availableDeliveryWindows (array of objects, default: null)
+**import:** const { getFirstScheduledDelivery } = require('@vtex/delivery-packages/scheduled-delivery')
 
-return the first scheduled delivery sla with the availableDeliveryWindows passed (or the first scheduled delivery sla that exists if availableDeliveryWindows param is not passed)
+**params:** logisticInfo (array of objects), availableDeliveryWindows (array of objects, default: null)
+
+**return** the first scheduled delivery sla with the availableDeliveryWindows passed (or the first scheduled delivery sla that exists if availableDeliveryWindows param is not passed)
 
 ### getNewLogisticsInfo
 
-params: logisticsInfo (array of objects), selectedSla (string), availableDeliveryWindows (array of objects, default: null)
+**import:** const { getNewLogisticsInfo } = require('@vtex/delivery-packages/scheduled-delivery')
 
-return new logisticInfo with the selectedSla on all items that it can be selected and optionally only set the selectSla for the slas that match the availableDeliveryWindows passed
+**params:** logisticsInfo (array of objects), selectedSla (string), availableDeliveryWindows (array of objects, default: null)
+
+**return** new logisticInfo with the selectedSla on all items that it can be selected and optionally only set the selectSla for the slas that match the availableDeliveryWindows passed
 
 ### getNewLogisticsInfoWithSelectedScheduled
 
-params: logisticsInfo (array of objects)
+**import:** const { getNewLogisticsInfoWithSelectedScheduled } = require('@vtex/delivery-packages/scheduled-delivery')
 
-return new logisticInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered
+**params:** logisticsInfo (array of objects)
+
+**return** new logisticInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered
 
 ### hasSLAs
 
-param: slasSource (object with slas key or array of objects)
+**import:** const { hasSLAs } = require('@vtex/delivery-packages/sla')
 
-return true or false
+**params:** slasSource (object with slas key or array of objects)
+
+**return** true or false
 
 ### hasDeliveryWindows
 
-params: slas (array of objects)
+**import:** const { hasDeliveryWindows } = require('@vtex/delivery-packages/sla')
 
-return true or false
+**params:** slas (array of objects)
+
+**return** true or false
 
 ### getSelectedSla
 
-params: {logisticsInfo, itemIndex, selectedSla} (logisticInfo is an array of objects, itemIndex is a number and selectedSla is a string)
+**import:** const { getSelectedSla } = require('@vtex/delivery-packages/sla')
 
-return the selectedSla object on the logisticsInfoItem that itemIndex refer on logisticInfo and optionally using another selectedSla then the one on logisticsInfoItem
+**params:** {logisticsInfo, itemIndex, selectedSla} (logisticInfo is an array of objects, itemIndex is a number and selectedSla is a string)
+
+**return** the selectedSla object on the logisticsInfoItem that itemIndex refer on logisticInfo and optionally using another selectedSla then the one on logisticsInfoItem
 
 ## License
 
