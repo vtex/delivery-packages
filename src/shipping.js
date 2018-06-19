@@ -1,5 +1,5 @@
 import './polyfills'
-import { hasDeliveryWindow, getSelectedSla } from './sla'
+import { hasDeliveryWindows, getSelectedSla } from './sla'
 import {
   filterSlaByAvailableDeliveryWindows,
   getFirstScheduledDelivery,
@@ -153,7 +153,7 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
       itemIndex: li.itemIndex,
     })
 
-    if (selectedSlaObj && hasDeliveryWindow(selectedSlaObj)) {
+    if (selectedSlaObj && hasDeliveryWindows(selectedSlaObj)) {
       return
     }
 

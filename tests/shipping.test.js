@@ -538,5 +538,45 @@ describe('Shipping', () => {
 
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
+
+    it('should return same logisticInfo with selectedSlas if slas are already selected', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'biggerWindowScheduledDeliverySla'],
+            1
+          )[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.biggerWindowScheduledDeliverySla.id,
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+          selectedDeliveryChannel: null,
+          selectedSla: null,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalScheduledDeliverySla.id,
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+
+      const expectedLogisticsInfo = [...logisticsInfo]
+
+      const newLogisticsInfo = getNewLogisticsInfoWithSelectedScheduled(
+        logisticsInfo
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
   })
 })
