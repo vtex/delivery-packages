@@ -1,3 +1,3 @@
-import { parcelify } from './package'
+import { parcelify } from './parcel'
 
 export default parcelify

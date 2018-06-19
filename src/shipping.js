@@ -5,6 +5,8 @@ import {
   getFirstScheduledDelivery,
 } from './scheduled-delivery'
 
+/** PRIVATE **/
+
 // params: { itemIndex, logisticsInfo }
 export function getLogisticsInfoData(params) {
   if (!params || !params.logisticsInfo || params.logisticsInfo.length === 0) {
@@ -41,17 +43,17 @@ export function getLogisticsInfoData(params) {
   }
 }
 
-export function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
+function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
   const sla = getSelectedSla({ itemIndex, logisticsInfo })
   return sla && sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
 }
 
-export function getPickupAddress({ itemIndex, logisticsInfo }) {
+function getPickupAddress({ itemIndex, logisticsInfo }) {
   const sla = getSelectedSla({ itemIndex, logisticsInfo })
   return sla.pickupStoreInfo ? sla.pickupStoreInfo.address : null
 }
 
-export function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
+function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
   const selectedSla = getSelectedSla({
     itemIndex,
     logisticsInfo,
@@ -99,6 +101,8 @@ export function hydratePackageWithLogisticsExtraInfo(
     }),
   }
 }
+
+/** PUBLIC **/
 
 export function getNewLogisticsInfo(
   logisticsInfo,

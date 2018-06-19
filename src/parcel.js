@@ -6,13 +6,15 @@ import { getNewItems, getDeliveredItems } from './items'
 import { hydratePackageWithLogisticsExtraInfo } from './shipping'
 import { DEFAULT_CRITERIA } from './constants'
 
-export function groupPackages(items, criteria) {
+/** PRIVATE **/
+
+function groupPackages(items, criteria) {
   return addToPackage(items, criteria, (packages, item) => {
     return packages.find(pack => pack.package.index === item.package.index)
   })
 }
 
-export function groupDeliveries(items, criteria) {
+function groupDeliveries(items, criteria) {
   return addToPackage(items, criteria, (packages, item) => {
     return packages.find(pack => {
       if (
@@ -74,7 +76,7 @@ export function groupDeliveries(items, criteria) {
   })
 }
 
-export function addToPackage(items, criteria, fn) {
+function addToPackage(items, criteria, fn) {
   return items.reduce((packages, item) => {
     const pack = fn(packages, item)
     if (pack) {
@@ -125,6 +127,8 @@ export function addToPackage(items, criteria, fn) {
     return packages.concat(newPackage)
   }, [])
 }
+
+/** PUBLIC **/
 
 export function parcelify(order, options = {}) {
   const {

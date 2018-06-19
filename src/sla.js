@@ -1,29 +1,7 @@
 import './polyfills'
 import { isCurrentChannel } from './delivery-channel'
 
-export function hasSLAs(slasSource) {
-  if (slasSource && slasSource.slas) {
-    return !!(slasSource.slas.length > 0)
-  }
-  return !!(slasSource && slasSource.length > 0)
-}
-
-export function hasDeliveryWindows(slas) {
-  if (!slas) {
-    return false
-  }
-
-  if (!Array.isArray(slas)) {
-    slas = [slas]
-  }
-
-  return slas.some(
-    sla =>
-      sla &&
-      sla.availableDeliveryWindows &&
-      sla.availableDeliveryWindows.length > 0
-  )
-}
+/** PRIVATE **/
 
 export function getSelectedSlaInSlas(item, selectedSla = null) {
   selectedSla = selectedSla || (item && item.selectedSla)
@@ -51,6 +29,32 @@ export function findSlaWithChannel(item, channel) {
     return null
   }
   return item.slas && item.slas.find(sla => isCurrentChannel(sla, channel))
+}
+
+/** PUBLIC **/
+
+export function hasSLAs(slasSource) {
+  if (slasSource && slasSource.slas) {
+    return !!(slasSource.slas.length > 0)
+  }
+  return !!(slasSource && slasSource.length > 0)
+}
+
+export function hasDeliveryWindows(slas) {
+  if (!slas) {
+    return false
+  }
+
+  if (!Array.isArray(slas)) {
+    slas = [slas]
+  }
+
+  return slas.some(
+    sla =>
+      sla &&
+      sla.availableDeliveryWindows &&
+      sla.availableDeliveryWindows.length > 0
+  )
 }
 
 /* params = {logisticsInfo, itemIndex, selectedSla} */

@@ -2,6 +2,8 @@ import './polyfills'
 import { hasDeliveryWindows, getSelectedSlaIfMatchSlaId } from './sla'
 import { isDelivery } from './delivery-channel'
 
+/** PRIVATE **/
+
 export function areDeliveryWindowsEquals(deliveryWindow1, deliveryWindow2) {
   if (!deliveryWindow1 || !deliveryWindow2) {
     return false
@@ -15,6 +17,55 @@ export function areDeliveryWindowsEquals(deliveryWindow1, deliveryWindow2) {
     deliveryWindow1.tax === deliveryWindow2.tax
   )
 }
+
+export function checkIfHasDeliveryWindow(selectedSla, actionDeliveryWindow) {
+  return (
+    selectedSla &&
+    selectedSla.availableDeliveryWindows.find(
+      deliveryWindow =>
+        actionDeliveryWindow &&
+        areDeliveryWindowsEquals(deliveryWindow, actionDeliveryWindow)
+    )
+  )
+}
+
+export function filterSlaByAvailableDeliveryWindows(
+  sla,
+  availableDeliveryWindows
+) {
+  if (!availableDeliveryWindows) {
+    return true
+  }
+
+  return areAvailableDeliveryWindowsEquals(
+    sla.availableDeliveryWindows,
+    availableDeliveryWindows
+  )
+}
+
+export function getScheduledDeliverySLA(
+  logisticInfoItem,
+  availableDeliveryWindows = null
+) {
+  if (
+    !logisticInfoItem ||
+    !logisticInfoItem.slas ||
+    logisticInfoItem.slas.length === 0
+  ) {
+    return null
+  }
+
+  return (
+    logisticInfoItem.slas.find(
+      sla =>
+        isDelivery(sla) &&
+        hasDeliveryWindows(sla) &&
+        filterSlaByAvailableDeliveryWindows(sla, availableDeliveryWindows)
+    ) || null
+  )
+}
+
+/** PUBLIC **/
 
 export function areAvailableDeliveryWindowsEquals(
   availableDeliveryWindows1,
@@ -36,17 +87,6 @@ export function areAvailableDeliveryWindowsEquals(
   )
 
   return deliveryWindowsThatAreEqual.length === availableDeliveryWindows1.length
-}
-
-export function checkIfHasDeliveryWindow(selectedSla, actionDeliveryWindow) {
-  return (
-    selectedSla &&
-    selectedSla.availableDeliveryWindows.find(
-      deliveryWindow =>
-        actionDeliveryWindow &&
-        areDeliveryWindowsEquals(deliveryWindow, actionDeliveryWindow)
-    )
-  )
 }
 
 /* action = {selectedSla, deliveryWindow} */
@@ -84,42 +124,6 @@ export function selectDeliveryWindow(logisticsInfo, action) {
 
     return li
   })
-}
-
-export function filterSlaByAvailableDeliveryWindows(
-  sla,
-  availableDeliveryWindows
-) {
-  if (!availableDeliveryWindows) {
-    return true
-  }
-
-  return areAvailableDeliveryWindowsEquals(
-    sla.availableDeliveryWindows,
-    availableDeliveryWindows
-  )
-}
-
-export function getScheduledDeliverySLA(
-  logisticInfoItem,
-  availableDeliveryWindows = null
-) {
-  if (
-    !logisticInfoItem ||
-    !logisticInfoItem.slas ||
-    logisticInfoItem.slas.length === 0
-  ) {
-    return null
-  }
-
-  return (
-    logisticInfoItem.slas.find(
-      sla =>
-        isDelivery(sla) &&
-        hasDeliveryWindows(sla) &&
-        filterSlaByAvailableDeliveryWindows(sla, availableDeliveryWindows)
-    ) || null
-  )
 }
 
 export function getFirstScheduledDelivery(

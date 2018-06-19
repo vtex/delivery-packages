@@ -1,5 +1,7 @@
 import './polyfills'
 
+/** PUBLIC **/
+
 export function getNewItems(items, changes) {
   if (!items || items.length === 0 || !changes || changes.length === 0) {
     return items || null

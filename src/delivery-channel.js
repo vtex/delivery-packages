@@ -1,6 +1,15 @@
 import './polyfills'
 import { PICKUP_IN_STORE, DELIVERY } from './constants'
 
+/** PRIVATE **/
+
+export function isCurrentChannel(deliveryChannelSource, currentChannel) {
+  const deliveryChannel = getDeliveryChannel(deliveryChannelSource)
+  return deliveryChannel === currentChannel
+}
+
+/** PUBLIC **/
+
 export function getDeliveryChannel(deliveryChannelSource) {
   if (typeof deliveryChannelSource === 'string') {
     return deliveryChannelSource
@@ -16,11 +25,6 @@ export function getDeliveryChannel(deliveryChannelSource) {
     deliveryChannelSource.id ||
     null
   )
-}
-
-export function isCurrentChannel(deliveryChannelSource, currentChannel) {
-  const deliveryChannel = getDeliveryChannel(deliveryChannelSource)
-  return deliveryChannel === currentChannel
 }
 
 export function isPickup(deliveryChannelSource) {
@@ -41,7 +45,9 @@ export function findChannelById(logisticsInfoItem, deliveryChannel) {
     return null
   }
 
-  return logisticsInfoItem.deliveryChannels.find(
-    liChannel => liChannel.id === deliveryChannel
-  ) || null
+  return (
+    logisticsInfoItem.deliveryChannels.find(
+      liChannel => liChannel.id === deliveryChannel
+    ) || null
+  )
 }
