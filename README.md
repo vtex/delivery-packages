@@ -266,10 +266,6 @@ parcelify(order, { criteria: { seller: false } })
 
 ## Other important functions
 
-See [src](./src/) folder to see all available functions and [tests](./tests/) folder for more examples.
-
-All functions also import some [polyfills](./src/polyfills) worth checking.
-
 ### getDeliveryChannel
 
 **import:** const { getDeliveryChannel } = require('@vtex/delivery-packages/delivery-channel')
@@ -304,7 +300,7 @@ All functions also import some [polyfills](./src/polyfills) worth checking.
 
 ### getNewItems
 
-**import:** const { findChannelById } = require('@vtex/delivery-packages/items')
+**import:** const { getNewItems } = require('@vtex/delivery-packages/items')
 
 **params:** items (array of objects), changes (array of objects)
 
