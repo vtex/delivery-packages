@@ -79,3 +79,13 @@ export function getSelectedSla(params) {
 
   return getSelectedSlaInSlas(item, selectedSla)
 }
+
+export function getSlaObj(slas, slaId) {
+  if (!slas || slas.length === 0 || !slaId) {
+    return null
+  }
+
+  const slaObj = slas.find(sla => sla && sla.id === slaId)
+
+  return slaObj || null
+}

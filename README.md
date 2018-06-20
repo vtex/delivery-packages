@@ -374,6 +374,14 @@ All functions also import some [polyfills](./src/polyfills) worth checking.
 
 **return** true or false
 
+### getSlaObj
+
+**import:** const { getSlaObj } = require('@vtex/delivery-packages/sla')
+
+**params:** slas (array of objects), slaId (string)
+
+**return** the sla object on the passed array that match the slaId or null if not found
+
 ### getSelectedSla
 
 **import:** const { getSelectedSla } = require('@vtex/delivery-packages/sla')

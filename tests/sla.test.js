@@ -1,5 +1,6 @@
 import {
   getSelectedSla,
+  getSlaObj,
   findSlaWithChannel,
   getSelectedSlaInSlas,
   getSelectedSlaIfMatchSlaId,
@@ -61,6 +62,44 @@ describe('Sla', () => {
         selectedSla,
         itemIndex: 0,
       })
+
+      expect(newSelectedSla).toEqual(expectedSelectedSla)
+    })
+  })
+
+  describe('getSlaObj', () => {
+    it('should return null if empty params are passed', () => {
+      const sla1 = getSlaObj()
+      const sla2 = getSlaObj([])
+      const sla3 = getSlaObj([], '')
+
+      expect(sla1).toBeNull()
+      expect(sla2).toBeNull()
+      expect(sla3).toBeNull()
+    })
+
+    it('should return null if slas and slaId is not found', () => {
+      const logisticsInfoItem = createLogisticsInfo(
+        ['normalSla', 'expressSla', 'pickupSla'],
+        1
+      )[0]
+      const invalidSlaId = slas.normalScheduledDeliverySla.id
+
+      const newSelectedSla = getSlaObj(logisticsInfoItem.slas, invalidSlaId)
+
+      expect(newSelectedSla).toBeNull()
+    })
+
+    it('should return correct slaObj if slas and valid slaId is passed', () => {
+      const logisticsInfoItem = createLogisticsInfo(
+        ['normalSla', 'expressSla', 'pickupSla'],
+        1
+      )[0]
+
+      const expectedSelectedSla = slas.expressSla
+      const slaId = expectedSelectedSla.id
+
+      const newSelectedSla = getSlaObj(logisticsInfoItem.slas, slaId)
 
       expect(newSelectedSla).toEqual(expectedSelectedSla)
     })
