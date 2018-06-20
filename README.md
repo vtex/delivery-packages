@@ -266,125 +266,1006 @@ parcelify(order, { criteria: { seller: false } })
 
 ## Other important functions
 
-### getDeliveryChannel
+This module provide a lot of helper functions besides parcelify, that are worth checking below.
 
-**import:** const { getDeliveryChannel } = require('@vtex/delivery-packages/delivery-channel')
+## Delivery Channel
+> @vtex/delivery-packages/delivery-channel
 
-**params:** deliveryChannelSource (object or string)
+### getDeliveryChannel (deliveryChannelSource)
 
-**return** deliveryChannel (string)
+Get the delivery channel string of a delivery channel source.
 
-### isPickup
+##### Usage
+```js
+const { getDeliveryChannel } = require('@vtex/delivery-packages/delivery-channel')
 
-**import:** const { isPickup } = require('@vtex/delivery-packages/delivery-channel')
+getDeliveryChannel({ id: 'pickup-in-point'})
+// -> 'pickup-in-point'
+```
 
-**params:** deliveryChannelSource (object or string)
+**params:**
+- **deliveryChannelSource**
+Type: `object` or `string`
+An object containing a deliveryChannel string or the string itself
 
-**return** true or false
+**returns:**
+- **deliveryChannel**
+Type: `string`
+The deliveryChannel string (generally 'pickup-in-point' or 'delivery')
 
-### isDelivery
+### isPickup (deliveryChannelSource)
 
-**import:** const { isDelivery } = require('@vtex/delivery-packages/delivery-channel')
+Check if the delivery channel source is a pickup point.
 
-**params:** deliveryChannelSource (object or string)
+##### Usage
+```js
+const { isPickup } = require('@vtex/delivery-packages/delivery-channel')
 
-**return** true or false
+isPickup({ id: 'pickup-in-point'})
+// -> true
 
-### findChannelById
+isPickup({ id: 'delivery'})
+// -> false
+```
 
-**import:** const { findChannelById } = require('@vtex/delivery-packages/delivery-channel')
+**params:**
+- **deliveryChannelSource**
+Type: `object` or `string`
+An object containing a deliveryChannel string or the string itself
 
-**params:** logisticsInfoItem (object), deliveryChannel (string)
+**returns:**
+- **isPickup**
+Type: `boolean`
+true or false
 
-**return** deliveryChannel (string) in logisticsInfoItem or null if doesn't find it
+### isDelivery (deliveryChannelSource)
 
-### getNewItems
+Check if the delivery channel source is a delivery.
 
-**import:** const { getNewItems } = require('@vtex/delivery-packages/items')
+##### Usage
+```js
+const { isDelivery } = require('@vtex/delivery-packages/delivery-channel')
 
-**params:** items (array of objects), changes (array of objects)
+isDelivery({ id: 'pickup-in-point'})
+// -> false
 
-**return** the items received with the changes (itemsAdded and itemsRemoved) passed
+isDelivery({ id: 'delivery'})
+// -> true
+```
 
-### getDeliveredItems
+**params:**
+- **deliveryChannelSource**
+Type: `object` or `string`
+An object containing a deliveryChannel string or the string itself
 
-**import:** const { getDeliveredItems } = require('@vtex/delivery-packages/items')
+**returns:**
+- **isDelivery**
+Type: `boolean`
+true or false
 
-**params:** { items, packages } (items and packages are array of objects)
+### findChannelById (logisticsInfoItem, deliveryChannelSource)
 
-**return** object with items merged with packages and splitted by delivered and toBeDelivered
+Search for a delivery channel object from an object container a list of delivery channel objects (usually it will be a logisticInfo item).
 
-### areAvailableDeliveryWindowsEquals
+##### Usage
+```js
+const { findChannelById } = require('@vtex/delivery-packages/delivery-channel')
 
-**import:** const { areAvailableDeliveryWindowsEquals } = require('@vtex/delivery-packages/scheduled-delivery')
+findChannelById({ deliveryChannels: [{ id: 'delivery' }] }, 'pickup-in-point')
+// -> null
 
-**params:** availableDeliveryWindows1, availableDeliveryWindows2 (both arrays of deliveryWindow)
+findChannelById({ deliveryChannels: [{ id: 'delivery' }, { id: 'pickup-in-point' }] }, 'delivery')
+// -> { id: 'delivery' }
+```
 
-**return** true or false
+**params:**
+- **logisticsInfoItem**
+Type: `object`
+An object containing a deliveryChannels array
+- **deliveryChannelSource**
+Type: `object` or `string`
+An object containing a deliveryChannel string or the string itself
 
-### selectDeliveryWindow
+**returns:**
+- **deliveryChannel**
+Type: `object`
+Object like `{ id: 'delivery' }` or `{ id: 'pickup-in-point' }`
 
-**import:** const { selectDeliveryWindow } = require('@vtex/delivery-packages/scheduled-delivery')
+## Items
+> @vtex/delivery-packages/items
 
-**params:** logisticsInfo (array of objects), { selectedSla, deliveryWindow } (selectedSla and deliveryWindow are strings)
+### getNewItems (items, changes)
 
-**return** new logisticsInfo selecting deliveryWindow on the selectedSla passed
+Get new items based on the ones passed and an array of changes.
 
-### getFirstScheduledDelivery
+##### Usage
+```js
+const { getNewItems } = require('@vtex/delivery-packages/items')
 
-**import:** const { getFirstScheduledDelivery } = require('@vtex/delivery-packages/scheduled-delivery')
+const items = [
+  { id: 10, quantity: 1, seller: '1' },
+  { id: 11, quantity: 1, seller: '1' },
+]
+const changes = [
+  { itemsAdded: [{ id: 12, quantity: 1, seller: '1' }] },
+  { itemsRemoved: [{ id: 11, quantity: 1, seller: '1' }] },
+]
 
-**params:** logisticInfo (array of objects), availableDeliveryWindows (array of objects, default: null)
+getNewItems(items, changes)
+// -> [{ id: 10, quantity: 1, seller: '1' }, { id: 12, quantity: 1, seller: '1'}]
+```
 
-**return** the first scheduled delivery sla with the availableDeliveryWindows passed (or the first scheduled delivery sla that exists if availableDeliveryWindows param is not passed)
+**params:**
+- **items**
+Type: `Array<object>`
+Array of items (like the ones in an orderForm)
 
-### getNewLogisticsInfo
+- **changes**
+Type: `Array<object>`
+Array of changes, each change on the format `{ itemsAdded: Array<item>, itemsRemoved: Array<item> }`
 
-**import:** const { getNewLogisticsInfo } = require('@vtex/delivery-packages/scheduled-delivery')
+**returns:**
+- **new items**
+Type: `Array<object>`
+New array of items with the changes applied
 
-**params:** logisticsInfo (array of objects), selectedSla (string), availableDeliveryWindows (array of objects, default: null)
+### getDeliveredItems ({ items, packages })
 
-**return** new logisticInfo with the selectedSla on all items that it can be selected and optionally only set the selectSla for the slas that match the availableDeliveryWindows passed
+Merge items with packages and organize them based if they were already delivered or will be delivered.
 
-### getNewLogisticsInfoWithSelectedScheduled
+##### Usage
+```js
+const { getDeliveredItems } = require('@vtex/delivery-packages/items')
 
-**import:** const { getNewLogisticsInfoWithSelectedScheduled } = require('@vtex/delivery-packages/scheduled-delivery')
+const items = [
+  { id: 10, quantity: 1, seller: '1', index: 0 },
+  { id: 11, quantity: 1, seller: '1', index: 1 },
+]
+const packages = [
+  {
+    courierStatus: { finished: false },
+    index: 0,
+    invoiceNumber: '456',
+    items: [
+      { itemIndex: 0, quantity: 1 },
+      { itemIndex: 1, quantity: 1 },
+    ],
+    trackingNumber: '123',
+    trackingUrl: '',
+  },
+]
 
-**params:** logisticsInfo (array of objects)
+getDeliveredItems({ items, packages })
+// -> {
+//   delivered: [
+//     {
+//       item: { id: '10', index: 0, quantity: 1, seller: '1' },
+//       package: {
+//         courierStatus: { finished: false },
+//         index: 0,
+//         invoiceNumber: '456',
+//         items: [{ itemIndex: 0, quantity: 1 }, { itemIndex: 1, quantity: 1 }],
+//         trackingNumber: '123',
+//         trackingUrl: '',
+//       },
+//     },
+//   ],
+//   toBeDelivered: [{ item: { id: '1', index: 1, quantity: 1, seller: '1' } }],
+// }
+```
 
-**return** new logisticInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered
+**params:**
+- **deliveryContext**
+Type: `object`
+Object on the format `{ items, packages }` containing the items and packages of an order, with the index of each item and package
 
-### hasSLAs
+**returns:**
+- **items with packages**
+Type: `object`
+Object contained the keys delivered and toBeDelivered containing the right items and packages
 
-**import:** const { hasSLAs } = require('@vtex/delivery-packages/sla')
+## Scheduled Delivery
+> @vtex/delivery-packages/scheduled-delivery
 
-**params:** slasSource (object with slas key or array of objects)
+### areAvailableDeliveryWindowsEquals (availableDeliveryWindows1, availableDeliveryWindows2)
 
-**return** true or false
+Check if two available delivery windows are equal.
 
-### hasDeliveryWindows
+##### Usage
+```js
+const { areAvailableDeliveryWindowsEquals } = require('@vtex/delivery-packages/scheduled-delivery')
 
-**import:** const { hasDeliveryWindows } = require('@vtex/delivery-packages/sla')
+const availableDeliveryWindows1 = [
+  {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  }
+]
 
-**params:** slas (array of objects)
+const availableDeliveryWindows2 = [
+  {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  }
+]
 
-**return** true or false
+const availableDeliveryWindows3 = [
+  {
+    startDateUtc: '2018-06-20T09:00:00+00:00',
+    endDateUtc: '2018-06-20T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  }
+]
 
-### getSlaObj
+areAvailableDeliveryWindowsEquals(availableDeliveryWindows1, availableDeliveryWindows2)
+// -> true
 
-**import:** const { getSlaObj } = require('@vtex/delivery-packages/sla')
+areAvailableDeliveryWindowsEquals(availableDeliveryWindows1, availableDeliveryWindows3)
+// -> false
+```
 
-**params:** slas (array of objects), slaId (string)
+**params:**
+- **availableDeliveryWindows1**
+Type: `Array<object>`
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries)
 
-**return** the sla object on the passed array that match the slaId or null if not found
+- **availableDeliveryWindows2**
+Type: `Array<object>`
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries)
 
-### getSelectedSla
+**returns:**
+- **are equal**
+Type: `boolean`
+true or false
 
-**import:** const { getSelectedSla } = require('@vtex/delivery-packages/sla')
+### selectDeliveryWindow (logisticsInfo, { selectedSla, deliveryWindow })
 
-**params:** {logisticsInfo, itemIndex, selectedSla} (logisticInfo is an array of objects, itemIndex is a number and selectedSla is a string)
+Get new logisticInfo with the deliveryWindow of the selectedSla inserted.
 
-**return** the selectedSla object on the logisticsInfoItem that itemIndex refer on logisticInfo and optionally using another selectedSla then the one on logisticsInfoItem
+##### Usage
+```js
+const { selectDeliveryWindow } = require('@vtex/delivery-packages/scheduled-delivery')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticInfo
+    "addressId": "-4556418741084",
+    "selectedSla": "Agendada",
+    "shippingEstimate": "5bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {
+        "id": "Agendada",
+        "deliveryChannel": "delivery",
+        "availableDeliveryWindows": [
+          {
+            startDateUtc: '2018-05-26T09:00:00+00:00',
+            endDateUtc: '2018-05-26T21:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          },
+          {
+            startDateUtc: '2018-05-26T12:00:00+00:00',
+            endDateUtc: '2018-05-26T13:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": "Normal",
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+selectDeliveryWindow(logisticsInfo, {
+  selectedSla: 'Agendada',
+  deliveryWindow: {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+})
+// -> [
+//   {
+//     // You can pass all the properties of the logisticInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": "Agendada",
+//     "shippingEstimate": "5bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "deliveryWindow": {
+//       startDateUtc: '2018-05-26T09:00:00+00:00',
+//       endDateUtc: '2018-05-26T21:00:00+00:00',
+//       price: 500,
+//       lisPrice: 500,
+//       tax: 0,
+//     },
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {
+//         "id": "Agendada",
+//         "deliveryChannel": "delivery",
+//         "deliveryWindow": {
+//           startDateUtc: '2018-05-26T09:00:00+00:00',
+//           endDateUtc: '2018-05-26T21:00:00+00:00',
+//           price: 500,
+//           lisPrice: 500,
+//           tax: 0,
+//         },
+//         "availableDeliveryWindows": [
+//           {
+//             startDateUtc: '2018-05-26T09:00:00+00:00',
+//             endDateUtc: '2018-05-26T21:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           },
+//           {
+//             startDateUtc: '2018-05-26T12:00:00+00:00',
+//             endDateUtc: '2018-05-26T13:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     "addressId": "-4556418741084",
+//     "selectedSla": "Normal",
+//     "shippingEstimate": "6bd",
+//     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 1,
+//     "slas": [
+//       { "id": "Normal", "deliveryChannel": "delivery" }
+//     ]
+//   }
+// ]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+
+- **action**
+Type: `object`
+Object on the format `{ selectedSla, deliveryWindow }`, selectedSla being a string with the id of the selectedSla of each logisticInfo item and deliveryWindow being an object of the availableDeliveryWindows on these items
+
+**returns:**
+- **new logisticInfo**
+Type: `Array<object>`
+The new logisticInfo with the deliveryWindow selected on the matching items that have the selectedSla passed
+
+### getFirstScheduledDelivery (logisticsInfo, availableDeliveryWindows = null)
+
+Get the first sla with scheduled delivery matching the availableDeliveryWindows passed.
+
+##### Usage
+```js
+const { getFirstScheduledDelivery } = require('@vtex/delivery-packages/scheduled-delivery')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticInfo
+    "addressId": "-4556418741084",
+    "selectedSla": "Agendada",
+    "shippingEstimate": "5bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {
+        "id": "Agendada",
+        "deliveryChannel": "delivery",
+        "availableDeliveryWindows": [
+          {
+            startDateUtc: '2018-05-26T09:00:00+00:00',
+            endDateUtc: '2018-05-26T21:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          },
+          {
+            startDateUtc: '2018-05-26T12:00:00+00:00',
+            endDateUtc: '2018-05-26T13:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": "Normal",
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+getFirstScheduledDelivery(logisticsInfo, [
+  {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-26T12:00:00+00:00',
+    endDateUtc: '2018-05-26T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  }
+])
+// ->
+// {
+//   "id": "Agendada",
+//   "deliveryChannel": "delivery",
+//   "availableDeliveryWindows": [
+//     {
+//       startDateUtc: '2018-05-26T09:00:00+00:00',
+//       endDateUtc: '2018-05-26T21:00:00+00:00',
+//       price: 500,
+//       lisPrice: 500,
+//       tax: 0,
+//     },
+//     {
+//       startDateUtc: '2018-05-26T12:00:00+00:00',
+//       endDateUtc: '2018-05-26T13:00:00+00:00',
+//       price: 500,
+//       lisPrice: 500,
+//       tax: 0,
+//     }
+//   ]
+// }
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+
+- **availableDeliveryWindows1**
+Type: `Array<object>`
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries). The default value for this parameter is null
+
+
+**returns:**
+- **sla**
+Type: `object`
+If availableDeliveryWindows is passed, return the first sla with scheduled delivery matching the availableDeliveryWindows. If availableDeliveryWindows is not passed, return the first scheduled delivery sla that exists
+
+## Shipping
+> @vtex/delivery-packages/shipping
+
+### getNewLogisticsInfo (logisticsInfo, selectedSla, availableDeliveryWindows = null)
+
+Get new logisticInfo with the selectedSla on all items that can receive it as selected.
+
+##### Usage
+```js
+const { getNewLogisticsInfo } = require('@vtex/delivery-packages/shipping')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticInfo
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "5bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {
+        "id": "Agendada",
+        "deliveryChannel": "delivery",
+        "availableDeliveryWindows": [
+          {
+            startDateUtc: '2018-05-26T09:00:00+00:00',
+            endDateUtc: '2018-05-26T21:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          },
+          {
+            startDateUtc: '2018-05-26T12:00:00+00:00',
+            endDateUtc: '2018-05-26T13:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+getNewLogisticsInfo(logisticsInfo, 'Normal')
+// -> [
+//   {
+//     // You can pass all the properties of the logisticInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "5bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {
+//         "id": "Agendada",
+//         "deliveryChannel": "delivery",
+//         "availableDeliveryWindows": [
+//           {
+//             startDateUtc: '2018-05-26T09:00:00+00:00',
+//             endDateUtc: '2018-05-26T21:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           },
+//           {
+//             startDateUtc: '2018-05-26T12:00:00+00:00',
+//             endDateUtc: '2018-05-26T13:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     "addressId": "-4556418741084",
+//     "selectedSla": "Normal",
+//     "selectedDeliveryChannel": "delivery",
+//     "shippingEstimate": "6bd",
+//     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 1,
+//     "slas": [
+//       { "id": "Normal", "deliveryChannel": "delivery" }
+//     ]
+//   }
+// ]
+
+getNewLogisticsInfo(logisticsInfo, 'Agendada', [
+  {
+    startDateUtc: '2018-05-26T09:00:00+00:00',
+    endDateUtc: '2018-05-26T21:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  },
+  {
+    startDateUtc: '2018-05-26T12:00:00+00:00',
+    endDateUtc: '2018-05-26T13:00:00+00:00',
+    price: 500,
+    lisPrice: 500,
+    tax: 0,
+  }
+])
+// -> [
+//   {
+//     // You can pass all the properties of the logisticInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": "Agendada",
+//     "selectedDeliveryChannel": "delivery",
+//     "shippingEstimate": "5bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {
+//         "id": "Agendada",
+//         "deliveryChannel": "delivery",
+//         "availableDeliveryWindows": [
+//           {
+//             startDateUtc: '2018-05-26T09:00:00+00:00',
+//             endDateUtc: '2018-05-26T21:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           },
+//           {
+//             startDateUtc: '2018-05-26T12:00:00+00:00',
+//             endDateUtc: '2018-05-26T13:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "6bd",
+//     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 1,
+//     "slas": [
+//       { "id": "Normal", "deliveryChannel": "delivery" }
+//     ]
+//   }
+// ]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+
+- **selectedSla**
+Type: `string`
+The id of the selected sla on logisticInfo items
+
+- **availableDeliveryWindows**
+Type: `Array<object>`
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries). The default value for this parameter is null
+
+**returns:**
+- **new logisticInfo**
+Type: `Array<object>`
+New logisticInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that can be selected. Optionally the availableDeliveryWindows can be passed to filter the scheduled delivery slas
+
+### getNewLogisticsInfoWithSelectedScheduled (logisticsInfo)
+
+Get new logisticInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered.
+
+##### Usage
+```js
+const { getNewLogisticsInfoWithSelectedScheduled } = require('@vtex/delivery-packages/shipping')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticInfo
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "5bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {
+        "id": "Agendada",
+        "deliveryChannel": "delivery",
+        "availableDeliveryWindows": [
+          {
+            startDateUtc: '2018-05-26T09:00:00+00:00',
+            endDateUtc: '2018-05-26T21:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          },
+          {
+            startDateUtc: '2018-05-26T12:00:00+00:00',
+            endDateUtc: '2018-05-26T13:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+getNewLogisticsInfoWithSelectedScheduled(logisticsInfo)
+// -> [
+//   {
+//     // You can pass all the properties of the logisticInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": 'Agendada',
+//     "selectedDeliveryChannel": 'delivery',
+//     "shippingEstimate": "5bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {
+//         "id": "Agendada",
+//         "deliveryChannel": "delivery",
+//         "availableDeliveryWindows": [
+//           {
+//             startDateUtc: '2018-05-26T09:00:00+00:00',
+//             endDateUtc: '2018-05-26T21:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           },
+//           {
+//             startDateUtc: '2018-05-26T12:00:00+00:00',
+//             endDateUtc: '2018-05-26T13:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "6bd",
+//     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 1,
+//     "slas": [
+//       { "id": "Normal", "deliveryChannel": "delivery" }
+//     ]
+//   }
+// ]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+
+**returns:**
+- **new logisticInfo**
+Type: `Array<object>`
+New logisticInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that has availableDeliveryWindows
+
+## SLA
+> @vtex/delivery-packages/sla
+
+### hasSLAs (slasSource)
+
+Check if the object or array passed have one or more slas
+
+##### Usage
+```js
+const { hasSLAs } = require('@vtex/delivery-packages/sla')
+
+hasSLAs({
+  slas: [{ "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }],
+})
+// -> true
+
+hasSLAs([{ "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }],)
+// -> true
+
+hasSLAs({ slas: [] })
+// -> false
+```
+
+**params:**
+- **slasSource**
+Type: `object` or `Array<object>`
+Object with slas key or array of objects
+
+**returns:**
+- **hasSLAs**
+Type: `boolean`
+true or false
+
+### hasDeliveryWindows (slas)
+
+Check if the object or array passed have at least of sla that can be scheduled delivered.
+
+##### Usage
+```js
+const { hasDeliveryWindows } = require('@vtex/delivery-packages/sla')
+
+hasDeliveryWindows([
+  { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+])
+// -> false
+
+hasDeliveryWindows([
+  {
+    "id": "Agendada",
+    "deliveryChannel": "delivery",
+    "availableDeliveryWindows":
+    [
+      {
+        startDateUtc: '2018-05-26T09:00:00+00:00',
+        endDateUtc: '2018-05-26T21:00:00+00:00',
+        price: 500,
+        lisPrice: 500,
+        tax: 0,
+      }
+    ]
+  },
+  { "id": "Expressa", "deliveryChannel": "delivery" }
+])
+// -> true
+
+hasDeliveryWindows({
+  "id": "Agendada",
+  "deliveryChannel": "delivery",
+  "availableDeliveryWindows":
+  [
+    {
+      startDateUtc: '2018-05-26T09:00:00+00:00',
+      endDateUtc: '2018-05-26T21:00:00+00:00',
+      price: 500,
+      lisPrice: 500,
+      tax: 0,
+    }
+  ]
+})
+// -> true
+```
+
+**params:**
+- **slas**
+Type: `object` or `Array<object>`
+Object with a single sla or an array of slas
+
+**returns:**
+- **hasDeliveryWindows**
+Type: `boolean`
+true or false
+
+### getSlaObj (slas, slaId)
+
+Get the sla object on slas that match the slaId passed.
+
+##### Usage
+```js
+const { getSlaObj } = require('@vtex/delivery-packages/sla')
+
+getSlaObj([
+  { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+], 'Normal')
+// -> { "id": "Normal", "deliveryChannel": "delivery" }
+
+getSlaObj([
+  { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+], 'Agendada')
+// -> null
+```
+
+**params:**
+- **slas**
+Type: `Array<object>`
+An array of slas
+
+- **slaId**
+Type: `string`
+The id of a sla of the list passed
+
+**returns:**
+- **sla**
+Type: `object`
+the sla object on the array that match the slaId passed or null if it doesn't find it
+
+### getSelectedSla ({logisticsInfo, itemIndex, selectedSla})
+
+Get the select sla object on logisticInfo at the itemIndex position and optionally passing another selectedSla as reference.
+
+##### Usage
+```js
+const { getSelectedSla } = require('@vtex/delivery-packages/sla')
+
+getSelectedSla({
+  logisticInfo: [
+    {
+      // other logisticInfo properties can be passed also
+      selectedSla: 'Normal',
+      slas: [
+        { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+      ]
+    },
+    {
+      // other logisticInfo properties can be passed also
+      selectedSla: 'Expressa',
+      slas: [
+        { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+      ]
+    }
+  ],
+  itemIndex: 0,
+})
+// -> { "id": "Normal", "deliveryChannel": "delivery" }
+
+getSelectedSla({
+  logisticInfo: [
+    {
+      // other logisticInfo properties can be passed also
+      selectedSla: 'Normal',
+      slas: [
+        { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+      ]
+    },
+    {
+      // other logisticInfo properties can be passed also
+      selectedSla: 'Expressa',
+      slas: [
+        { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+      ]
+    }
+  ],
+  itemIndex: 1,
+  selectedSla: 'Normal',
+})
+// -> { "id": "Normal", "deliveryChannel": "delivery" }
+```
+
+**params:**
+- **selectedSlaContext**
+Type: `object`
+Object on the format `{logisticsInfo, itemIndex, selectedSla}` with logisticsInfo being an object like the one inside an orderForm, itemIndex a number referring the position of a logisticInfo item and selectedSla an optional string with the id of the wanted sla
+
+**returns:**
+- **selectedSla**
+Type: `object`
+the selectedSla object on the logisticsInfo item that itemIndex refer and optionally using another selectedSla then the one on logisticsInfo item
 
 ## License
 

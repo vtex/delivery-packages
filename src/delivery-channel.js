@@ -35,15 +35,17 @@ export function isDelivery(deliveryChannelSource) {
   return isCurrentChannel(deliveryChannelSource, DELIVERY)
 }
 
-export function findChannelById(logisticsInfoItem, deliveryChannel) {
+export function findChannelById(logisticsInfoItem, deliveryChannelSource) {
   if (
     !logisticsInfoItem ||
     !logisticsInfoItem.deliveryChannels ||
     logisticsInfoItem.deliveryChannels.length === 0 ||
-    !deliveryChannel
+    !deliveryChannelSource
   ) {
     return null
   }
+
+  const deliveryChannel = getDeliveryChannel(deliveryChannelSource)
 
   return (
     logisticsInfoItem.deliveryChannels.find(
