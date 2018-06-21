@@ -304,6 +304,12 @@ const { isPickup } = require('@vtex/delivery-packages/delivery-channel')
 isPickup({ id: 'pickup-in-point'})
 // -> true
 
+isPickup({ selectedDeliveryChannel: 'pickup-in-point' })
+// true
+
+isPickup({ deliveryChannel:  'pickup-in-point' })
+// true
+
 isPickup({ id: 'delivery'})
 // -> false
 ```
@@ -328,6 +334,12 @@ const { isDelivery } = require('@vtex/delivery-packages/delivery-channel')
 
 isDelivery({ id: 'pickup-in-point'})
 // -> false
+
+isDelivery({ selectedDeliveryChannel: 'delivery' })
+// true
+
+isDelivery({ deliveryChannel:  'delivery' })
+// true
 
 isDelivery({ id: 'delivery'})
 // -> true
