@@ -1,20 +1,36 @@
+import path from 'path'
+import fs from 'fs'
+
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import babel from 'rollup-plugin-babel'
 import uglify from 'rollup-plugin-uglify'
+
 import pkg from './package.json'
 
-export default [
-  // browser-friendly UMD build
-  {
-    input: 'src/index.js',
-    output: {
-      name: 'vtex.deliveryPackages',
-      file: pkg.browser,
+const SRC_PATH = 'src'
+const DIST_PATH = 'dist'
+
+const FILES_FILTERS = ['constants', 'index']
+
+function getBuild(file, outputType = null) {
+  outputType = outputType || 'default'
+
+  const outputs = {
+    browser: {
+      name: file.browserName,
+      file: file.main,
       format: 'umd',
       sourcemap: true,
     },
-    plugins: [
+    default: [
+      { file: file.main, format: 'cjs', sourcemap: true },
+      { file: file.module, format: 'es', sourcemap: true },
+    ],
+  }
+
+  const plugins = {
+    browser: [
       resolve(),
       babel({
         exclude: 'node_modules/**',
@@ -22,26 +38,52 @@ export default [
       uglify(),
       commonjs(),
     ],
-  },
-
-  // CommonJS (for Node) and ES module (for bundlers) build.
-  // (We could have three entries in the configuration array
-  // instead of two, but it's quicker to generate multiple
-  // builds from a single configuration where possible, using
-  // an array for the `output` option, where we can specify
-  // `file` and `format` for each target)
-  {
-    input: 'src/index.js',
-    plugins: [
+    default: [
       resolve(),
       babel({
         exclude: 'node_modules/**',
       }),
       commonjs(),
     ],
-    output: [
-      { file: pkg.main, format: 'cjs', sourcemap: true },
-      { file: pkg.module, format: 'es', sourcemap: true },
-    ],
-  },
+  }
+
+  return {
+    input: file.input,
+    output: outputs[outputType],
+    plugins: plugins[outputType],
+  }
+}
+
+function getBuildForFile(filePath) {
+  const fileName = path.basename(filePath, '.js')
+
+  return getBuild({
+    input: path.join(SRC_PATH, `${fileName}.js`),
+    main: path.join(DIST_PATH, `${fileName}.js`),
+    module: path.join(DIST_PATH, `${fileName}.esm.js`),
+  })
+}
+
+const modules = [
+  getBuild(
+    {
+      input: 'src/index.js',
+      main: pkg.browser,
+      browserName: 'vtex.deliveryPackages',
+    },
+    'browser'
+  ),
+  getBuild({ input: 'src/index.js', main: pkg.main, module: pkg.module }),
 ]
+
+fs.readdirSync(SRC_PATH).forEach(filePath => {
+  const fileName = path.basename(filePath, '.js')
+
+  if (FILES_FILTERS.indexOf(fileName) !== -1) {
+    return
+  }
+
+  modules.push(getBuildForFile(filePath))
+})
+
+export default modules

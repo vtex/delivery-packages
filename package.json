@@ -1,6 +1,6 @@
 {
   "name": "@vtex/delivery-packages",
-  "version": "2.2.5",
+  "version": "2.3.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -10,8 +10,12 @@
   ],
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
+    "jest": "cross-env NODE_ENV=test jest --watch --verbose --coverage=false",
     "build": "cross-env NODE_ENV=production rollup -c",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "postreleasy": "npm publish",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix --max-warnings 0"
   },
   "keywords": [
     "vtex",
@@ -30,6 +34,7 @@
     "babel-core": "6",
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.2.2",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "cross-env": "^5.1.4",
