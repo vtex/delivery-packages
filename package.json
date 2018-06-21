@@ -13,6 +13,7 @@
     "jest": "cross-env NODE_ENV=test jest --watch --verbose --coverage=false",
     "build": "cross-env NODE_ENV=production rollup -c",
     "prepublishOnly": "npm run build",
+    "postreleasy": "npm publish",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix --max-warnings 0"
   },
