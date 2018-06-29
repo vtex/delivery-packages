@@ -269,7 +269,7 @@ parcelify(order, { criteria: { seller: false } })
 This module provide a lot of helper functions besides parcelify, that are worth checking below.
 
 ## Delivery Channel
-> @vtex/delivery-packages/delivery-channel
+> @vtex/delivery-packages/dist/delivery-channel
 
 ### getDeliveryChannel (deliveryChannelSource)
 
@@ -277,7 +277,7 @@ Get the delivery channel string of a delivery channel source.
 
 ##### Usage
 ```js
-const { getDeliveryChannel } = require('@vtex/delivery-packages/delivery-channel')
+const { getDeliveryChannel } = require('@vtex/delivery-packages/dist/delivery-channel')
 
 getDeliveryChannel({ id: 'pickup-in-point'})
 // -> 'pickup-in-point'
@@ -299,7 +299,7 @@ Check if the delivery channel source is a pickup point.
 
 ##### Usage
 ```js
-const { isPickup } = require('@vtex/delivery-packages/delivery-channel')
+const { isPickup } = require('@vtex/delivery-packages/dist/delivery-channel')
 
 isPickup({ id: 'pickup-in-point'})
 // -> true
@@ -330,7 +330,7 @@ Check if the delivery channel source is a delivery.
 
 ##### Usage
 ```js
-const { isDelivery } = require('@vtex/delivery-packages/delivery-channel')
+const { isDelivery } = require('@vtex/delivery-packages/dist/delivery-channel')
 
 isDelivery({ id: 'pickup-in-point'})
 // -> false
@@ -361,7 +361,7 @@ Search for a delivery channel object from an object container a list of delivery
 
 ##### Usage
 ```js
-const { findChannelById } = require('@vtex/delivery-packages/delivery-channel')
+const { findChannelById } = require('@vtex/delivery-packages/dist/delivery-channel')
 
 findChannelById({ deliveryChannels: [{ id: 'delivery' }] }, 'pickup-in-point')
 // -> null
@@ -384,7 +384,7 @@ Type: `object`
 Object like `{ id: 'delivery' }` or `{ id: 'pickup-in-point' }`
 
 ## Items
-> @vtex/delivery-packages/items
+> @vtex/delivery-packages/dist/items
 
 ### getNewItems (items, changes)
 
@@ -392,7 +392,7 @@ Get new items based on the ones passed and an array of changes.
 
 ##### Usage
 ```js
-const { getNewItems } = require('@vtex/delivery-packages/items')
+const { getNewItems } = require('@vtex/delivery-packages/dist/items')
 
 const items = [
   { id: 10, quantity: 1, seller: '1' },
@@ -427,7 +427,7 @@ Merge items with packages and organize them based if they were already delivered
 
 ##### Usage
 ```js
-const { getDeliveredItems } = require('@vtex/delivery-packages/items')
+const { getDeliveredItems } = require('@vtex/delivery-packages/dist/items')
 
 const items = [
   { id: 10, quantity: 1, seller: '1', index: 0 },
@@ -477,7 +477,7 @@ Type: `object`
 Object contained the keys delivered and toBeDelivered containing the right items and packages
 
 ## Scheduled Delivery
-> @vtex/delivery-packages/scheduled-delivery
+> @vtex/delivery-packages/dist/scheduled-delivery
 
 ### areAvailableDeliveryWindowsEquals (availableDeliveryWindows1, availableDeliveryWindows2)
 
@@ -485,7 +485,7 @@ Check if two available delivery windows are equal.
 
 ##### Usage
 ```js
-const { areAvailableDeliveryWindowsEquals } = require('@vtex/delivery-packages/scheduled-delivery')
+const { areAvailableDeliveryWindowsEquals } = require('@vtex/delivery-packages/dist/scheduled-delivery')
 
 const availableDeliveryWindows1 = [
   {
@@ -544,7 +544,7 @@ Get new logisticInfo with the deliveryWindow of the selectedSla inserted.
 
 ##### Usage
 ```js
-const { selectDeliveryWindow } = require('@vtex/delivery-packages/scheduled-delivery')
+const { selectDeliveryWindow } = require('@vtex/delivery-packages/dist/scheduled-delivery')
 
 const logisticsInfo = [
   {
@@ -683,7 +683,7 @@ Get the first sla with scheduled delivery matching the availableDeliveryWindows 
 
 ##### Usage
 ```js
-const { getFirstScheduledDelivery } = require('@vtex/delivery-packages/scheduled-delivery')
+const { getFirstScheduledDelivery } = require('@vtex/delivery-packages/dist/scheduled-delivery')
 
 const logisticsInfo = [
   {
@@ -786,7 +786,7 @@ Type: `object`
 If availableDeliveryWindows is passed, return the first sla with scheduled delivery matching the availableDeliveryWindows. If availableDeliveryWindows is not passed, return the first scheduled delivery sla that exists
 
 ## Shipping
-> @vtex/delivery-packages/shipping
+> @vtex/delivery-packages/dist/shipping
 
 ### getNewLogisticsInfo (logisticsInfo, selectedSla, availableDeliveryWindows = null)
 
@@ -794,7 +794,7 @@ Get new logisticInfo with the selectedSla on all items that can receive it as se
 
 ##### Usage
 ```js
-const { getNewLogisticsInfo } = require('@vtex/delivery-packages/shipping')
+const { getNewLogisticsInfo } = require('@vtex/delivery-packages/dist/shipping')
 
 const logisticsInfo = [
   {
@@ -982,7 +982,7 @@ Get new logisticInfo selecting first sla that has availableDeliveryWindows on ea
 
 ##### Usage
 ```js
-const { getNewLogisticsInfoWithSelectedScheduled } = require('@vtex/delivery-packages/shipping')
+const { getNewLogisticsInfoWithSelectedScheduled } = require('@vtex/delivery-packages/dist/shipping')
 
 const logisticsInfo = [
   {
@@ -1093,7 +1093,7 @@ Type: `Array<object>`
 New logisticInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that has availableDeliveryWindows
 
 ## SLA
-> @vtex/delivery-packages/sla
+> @vtex/delivery-packages/dist/sla
 
 ### hasSLAs (slasSource)
 
@@ -1101,7 +1101,7 @@ Check if the object or array passed have one or more slas
 
 ##### Usage
 ```js
-const { hasSLAs } = require('@vtex/delivery-packages/sla')
+const { hasSLAs } = require('@vtex/delivery-packages/dist/sla')
 
 hasSLAs({
   slas: [{ "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }],
@@ -1131,7 +1131,7 @@ Check if the object or array passed have at least of sla that can be scheduled d
 
 ##### Usage
 ```js
-const { hasDeliveryWindows } = require('@vtex/delivery-packages/sla')
+const { hasDeliveryWindows } = require('@vtex/delivery-packages/dist/sla')
 
 hasDeliveryWindows([
   { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
@@ -1190,7 +1190,7 @@ Get the sla object on slas that match the slaId passed.
 
 ##### Usage
 ```js
-const { getSlaObj } = require('@vtex/delivery-packages/sla')
+const { getSlaObj } = require('@vtex/delivery-packages/dist/sla')
 
 getSlaObj([
   { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
@@ -1223,7 +1223,7 @@ Get the select sla object on logisticInfo at the itemIndex position and optional
 
 ##### Usage
 ```js
-const { getSelectedSla } = require('@vtex/delivery-packages/sla')
+const { getSelectedSla } = require('@vtex/delivery-packages/dist/sla')
 
 getSelectedSla({
   logisticInfo: [

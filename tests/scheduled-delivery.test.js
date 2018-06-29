@@ -1,9 +1,11 @@
+import { getNewLogisticsInfoWithSelectedScheduled } from '../src/shipping'
 import {
   getFirstScheduledDelivery,
   areDeliveryWindowsEquals,
   areAvailableDeliveryWindowsEquals,
   selectDeliveryWindow,
   getScheduledDeliverySLA,
+  checkLogisticsInfoHasScheduledDeliverySelected,
 } from '../src/scheduled-delivery'
 
 import {
@@ -105,7 +107,7 @@ describe('Scheduled delivery', () => {
       expect(newLogisticsInfo3).toBeNull()
     })
 
-    it('should return correct new logisticsInfo if valid logisticInfo and deliveryWindow are passed', () => {
+    it('should return correct new logisticsInfo if valid logisticsInfo and deliveryWindow are passed', () => {
       let logisticsInfo = createLogisticsInfo(
         ['normalSla', 'expressSla', 'normalScheduledDeliverySla'],
         3
@@ -157,7 +159,7 @@ describe('Scheduled delivery', () => {
       expect(scheduledDelivery2).toBeNull()
     })
 
-    it('should return first valid scheduled delivery if a logisticInfo item is passed', () => {
+    it('should return first valid scheduled delivery if a logisticsInfo item is passed', () => {
       const li = createLogisticsInfo(
         [
           'normalSla',
@@ -175,7 +177,7 @@ describe('Scheduled delivery', () => {
       expect(scheduledDelivery).toEqual(expectedScheduledDelivery)
     })
 
-    it('should return first valid scheduled delivery if a logisticInfo item and specific availableDeliveryWindows are passed', () => {
+    it('should return first valid scheduled delivery if a logisticsInfo item and specific availableDeliveryWindows are passed', () => {
       const li = createLogisticsInfo(
         [
           'normalSla',
@@ -201,12 +203,13 @@ describe('Scheduled delivery', () => {
     it('should return null if empty params are passed', () => {
       const scheduledDelivery1 = getFirstScheduledDelivery()
       const scheduledDelivery2 = getFirstScheduledDelivery([], null, [])
+
       expect(scheduledDelivery1).toBeNull()
       expect(scheduledDelivery2).toBeNull()
     })
 
-    it('should return first valid scheduled delivery if logisticInfo is passed', () => {
-      const logisticInfo = [
+    it('should return first valid scheduled delivery if logisticsInfo is passed', () => {
+      const logisticsInfo = [
         ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
         ...createLogisticsInfo(
           [
@@ -222,13 +225,13 @@ describe('Scheduled delivery', () => {
 
       const expectedScheduledDelivery = slas.normalScheduledDeliverySla
 
-      const scheduledDelivery = getFirstScheduledDelivery(logisticInfo)
+      const scheduledDelivery = getFirstScheduledDelivery(logisticsInfo)
 
       expect(scheduledDelivery).toEqual(expectedScheduledDelivery)
     })
 
-    it('should return first valid scheduled delivery if logisticInfo and specific availableDeliveryWindows are passed', () => {
-      const logisticInfo = [
+    it('should return first valid scheduled delivery if logisticsInfo and specific availableDeliveryWindows are passed', () => {
+      const logisticsInfo = [
         ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
         ...createLogisticsInfo(
           [
@@ -245,11 +248,62 @@ describe('Scheduled delivery', () => {
       const expectedScheduledDelivery = slas.biggerWindowScheduledDeliverySla
 
       const scheduledDelivery = getFirstScheduledDelivery(
-        logisticInfo,
+        logisticsInfo,
         availableDeliveryWindows
       )
 
       expect(scheduledDelivery).toEqual(expectedScheduledDelivery)
+    })
+  })
+
+  describe('checkLogisticsInfoHasScheduledDeliverySelected', () => {
+    it('should return false if empty params are passed', () => {
+      const scheduledDelivery1 = checkLogisticsInfoHasScheduledDeliverySelected()
+      const scheduledDelivery2 = checkLogisticsInfoHasScheduledDeliverySelected(
+        []
+      )
+
+      expect(scheduledDelivery1).toBeFalsy()
+      expect(scheduledDelivery2).toBeFalsy()
+    })
+
+    it('should return true if logisticsInfo with scheduledDelivery selected is passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 0,
+        },
+        {
+          ...createLogisticsInfo(
+            [
+              'normalSla',
+              'expressSla',
+              'normalScheduledDeliverySla',
+              'biggerWindowScheduledDeliverySla',
+            ],
+            1
+          )[0],
+          itemIndex: 1,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 2,
+        },
+      ]
+
+      let scheduledLogisticsInfo = getNewLogisticsInfoWithSelectedScheduled(
+        logisticsInfo
+      )
+      scheduledLogisticsInfo = selectDeliveryWindow(scheduledLogisticsInfo, {
+        selectedSla: slas.normalScheduledDeliverySla.id,
+        deliveryWindow: availableDeliveryWindows[0],
+      })
+
+      const hasScheduledDelivery = checkLogisticsInfoHasScheduledDeliverySelected(
+        scheduledLogisticsInfo
+      )
+
+      expect(hasScheduledDelivery).toBeTruthy()
     })
   })
 })

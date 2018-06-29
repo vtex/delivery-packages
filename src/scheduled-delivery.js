@@ -89,6 +89,17 @@ export function areAvailableDeliveryWindowsEquals(
   return deliveryWindowsThatAreEqual.length === availableDeliveryWindows1.length
 }
 
+export function checkLogisticsInfoHasScheduledDeliverySelected(logisticsInfo) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return false
+  }
+
+  return logisticsInfo.some(li => {
+    const selectedSlaObj = getSelectedSlaIfMatchSlaId(li, li.selectedSla)
+    return hasDeliveryWindows(selectedSlaObj) && !!li.deliveryWindow
+  })
+}
+
 /* action = {selectedSla, deliveryWindow} */
 export function selectDeliveryWindow(logisticsInfo, action) {
   if (

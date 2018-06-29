@@ -157,16 +157,13 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
       return
     }
 
-    const firstScheduledSla = getFirstScheduledDelivery(
-      [li],
-      li.availableDeliveryWindows
-    )
+    const firstScheduledSla = getFirstScheduledDelivery([li])
 
     if (firstScheduledSla) {
       newLogisticsInfo[li.itemIndex] = getNewLogisticsInfo(
-        logisticsInfo,
+        newLogisticsInfo,
         firstScheduledSla,
-        li.availableDeliveryWindows
+        firstScheduledSla.availableDeliveryWindows
       )[li.itemIndex]
     }
   })
