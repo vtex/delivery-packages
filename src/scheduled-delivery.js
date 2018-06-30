@@ -89,6 +89,16 @@ export function areAvailableDeliveryWindowsEquals(
   return deliveryWindowsThatAreEqual.length === availableDeliveryWindows1.length
 }
 
+export function checkLogisticsInfoHasScheduledDeliverySla(logisticsInfo) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return false
+  }
+
+  return logisticsInfo.some(li => {
+    return li.slas.some(sla => hasDeliveryWindows(sla))
+  })
+}
+
 export function checkLogisticsInfoHasScheduledDeliverySelected(logisticsInfo) {
   if (!logisticsInfo || logisticsInfo.length === 0) {
     return false
