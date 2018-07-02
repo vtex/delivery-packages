@@ -1207,7 +1207,7 @@ An array of slas
 **returns:**
 - **delivery slas**
 Type: `Array<object>`
-an array with only the delivery slas (no pickup point sla)
+An array with only the delivery slas (no pickup point sla)
 
 ### getSlaObj (slas, slaId)
 
