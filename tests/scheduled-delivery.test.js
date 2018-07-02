@@ -5,6 +5,7 @@ import {
   areAvailableDeliveryWindowsEquals,
   selectDeliveryWindow,
   getScheduledDeliverySLA,
+  checkLogisticsInfoHasScheduledDeliverySla,
   checkLogisticsInfoHasScheduledDeliverySelected,
 } from '../src/scheduled-delivery'
 
@@ -300,6 +301,49 @@ describe('Scheduled delivery', () => {
       })
 
       const hasScheduledDelivery = checkLogisticsInfoHasScheduledDeliverySelected(
+        scheduledLogisticsInfo
+      )
+
+      expect(hasScheduledDelivery).toBeTruthy()
+    })
+  })
+
+  describe('checkLogisticsInfoHasScheduledDeliverySla', () => {
+    it('should return false if empty params are passed', () => {
+      const scheduledDelivery1 = checkLogisticsInfoHasScheduledDeliverySla()
+      const scheduledDelivery2 = checkLogisticsInfoHasScheduledDeliverySla(
+        []
+      )
+
+      expect(scheduledDelivery1).toBeFalsy()
+      expect(scheduledDelivery2).toBeFalsy()
+    })
+
+    it('should return true if logisticsInfo with scheduledDelivery selected is passed', () => {
+      const scheduledLogisticsInfo = [
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 0,
+        },
+        {
+          ...createLogisticsInfo(
+            [
+              'normalSla',
+              'expressSla',
+              'normalScheduledDeliverySla',
+              'biggerWindowScheduledDeliverySla',
+            ],
+            1
+          )[0],
+          itemIndex: 1,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          itemIndex: 2,
+        },
+      ]
+
+      const hasScheduledDelivery = checkLogisticsInfoHasScheduledDeliverySla(
         scheduledLogisticsInfo
       )
 
