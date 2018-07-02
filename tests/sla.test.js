@@ -6,6 +6,7 @@ import {
   getSelectedSlaIfMatchSlaId,
   hasDeliveryWindows,
   hasSLAs,
+  excludePickupTypeFromSlas,
 } from '../src/sla'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
 
@@ -337,6 +338,43 @@ describe('Sla', () => {
 
       expect(hasSLAs1).toBeTruthy()
       expect(hasSLAs2).toBeTruthy()
+    })
+  })
+
+  describe('excludePickupTypeFromSlas', () => {
+    it('should return false if empty params are passed', () => {
+      const deliverySlas1 = excludePickupTypeFromSlas()
+      const deliverySlas2 = excludePickupTypeFromSlas(null)
+      const deliverySlas3 = excludePickupTypeFromSlas([])
+
+      expect(deliverySlas1).toEqual([])
+      expect(deliverySlas2).toEqual([])
+      expect(deliverySlas3).toEqual([])
+    })
+
+    it('should return same slas if only passed delivery slas', () => {
+      const slasObjs = [slas.expressSla, slas.normalSla, slas.normalFastestSla]
+
+      const deliverySlas = excludePickupTypeFromSlas(slasObjs)
+
+      expect(deliverySlas).toEqual(slasObjs)
+    })
+
+    it('should return only delivery slas if passed delivery slas and pickup slas', () => {
+      const slasObjs = [
+        slas.expressSla,
+        slas.pickupNormalSla,
+        slas.normalFastestSla,
+      ]
+
+      const expectedSlas = [
+        slas.expressSla,
+        slas.normalFastestSla,
+      ]
+
+      const deliverySlas = excludePickupTypeFromSlas(slasObjs)
+
+      expect(deliverySlas).toEqual(expectedSlas)
     })
   })
 })

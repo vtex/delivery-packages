@@ -89,3 +89,13 @@ export function getSlaObj(slas, slaId) {
 
   return slaObj || null
 }
+
+export function excludePickupTypeFromSlas(slas) {
+  if (!slas || slas.length === 0) {
+    return []
+  }
+
+  return slas.filter(
+    sla => !sla.pickupStoreInfo || !sla.pickupStoreInfo.isPickupStore
+  )
+}
