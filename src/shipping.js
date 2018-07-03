@@ -1,8 +1,9 @@
 import './polyfills'
-import { hasDeliveryWindows, getSelectedSla } from './sla'
+import { hasDeliveryWindows, getSelectedSla, getSlaAsId } from './sla'
 import {
   filterSlaByAvailableDeliveryWindows,
   getFirstScheduledDelivery,
+  selectDeliveryWindow,
 } from './scheduled-delivery'
 
 /** PRIVATE **/
@@ -109,13 +110,17 @@ export function getNewLogisticsInfo(
   selectedSla,
   availableDeliveryWindows = null
 ) {
-  selectedSla = selectedSla && selectedSla.id ? selectedSla.id : selectedSla
+  selectedSla = getSlaAsId(selectedSla)
 
   if (!selectedSla || !logisticsInfo || logisticsInfo.length === 0) {
     return logisticsInfo || null
   }
 
   return logisticsInfo.map(li => {
+    if (!li) {
+      return li
+    }
+
     const selectedSlaObj = getSelectedSla({
       logisticsInfo,
       itemIndex: li.itemIndex,
@@ -169,4 +174,55 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
   })
 
   return newLogisticsInfo
+}
+
+export function getNewLogisticsInfoWithScheduledDeliveryChoice(
+  logisticsInfo,
+  scheduledDeliveryChoice,
+  scheduledDeliveryItems = null
+) {
+  if (
+    !logisticsInfo ||
+    logisticsInfo.length === 0 ||
+    !scheduledDeliveryChoice ||
+    !scheduledDeliveryChoice.deliveryWindow ||
+    !scheduledDeliveryChoice.selectedSla
+  ) {
+    return null
+  }
+
+  const { deliveryWindow } = scheduledDeliveryChoice
+  const selectedSla = getSlaAsId(scheduledDeliveryChoice.selectedSla)
+
+  const indexes = scheduledDeliveryItems
+    ? scheduledDeliveryItems.map(
+      item =>
+        typeof item.itemIndex !== 'undefined' ? item.itemIndex : item.index
+    )
+    : null
+
+  const itemsLogisticsInfo = indexes
+    ? logisticsInfo.map(
+      li => (indexes.indexOf(li.itemIndex) !== -1 ? li : null)
+    )
+    : logisticsInfo
+
+  const newItemsLogisticsInfo = getNewLogisticsInfo(
+    itemsLogisticsInfo,
+    selectedSla
+  )
+
+  const newItemsLogisticsInfoWithDeliveryWindow = selectDeliveryWindow(
+    newItemsLogisticsInfo,
+    { selectedSla, deliveryWindow }
+  )
+
+  return indexes
+    ? logisticsInfo.map(
+      li =>
+        newItemsLogisticsInfoWithDeliveryWindow[li.itemIndex]
+          ? newItemsLogisticsInfoWithDeliveryWindow[li.itemIndex]
+          : li
+    )
+    : newItemsLogisticsInfoWithDeliveryWindow
 }

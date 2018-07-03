@@ -123,6 +123,10 @@ export function selectDeliveryWindow(logisticsInfo, action) {
   }
 
   return logisticsInfo.map(li => {
+    if (!li) {
+      return li
+    }
+
     const selectedSlaId = action.selectedSla || action.slaOption
     const { deliveryWindow } = action
     const selectedSlaObj = getSelectedSlaIfMatchSlaId(li, selectedSlaId)

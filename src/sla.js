@@ -31,6 +31,10 @@ export function findSlaWithChannel(item, channel) {
   return item.slas && item.slas.find(sla => isCurrentChannel(sla, channel))
 }
 
+export function getSlaAsId(sla) {
+  return sla && sla.id ? sla.id : sla
+}
+
 /** PUBLIC **/
 
 export function hasSLAs(slasSource) {

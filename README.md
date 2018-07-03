@@ -1092,6 +1092,151 @@ The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
 Type: `Array<object>`
 New logisticInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that has availableDeliveryWindows
 
+
+### getNewLogisticsInfoWithScheduledDeliveryChoice (logisticsInfo, scheduledDeliveryChoice, scheduledDeliveryItems = null)
+
+Get new logisticInfo selecting the sla and delivery window passed and optionally filtering by a logistics items array.
+
+##### Usage
+```js
+const { getNewLogisticsInfoWithScheduledDeliveryChoice } = require('@vtex/delivery-packages/dist/shipping')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticInfo
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "5bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {
+        "id": "Agendada",
+        "deliveryChannel": "delivery",
+        "availableDeliveryWindows": [
+          {
+            startDateUtc: '2018-05-26T09:00:00+00:00',
+            endDateUtc: '2018-05-26T21:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          },
+          {
+            startDateUtc: '2018-05-26T12:00:00+00:00',
+            endDateUtc: '2018-05-26T13:00:00+00:00',
+            price: 500,
+            lisPrice: 500,
+            tax: 0,
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+const deliveryWindow = {
+  startDateUtc: '2018-05-26T12:00:00+00:00',
+  endDateUtc: '2018-05-26T13:00:00+00:00',
+  price: 500,
+  lisPrice: 500,
+  tax: 0,
+}
+
+getNewLogisticsInfoWithScheduledDeliveryChoice(logisticsInfo, { selectedSla: 'Agendada', deliveryWindow }, [{ itemIndex: 0 }])
+// -> [
+//   {
+//     // You can pass all the properties of the logisticInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": 'Agendada',
+//     "selectedDeliveryChannel": 'delivery',
+//     "shippingEstimate": "5bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "deliveryWindow": {
+//       startDateUtc: '2018-05-26T12:00:00+00:00',
+//       endDateUtc: '2018-05-26T13:00:00+00:00',
+//       price: 500,
+//       lisPrice: 500,
+//       tax: 0,
+//     },
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {
+//         "id": "Agendada",
+//         "deliveryChannel": "delivery",
+//         "deliveryWindow": {
+//           startDateUtc: '2018-05-26T12:00:00+00:00',
+//           endDateUtc: '2018-05-26T13:00:00+00:00',
+//           price: 500,
+//           lisPrice: 500,
+//           tax: 0,
+//         },
+//         "availableDeliveryWindows": [
+//           {
+//             startDateUtc: '2018-05-26T09:00:00+00:00',
+//             endDateUtc: '2018-05-26T21:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           },
+//           {
+//             startDateUtc: '2018-05-26T12:00:00+00:00',
+//             endDateUtc: '2018-05-26T13:00:00+00:00',
+//             price: 500,
+//             lisPrice: 500,
+//             tax: 0,
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "6bd",
+//     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 1,
+//     "slas": [
+//       { "id": "Normal", "deliveryChannel": "delivery" }
+//     ]
+//   }
+// ]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+- **scheduledDeliveryChoice**
+Type: `object`
+An object like `{ selectedSla, deliveryWindow }` saying what sla and deliveryWindow to choose the delivery
+- **scheduledDeliveryItems**
+Type: `Array<object>`
+An array of objects, each like `{ itemIndex: number }` or `{ index: number }` so that you can filter what items should change their selected sla and delivery window
+
+**returns:**
+- **new logisticInfo**
+Type: `Array<object>`
+New logisticInfo with selectedSla, selectedDeliveryChannel and deliveryWindow filled correctly according to the params
+
 ## SLA
 > @vtex/delivery-packages/dist/sla
 
