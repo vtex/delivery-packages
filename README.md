@@ -1184,6 +1184,31 @@ Object with a single sla or an array of slas
 Type: `boolean`
 true or false
 
+### excludePickupTypeFromSlas (slas)
+
+Return only delivery slas from a list of slas passed.
+
+##### Usage
+```js
+const { excludePickupTypeFromSlas } = require('@vtex/delivery-packages/dist/sla')
+
+excludePickupTypeFromSlas([
+  { "id": "Normal", "deliveryChannel": "delivery" },
+  { "id": "Pickup", "deliveryChannel": "delivery", pickupStoreInfo: { isPickupStore: true, friendlyName: 'Shopping da Gávea' }, }
+])
+// -> [ { "id": "Normal", "deliveryChannel": "delivery" } ]
+```
+
+**params:**
+- **slas**
+Type: `Array<object>`
+An array of slas
+
+**returns:**
+- **delivery slas**
+Type: `Array<object>`
+an array with only the delivery slas (no pickup point sla)
+
 ### getSlaObj (slas, slaId)
 
 Get the sla object on slas that match the slaId passed.
