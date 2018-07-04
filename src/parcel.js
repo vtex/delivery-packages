@@ -1,9 +1,13 @@
 import { getShippingEstimateQuantityInSeconds } from '@vtex/estimate-calculator'
 
 import './polyfills'
-import { hasDeliveryWindows } from './sla'
+import { hasDeliveryWindows, getSlaObj } from './sla'
 import { getNewItems, getDeliveredItems } from './items'
 import { hydratePackageWithLogisticsExtraInfo } from './shipping'
+import {
+  areAvailableDeliveryWindowsEquals,
+  getScheduledDeliverySLA,
+} from './scheduled-delivery'
 import { DEFAULT_CRITERIA } from './constants'
 
 /** PRIVATE **/
@@ -64,9 +68,17 @@ function groupDeliveries(items, criteria) {
         return false
       }
 
+      const scheduledSla =
+        getSlaObj(item.slas, item.selectedSla) || getScheduledDeliverySLA(item)
+
       if (
         criteria.groupByAvailableDeliveryWindows &&
-        hasDeliveryWindows(item.slas)
+        hasDeliveryWindows(item.slas) &&
+        (!pack.availableDeliveryWindows ||
+          !areAvailableDeliveryWindowsEquals(
+            pack.availableDeliveryWindows,
+            scheduledSla.availableDeliveryWindows
+          ))
       ) {
         return false
       }
@@ -79,6 +91,7 @@ function groupDeliveries(items, criteria) {
 function addToPackage(items, criteria, fn) {
   return items.reduce((packages, item) => {
     const pack = fn(packages, item)
+
     if (pack) {
       if (
         criteria.selectedSla &&
@@ -97,6 +110,9 @@ function addToPackage(items, criteria, fn) {
       return packages
     }
 
+    const scheduledSla =
+      getSlaObj(item.slas, item.selectedSla) || getScheduledDeliverySLA(item)
+
     const newPackage = {
       items: [item.item],
       package: item.package,
@@ -114,6 +130,10 @@ function addToPackage(items, criteria, fn) {
       hasAvailableDeliveryWindows: criteria.groupByAvailableDeliveryWindows
         ? hasDeliveryWindows(item.slas)
         : undefined,
+      availableDeliveryWindows:
+        criteria.groupByAvailableDeliveryWindows && scheduledSla
+          ? scheduledSla.availableDeliveryWindows
+          : undefined,
       deliveryWindow: criteria.selectedSla ? item.deliveryWindow : undefined,
       shippingEstimate: criteria.selectedSla
         ? item.shippingEstimate

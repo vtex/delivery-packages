@@ -989,7 +989,7 @@ describe('the order has changes', () => {
 })
 
 describe('has one package with scheduled delivery and the other with the normal delivery', () => {
-  it('should create two parcels with different selectedSla, one with a package and one delivery', () => {
+  it('should create two parcels with different selectedSla, one with a scheduled delivery and one delivery', () => {
     const items = createItems(2)
     const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
@@ -1053,8 +1053,8 @@ describe('has one package with scheduled delivery and the other with the normal 
     expect(result[1]).toEqual(expectedParcel2)
   })
 
-  it('should create two parcels with different selectedSla, one with a package and one delivery', () => {
-    const items = createItems(3)
+  it('should create two parcels with different selectedSla, one with a scheduled delivery and one delivery', () => {
+    const items = createItems(4)
     const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
       {
@@ -1078,6 +1078,15 @@ describe('has one package with scheduled delivery and the other with the normal 
         itemIndex: 2,
         itemId: 2,
       },
+      {
+        ...createLogisticsInfo(
+          ['normalSla', 'normalScheduledDeliverySla'],
+          1
+        )[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 3,
+        itemId: 3,
+      },
     ]
 
     const expectedParcel1 = {
@@ -1089,6 +1098,7 @@ describe('has one package with scheduled delivery and the other with the normal 
       items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
       slas: [normalSla, expressSla],
       hasAvailableDeliveryWindows: false,
+      availableDeliveryWindows: undefined,
       package: undefined,
       pickupFriendlyName: null,
       seller: '1',
@@ -1102,9 +1112,11 @@ describe('has one package with scheduled delivery and the other with the normal 
       item: undefined,
       deliveryChannel: undefined,
       address: residentialAddress,
-      items: [{ ...items[1], index: 1 }],
+      items: [{ ...items[1], index: 1 }, { ...items[3], index: 3 }],
       slas: [normalSla, normalScheduledDeliverySla],
       hasAvailableDeliveryWindows: true,
+      availableDeliveryWindows:
+        normalScheduledDeliverySla.availableDeliveryWindows,
       package: undefined,
       pickupFriendlyName: null,
       seller: '1',
@@ -1127,5 +1139,123 @@ describe('has one package with scheduled delivery and the other with the normal 
     expect(result).toHaveLength(2)
     expect(result[0]).toEqual(expectedParcel1)
     expect(result[1]).toEqual(expectedParcel2)
+  })
+})
+
+describe('has three package with two scheduled delivery and the other with the normal delivery', () => {
+  it('should create three parcels with different selectedSla, two with a scheduled delivery and one delivery', () => {
+    const items = createItems(4)
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 0,
+        itemId: 0,
+      },
+      {
+        ...createLogisticsInfo(
+          ['normalSla', 'normalScheduledDeliverySla'],
+          1
+        )[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 1,
+        itemId: 1,
+      },
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 2,
+        itemId: 2,
+      },
+      {
+        ...createLogisticsInfo(
+          ['normalSla', 'normalScheduledDeliverySla'],
+          1
+        )[0],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 3,
+        itemId: 3,
+      },
+    ]
+    const diffAvailableDeliveryWindows = normalScheduledDeliverySla.availableDeliveryWindows.slice(
+      0,
+      2
+    )
+    const diffNormalScheduledDeliverySla = {
+      ...logisticsInfo[3].slas[1],
+      availableDeliveryWindows: diffAvailableDeliveryWindows,
+    }
+    // Change the second availableDeliveryWindows to force break in multiple packages
+    logisticsInfo[3].slas[1] = diffNormalScheduledDeliverySla
+
+    const expectedParcel1 = {
+      deliveryIds: undefined,
+      deliveryWindow: undefined,
+      item: undefined,
+      deliveryChannel: undefined,
+      address: residentialAddress,
+      items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
+      slas: [normalSla, expressSla],
+      hasAvailableDeliveryWindows: false,
+      availableDeliveryWindows: undefined,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: null,
+      shippingEstimate: undefined,
+      shippingEstimateDate: undefined,
+    }
+    const expectedParcel2 = {
+      deliveryIds: undefined,
+      deliveryWindow: undefined,
+      item: undefined,
+      deliveryChannel: undefined,
+      address: residentialAddress,
+      items: [{ ...items[1], index: 1 }],
+      slas: [normalSla, normalScheduledDeliverySla],
+      hasAvailableDeliveryWindows: true,
+      availableDeliveryWindows:
+        normalScheduledDeliverySla.availableDeliveryWindows,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: null,
+      shippingEstimate: undefined,
+      shippingEstimateDate: undefined,
+    }
+    const expectedParcel3 = {
+      deliveryIds: undefined,
+      deliveryWindow: undefined,
+      item: undefined,
+      deliveryChannel: undefined,
+      address: residentialAddress,
+      items: [{ ...items[3], index: 3 }],
+      slas: [normalSla, diffNormalScheduledDeliverySla],
+      hasAvailableDeliveryWindows: true,
+      availableDeliveryWindows: diffAvailableDeliveryWindows,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: null,
+      shippingEstimate: undefined,
+      shippingEstimateDate: undefined,
+    }
+
+    const result = parcelify(
+      {
+        items,
+        shippingData: {
+          selectedAddresses,
+          logisticsInfo,
+        },
+      },
+      { criteria: { groupByAvailableDeliveryWindows: true } }
+    )
+
+    expect(result).toHaveLength(3)
+    expect(result[0]).toEqual(expectedParcel1)
+    expect(result[1]).toEqual(expectedParcel2)
+    expect(result[2]).toEqual(expectedParcel3)
   })
 })
