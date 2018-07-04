@@ -539,6 +539,62 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
+    it('should return new logisticInfo with scheduled delivery as selected slas if valid params are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'biggerWindowScheduledDeliverySla'],
+            1
+          )[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.biggerWindowScheduledDeliverySla.id,
+        },
+        {
+          ...logisticsInfo[1],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalSla.id,
+        },
+        {
+          ...logisticsInfo[2],
+          selectedDeliveryChannel: 'delivery',
+          selectedSla: slas.normalScheduledDeliverySla.id,
+        },
+      ]
+
+      const newLogisticsInfo = getNewLogisticsInfoWithSelectedScheduled(
+        logisticsInfo
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
     it('should return same logisticInfo with selectedSlas if slas are already selected', () => {
       const logisticsInfo = [
         {
