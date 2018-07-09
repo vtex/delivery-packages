@@ -1237,6 +1237,100 @@ An array of objects, each like `{ itemIndex: number }` or `{ index: number }` so
 Type: `Array<object>`
 New logisticsInfo with selectedSla, selectedDeliveryChannel and deliveryWindow filled correctly according to the params
 
+### filterLogisticsInfo (logisticsInfo, filters, keepSize = false)
+
+Get new logisticsInfo filtered by filters object and optionally choosing if the missing items are maintained on the new array as `null` values, to keep the original size.
+
+##### Usage
+```js
+const { filterLogisticsInfo } = require('@vtex/delivery-packages/dist/shipping')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticsInfo
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "1bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {"id": "Expressa", "deliveryChannel": "delivery"}
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+const items = [{ index: 0 }] // or const items = [{ itemIndex: 0 }, { itemIndex: 2 }]
+
+filterLogisticsInfo(logisticsInfo, { items })
+// -> [
+//   {
+//     // You can pass all the properties of the logisticsInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "1bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {"id": "Expressa", "deliveryChannel": "delivery"}
+//     ]
+//   }
+// ]
+
+const keepSize = true
+filterLogisticsInfo(logisticsInfo, { items }, keepSize)
+// -> [
+//   {
+//     // You can pass all the properties of the logisticsInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "1bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {"id": "Expressa", "deliveryChannel": "delivery"}
+//     ]
+//   },
+//   null
+// ]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+- **filters**
+Type: `object`
+An object like `{ items: [{ index or itemIndex: number }, ...], }` saying what items to filter on logisticsInfo
+- **keepSize**
+Type: `boolean`
+Flag to inform if the missing items are maintained on the new array as `null` values, to keep the original size, or they are just removed (default)
+
+**returns:**
+- **new logisticsInfo**
+Type: `Array<object>`
+New logisticsInfo filtered by the `filters` param and with the size according to `keepSize` param
+
 ## SLA
 > @vtex/delivery-packages/dist/sla
 

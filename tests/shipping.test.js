@@ -3,6 +3,7 @@ import {
   hydratePackageWithLogisticsExtraInfo,
   getNewLogisticsInfo,
   getNewLogisticsInfoWithSelectedScheduled,
+  filterLogisticsInfo,
   getNewLogisticsInfoWithScheduledDeliveryChoice,
 } from '../src/shipping'
 import { getDeliveredItems } from '../src/items'
@@ -630,6 +631,127 @@ describe('Shipping', () => {
 
       const newLogisticsInfo = getNewLogisticsInfoWithSelectedScheduled(
         logisticsInfo
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+  })
+
+  describe('filterLogisticsInfo', () => {
+    it('should return empty array if invalid params are passed', () => {
+      const newLogisticsInfo1 = filterLogisticsInfo()
+      const newLogisticsInfo2 = filterLogisticsInfo([])
+      const newLogisticsInfo3 = filterLogisticsInfo([], {})
+
+      expect(newLogisticsInfo1).toEqual([])
+      expect(newLogisticsInfo2).toEqual([])
+      expect(newLogisticsInfo3).toEqual([])
+    })
+
+    it('should return logisticsInfo filtered when items with itemIndex are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+      const items = [{ itemIndex: 0 }, { itemIndex: 2 }]
+
+      const expectedLogisticsInfo = [logisticsInfo[0], logisticsInfo[2]]
+
+      window.debug = true
+
+      const newLogisticsInfo = filterLogisticsInfo(logisticsInfo, { items })
+
+      window.debug = false
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return logisticsInfo filtered when items with index are passed', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+      const items = [{ index: 0 }, { index: 2 }]
+
+      const expectedLogisticsInfo = [logisticsInfo[0], logisticsInfo[2]]
+
+      const newLogisticsInfo = filterLogisticsInfo(logisticsInfo, { items })
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return new logisticsInfo with null on missing elements if keepSize argument is passed as true', () => {
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(
+            ['normalSla', 'normalScheduledDeliverySla'],
+            1
+          )[0],
+          itemIndex: 2,
+          itemId: 2,
+        },
+      ]
+      const items = [{ index: 0 }, { index: 2 }]
+
+      const expectedLogisticsInfo = [logisticsInfo[0], null, logisticsInfo[2]]
+
+      const keepSize = true
+
+      const newLogisticsInfo = filterLogisticsInfo(
+        logisticsInfo,
+        { items },
+        keepSize
       )
 
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
