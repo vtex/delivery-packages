@@ -1241,6 +1241,8 @@ New logisticsInfo with selectedSla, selectedDeliveryChannel and deliveryWindow f
 
 Get new logisticsInfo filtered by filters object and optionally choosing if the missing items are maintained on the new array as `null` values, to keep the original size.
 
+On each criteria, like in the `items` filter, the algorithm is to include everything that match any `item` filter (using an `||` logic).
+
 ##### Usage
 ```js
 const { filterLogisticsInfo } = require('@vtex/delivery-packages/dist/shipping')
