@@ -26,7 +26,7 @@ describe('Sla', () => {
       expect(selectedSla2).toBeNull()
     })
 
-    it('should return correct logisticInfo if only itemIndex is passed', () => {
+    it('should return correct logisticsInfo if only itemIndex is passed', () => {
       const logisticsInfo = createLogisticsInfo(
         ['normalSla', 'expressSla', 'pickupSla'],
         3
@@ -46,7 +46,7 @@ describe('Sla', () => {
       expect(newSelectedSla).toEqual(expectedSelectedSla)
     })
 
-    it('should return correct logisticInfo if valid selectedSla and itemIndex is passed', () => {
+    it('should return correct logisticsInfo if valid selectedSla and itemIndex is passed', () => {
       const logisticsInfo = createLogisticsInfo(
         ['normalSla', 'expressSla', 'pickupSla'],
         3

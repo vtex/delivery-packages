@@ -181,7 +181,7 @@ const order = {
     ],
     logisticsInfo: [
       {
-        // You can pass all the properties of the logisticInfo
+        // You can pass all the properties of the logisticsInfo
         "addressId": "-4556418741084",
         "selectedSla": "Expressa",
         "shippingEstimate": "5bd",
@@ -357,7 +357,7 @@ true or false
 
 ### findChannelById (logisticsInfoItem, deliveryChannelSource)
 
-Search for a delivery channel object from an object container a list of delivery channel objects (usually it will be a logisticInfo item).
+Search for a delivery channel object from an object container a list of delivery channel objects (usually it will be a logisticsInfo item).
 
 ##### Usage
 ```js
@@ -527,11 +527,11 @@ areAvailableDeliveryWindowsEquals(availableDeliveryWindows1, availableDeliveryWi
 **params:**
 - **availableDeliveryWindows1**
 Type: `Array<object>`
-Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries)
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticsInfo[i].slas that have scheduled deliveries)
 
 - **availableDeliveryWindows2**
 Type: `Array<object>`
-Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries)
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticsInfo[i].slas that have scheduled deliveries)
 
 **returns:**
 - **are equal**
@@ -540,7 +540,7 @@ true or false
 
 ### selectDeliveryWindow (logisticsInfo, { selectedSla, deliveryWindow })
 
-Get new logisticInfo with the deliveryWindow of the selectedSla inserted.
+Get new logisticsInfo with the deliveryWindow of the selectedSla inserted.
 
 ##### Usage
 ```js
@@ -548,7 +548,7 @@ const { selectDeliveryWindow } = require('@vtex/delivery-packages/dist/scheduled
 
 const logisticsInfo = [
   {
-    // You can pass all the properties of the logisticInfo
+    // You can pass all the properties of the logisticsInfo
     "addressId": "-4556418741084",
     "selectedSla": "Agendada",
     "shippingEstimate": "5bd",
@@ -604,7 +604,7 @@ selectDeliveryWindow(logisticsInfo, {
 })
 // -> [
 //   {
-//     // You can pass all the properties of the logisticInfo
+//     // You can pass all the properties of the logisticsInfo
 //     "addressId": "-4556418741084",
 //     "selectedSla": "Agendada",
 //     "shippingEstimate": "5bd",
@@ -666,16 +666,16 @@ selectDeliveryWindow(logisticsInfo, {
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
 
 - **action**
 Type: `object`
-Object on the format `{ selectedSla, deliveryWindow }`, selectedSla being a string with the id of the selectedSla of each logisticInfo item and deliveryWindow being an object of the availableDeliveryWindows on these items
+Object on the format `{ selectedSla, deliveryWindow }`, selectedSla being a string with the id of the selectedSla of each logisticsInfo item and deliveryWindow being an object of the availableDeliveryWindows on these items
 
 **returns:**
-- **new logisticInfo**
+- **new logisticsInfo**
 Type: `Array<object>`
-The new logisticInfo with the deliveryWindow selected on the matching items that have the selectedSla passed
+The new logisticsInfo with the deliveryWindow selected on the matching items that have the selectedSla passed
 
 ### getFirstScheduledDelivery (logisticsInfo, availableDeliveryWindows = null)
 
@@ -687,7 +687,7 @@ const { getFirstScheduledDelivery } = require('@vtex/delivery-packages/dist/sche
 
 const logisticsInfo = [
   {
-    // You can pass all the properties of the logisticInfo
+    // You can pass all the properties of the logisticsInfo
     "addressId": "-4556418741084",
     "selectedSla": "Agendada",
     "shippingEstimate": "5bd",
@@ -773,11 +773,11 @@ getFirstScheduledDelivery(logisticsInfo, [
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
 
 - **availableDeliveryWindows1**
 Type: `Array<object>`
-Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries). The default value for this parameter is null
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticsInfo[i].slas that have scheduled deliveries). The default value for this parameter is null
 
 
 **returns:**
@@ -790,7 +790,7 @@ If availableDeliveryWindows is passed, return the first sla with scheduled deliv
 
 ### getNewLogisticsInfo (logisticsInfo, selectedSla, availableDeliveryWindows = null)
 
-Get new logisticInfo with the selectedSla on all items that can receive it as selected.
+Get new logisticsInfo with the selectedSla on all items that can receive it as selected.
 
 ##### Usage
 ```js
@@ -798,7 +798,7 @@ const { getNewLogisticsInfo } = require('@vtex/delivery-packages/dist/shipping')
 
 const logisticsInfo = [
   {
-    // You can pass all the properties of the logisticInfo
+    // You can pass all the properties of the logisticsInfo
     "addressId": "-4556418741084",
     "selectedSla": null,
     "selectedDeliveryChannel": null,
@@ -847,7 +847,7 @@ const logisticsInfo = [
 getNewLogisticsInfo(logisticsInfo, 'Normal')
 // -> [
 //   {
-//     // You can pass all the properties of the logisticInfo
+//     // You can pass all the properties of the logisticsInfo
 //     "addressId": "-4556418741084",
 //     "selectedSla": null,
 //     "selectedDeliveryChannel": null,
@@ -911,7 +911,7 @@ getNewLogisticsInfo(logisticsInfo, 'Agendada', [
 ])
 // -> [
 //   {
-//     // You can pass all the properties of the logisticInfo
+//     // You can pass all the properties of the logisticsInfo
 //     "addressId": "-4556418741084",
 //     "selectedSla": "Agendada",
 //     "selectedDeliveryChannel": "delivery",
@@ -961,24 +961,24 @@ getNewLogisticsInfo(logisticsInfo, 'Agendada', [
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
 
 - **selectedSla**
 Type: `string`
-The id of the selected sla on logisticInfo items
+The id of the selected sla on logisticsInfo items
 
 - **availableDeliveryWindows**
 Type: `Array<object>`
-Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticInfo[i].slas that have scheduled deliveries). The default value for this parameter is null
+Array of objects, each object with `startDateUtc`, `endDateUtc`, `price`, `lisPrice` and `tax` properties (like inside logisticsInfo[i].slas that have scheduled deliveries). The default value for this parameter is null
 
 **returns:**
-- **new logisticInfo**
+- **new logisticsInfo**
 Type: `Array<object>`
-New logisticInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that can be selected. Optionally the availableDeliveryWindows can be passed to filter the scheduled delivery slas
+New logisticsInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that can be selected. Optionally the availableDeliveryWindows can be passed to filter the scheduled delivery slas
 
 ### getNewLogisticsInfoWithSelectedScheduled (logisticsInfo)
 
-Get new logisticInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered.
+Get new logisticsInfo selecting first sla that has availableDeliveryWindows on each item that can be scheduled delivered.
 
 ##### Usage
 ```js
@@ -986,7 +986,7 @@ const { getNewLogisticsInfoWithSelectedScheduled } = require('@vtex/delivery-pac
 
 const logisticsInfo = [
   {
-    // You can pass all the properties of the logisticInfo
+    // You can pass all the properties of the logisticsInfo
     "addressId": "-4556418741084",
     "selectedSla": null,
     "selectedDeliveryChannel": null,
@@ -1035,7 +1035,7 @@ const logisticsInfo = [
 getNewLogisticsInfoWithSelectedScheduled(logisticsInfo)
 // -> [
 //   {
-//     // You can pass all the properties of the logisticInfo
+//     // You can pass all the properties of the logisticsInfo
 //     "addressId": "-4556418741084",
 //     "selectedSla": 'Agendada',
 //     "selectedDeliveryChannel": 'delivery',
@@ -1085,17 +1085,17 @@ getNewLogisticsInfoWithSelectedScheduled(logisticsInfo)
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
 
 **returns:**
-- **new logisticInfo**
+- **new logisticsInfo**
 Type: `Array<object>`
-New logisticInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that has availableDeliveryWindows
+New logisticsInfo with selectedSla and selectedDeliveryChannel filled correctly on each item with slas that has availableDeliveryWindows
 
 
 ### getNewLogisticsInfoWithScheduledDeliveryChoice (logisticsInfo, scheduledDeliveryChoice, scheduledDeliveryItems = null)
 
-Get new logisticInfo selecting the sla and delivery window passed and optionally filtering by a logistics items array.
+Get new logisticsInfo selecting the sla and delivery window passed and optionally filtering by a logistics items array.
 
 ##### Usage
 ```js
@@ -1103,7 +1103,7 @@ const { getNewLogisticsInfoWithScheduledDeliveryChoice } = require('@vtex/delive
 
 const logisticsInfo = [
   {
-    // You can pass all the properties of the logisticInfo
+    // You can pass all the properties of the logisticsInfo
     "addressId": "-4556418741084",
     "selectedSla": null,
     "selectedDeliveryChannel": null,
@@ -1160,7 +1160,7 @@ const deliveryWindow = {
 getNewLogisticsInfoWithScheduledDeliveryChoice(logisticsInfo, { selectedSla: 'Agendada', deliveryWindow }, [{ itemIndex: 0 }])
 // -> [
 //   {
-//     // You can pass all the properties of the logisticInfo
+//     // You can pass all the properties of the logisticsInfo
 //     "addressId": "-4556418741084",
 //     "selectedSla": 'Agendada',
 //     "selectedDeliveryChannel": 'delivery',
@@ -1224,7 +1224,7 @@ getNewLogisticsInfoWithScheduledDeliveryChoice(logisticsInfo, { selectedSla: 'Ag
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
 - **scheduledDeliveryChoice**
 Type: `object`
 An object like `{ selectedSla, deliveryWindow }` saying what sla and deliveryWindow to choose the delivery
@@ -1233,9 +1233,105 @@ Type: `Array<object>`
 An array of objects, each like `{ itemIndex: number }` or `{ index: number }` so that you can filter what items should change their selected sla and delivery window
 
 **returns:**
-- **new logisticInfo**
+- **new logisticsInfo**
 Type: `Array<object>`
-New logisticInfo with selectedSla, selectedDeliveryChannel and deliveryWindow filled correctly according to the params
+New logisticsInfo with selectedSla, selectedDeliveryChannel and deliveryWindow filled correctly according to the params
+
+### filterLogisticsInfo (logisticsInfo, filters, keepSize = false)
+
+Get new logisticsInfo filtered by filters object and optionally choosing if the missing items are maintained on the new array as `null` values, to keep the original size.
+
+On each criteria, like in the `items` filter, the algorithm is to include everything that match any `item` filter (using an `||` logic).
+
+##### Usage
+```js
+const { filterLogisticsInfo } = require('@vtex/delivery-packages/dist/shipping')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticsInfo
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "1bd",
+    "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 0,
+    "slas": [
+      // You can pass all the properties of the sla
+      {"id": "Expressa", "deliveryChannel": "delivery"}
+    ]
+  },
+  {
+    "addressId": "-4556418741084",
+    "selectedSla": null,
+    "selectedDeliveryChannel": null,
+    "shippingEstimate": "6bd",
+    "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
+    "deliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+const items = [{ index: 0 }] // or const items = [{ itemIndex: 0 }, { itemIndex: 2 }]
+
+filterLogisticsInfo(logisticsInfo, { items })
+// -> [
+//   {
+//     // You can pass all the properties of the logisticsInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "1bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {"id": "Expressa", "deliveryChannel": "delivery"}
+//     ]
+//   }
+// ]
+
+const keepSize = true
+filterLogisticsInfo(logisticsInfo, { items }, keepSize)
+// -> [
+//   {
+//     // You can pass all the properties of the logisticsInfo
+//     "addressId": "-4556418741084",
+//     "selectedSla": null,
+//     "selectedDeliveryChannel": null,
+//     "shippingEstimate": "1bd",
+//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
+//     "deliveryChannel": "delivery",
+//     "itemIndex": 0,
+//     "slas": [
+//       // You can pass all the properties of the sla
+//       {"id": "Expressa", "deliveryChannel": "delivery"}
+//     ]
+//   },
+//   null
+// ]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+- **filters**
+Type: `object`
+An object like `{ items: [{ index or itemIndex: number }, ...], }` saying what items to filter on logisticsInfo
+- **keepSize**
+Type: `boolean`
+Flag to inform if the missing items are maintained on the new array as `null` values, to keep the original size, or they are just removed (default)
+
+**returns:**
+- **new logisticsInfo**
+Type: `Array<object>`
+New logisticsInfo filtered by the `filters` param and with the size according to `keepSize` param
 
 ## SLA
 > @vtex/delivery-packages/dist/sla
@@ -1389,23 +1485,23 @@ the sla object on the array that match the slaId passed or null if it doesn't fi
 
 ### getSelectedSla ({logisticsInfo, itemIndex, selectedSla})
 
-Get the select sla object on logisticInfo at the itemIndex position and optionally passing another selectedSla as reference.
+Get the select sla object on logisticsInfo at the itemIndex position and optionally passing another selectedSla as reference.
 
 ##### Usage
 ```js
 const { getSelectedSla } = require('@vtex/delivery-packages/dist/sla')
 
 getSelectedSla({
-  logisticInfo: [
+  logisticsInfo: [
     {
-      // other logisticInfo properties can be passed also
+      // other logisticsInfo properties can be passed also
       selectedSla: 'Normal',
       slas: [
         { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
       ]
     },
     {
-      // other logisticInfo properties can be passed also
+      // other logisticsInfo properties can be passed also
       selectedSla: 'Expressa',
       slas: [
         { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
@@ -1417,16 +1513,16 @@ getSelectedSla({
 // -> { "id": "Normal", "deliveryChannel": "delivery" }
 
 getSelectedSla({
-  logisticInfo: [
+  logisticsInfo: [
     {
-      // other logisticInfo properties can be passed also
+      // other logisticsInfo properties can be passed also
       selectedSla: 'Normal',
       slas: [
         { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
       ]
     },
     {
-      // other logisticInfo properties can be passed also
+      // other logisticsInfo properties can be passed also
       selectedSla: 'Expressa',
       slas: [
         { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
@@ -1442,7 +1538,7 @@ getSelectedSla({
 **params:**
 - **selectedSlaContext**
 Type: `object`
-Object on the format `{logisticsInfo, itemIndex, selectedSla}` with logisticsInfo being an object like the one inside an orderForm, itemIndex a number referring the position of a logisticInfo item and selectedSla an optional string with the id of the wanted sla
+Object on the format `{logisticsInfo, itemIndex, selectedSla}` with logisticsInfo being an object like the one inside an orderForm, itemIndex a number referring the position of a logisticsInfo item and selectedSla an optional string with the id of the wanted sla
 
 **returns:**
 - **selectedSla**

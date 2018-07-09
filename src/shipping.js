@@ -176,6 +176,29 @@ export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
   return newLogisticsInfo
 }
 
+export function filterLogisticsInfo(logisticsInfo, filters, keepSize = false) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return []
+  }
+
+  const { items: itemsFilter } = filters || {}
+
+  const indexes = itemsFilter
+    ? itemsFilter.map(
+      item =>
+        typeof item.itemIndex !== 'undefined' ? item.itemIndex : item.index
+    )
+    : null
+
+  return indexes
+    ? keepSize
+      ? logisticsInfo.map(
+        li => (indexes.indexOf(li.itemIndex) !== -1 ? li : null)
+      )
+      : logisticsInfo.filter(li => indexes.indexOf(li.itemIndex) !== -1)
+    : logisticsInfo
+}
+
 export function getNewLogisticsInfoWithScheduledDeliveryChoice(
   logisticsInfo,
   scheduledDeliveryChoice,
@@ -201,11 +224,14 @@ export function getNewLogisticsInfoWithScheduledDeliveryChoice(
     )
     : null
 
-  const itemsLogisticsInfo = indexes
-    ? logisticsInfo.map(
-      li => (indexes.indexOf(li.itemIndex) !== -1 ? li : null)
-    )
-    : logisticsInfo
+  const keepSize = true
+  const itemsLogisticsInfo = filterLogisticsInfo(
+    logisticsInfo,
+    {
+      items: scheduledDeliveryItems,
+    },
+    keepSize
+  )
 
   const newItemsLogisticsInfo = getNewLogisticsInfo(
     itemsLogisticsInfo,
