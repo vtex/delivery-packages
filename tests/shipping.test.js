@@ -27,7 +27,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo2).toBeNull()
     })
 
-    it('should return new completed logisticInfo if logisticInfo param is passed', () => {
+    it('should return new completed logisticsInfo if logisticsInfo param is passed', () => {
       let logisticsInfo = [
         ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
         ...createLogisticsInfo(
@@ -263,7 +263,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo2).toBeNull()
     })
 
-    it('should return logisticInfo with selectedSlas if valid params are passed', () => {
+    it('should return logisticsInfo with selectedSlas if valid params are passed', () => {
       const logisticsInfo = [
         ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
         ...createLogisticsInfo(['normalSla', 'pickupSla'], 1),
@@ -296,7 +296,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
-    it('should return logisticInfo with selectedSlas if valid delivery params are passed', () => {
+    it('should return logisticsInfo with selectedSlas if valid delivery params are passed', () => {
       const logisticsInfo = [
         ...createLogisticsInfo(['normalSla', 'expressSla'], 1),
         ...createLogisticsInfo(['normalSla', 'pickupSla'], 1),
@@ -329,7 +329,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
-    it('should return logisticInfo with selectedSlas if valid scheduled delivery params are passed', () => {
+    it('should return logisticsInfo with selectedSlas if valid scheduled delivery params are passed', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
@@ -377,7 +377,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
-    it('should return logisticInfo with selectedSlas if scheduled delivery with specific deliveryWindows are passed', () => {
+    it('should return logisticsInfo with selectedSlas if scheduled delivery with specific deliveryWindows are passed', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
@@ -431,7 +431,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
-    it('should return logisticInfo with selectedSlas if valid pickup params are passed', () => {
+    it('should return logisticsInfo with selectedSlas if valid pickup params are passed', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
@@ -489,7 +489,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo2).toBeNull()
     })
 
-    it('should return logisticInfo with selectedSlas if valid scheduled delivery params are passed', () => {
+    it('should return logisticsInfo with selectedSlas if valid scheduled delivery params are passed', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(
@@ -539,7 +539,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
-    it('should return new logisticInfo with scheduled delivery as selected slas if valid params are passed', () => {
+    it('should return new logisticsInfo with scheduled delivery as selected slas if valid params are passed', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(
@@ -595,7 +595,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
 
-    it('should return same logisticInfo with selectedSlas if slas are already selected', () => {
+    it('should return same logisticsInfo with selectedSlas if slas are already selected', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(
@@ -652,7 +652,7 @@ describe('Shipping', () => {
       expect(newLogisticsInfo3).toBeNull()
     })
 
-    it('should return logisticInfo with selectedSlas and delivery window if valid scheduled delivery params are passed', () => {
+    it('should return logisticsInfo with selectedSlas and delivery window if valid scheduled delivery params are passed', () => {
       const logisticsInfo = [
         {
           ...createLogisticsInfo(
