@@ -215,4 +215,19 @@ describe('Items', () => {
       expect(deliveredItems).toEqual(expectedObj)
     })
   })
+
+  it('should get the right items without the index property', () => {
+    const items = createItems(3)
+    const packages = [
+      createPackage([
+        { itemIndex: 0, quantity: 1 },
+        { itemIndex: 2, quantity: 1 },
+      ]),
+    ]
+
+    const deliveredItems = getDeliveredItems({ items, packages })
+
+    expect(deliveredItems.toBeDelivered).toHaveLength(1)
+    expect(deliveredItems.delivered).toHaveLength(2)
+  })
 })
