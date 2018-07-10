@@ -67,7 +67,7 @@ export function getDeliveredItems(params) {
 
       const quantityInPackages = packagesWithItem.reduce((total, pack) => {
         const packageItem = pack.items.find(
-          packageItem => packageItem.itemIndex === item.index
+          packageItem => packageItem.itemIndex === index
         )
 
         return total + packageItem.quantity
@@ -81,10 +81,9 @@ export function getDeliveredItems(params) {
           item: { ...item, quantity: quantityLeftToDeliver },
         })
       }
-
       const delivered = packagesWithItem.map(pack => {
         const packageItem = pack.items.find(
-          packageItem => packageItem.itemIndex === item.index
+          packageItem => packageItem.itemIndex === index
         )
 
         return {
