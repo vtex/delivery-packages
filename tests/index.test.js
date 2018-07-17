@@ -1259,3 +1259,53 @@ describe('has three package with two scheduled delivery and the other with the n
     expect(result[2]).toEqual(expectedParcel3)
   })
 })
+
+describe('Order with changes and all delivered', () => {
+  it('Guarantee index are respected', () => {
+    const items = createItems(7)
+    const packageAttachment = {
+      packages: [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 3, quantity: 1 },
+          { itemIndex: 4, quantity: 1 },
+          { itemIndex: 5, quantity: 1 },
+          { itemIndex: 6, quantity: 1 },
+        ]),
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
+    const logisticInfo = { ...baseLogisticsInfo.normal, slas: [normalSla] }
+    const logisticsInfo = [
+      { ...logisticInfo, itemIndex: 0 },
+      { ...logisticInfo, itemIndex: 1 },
+      { ...logisticInfo, itemIndex: 2 },
+      { ...logisticInfo, itemIndex: 3 },
+      { ...logisticInfo, itemIndex: 4 },
+      { ...logisticInfo, itemIndex: 5 },
+      { ...logisticInfo, itemIndex: 6 },
+    ]
+    const changesAttachment = {
+      changesData: [
+        {
+          itemsRemoved: [
+            { id: '1', quantity: 1 },
+            { id: '2', quantity: 1 },
+          ],
+        },
+      ],
+    }
+
+    const result = parcelify({
+      items,
+      packageAttachment,
+      changesAttachment,
+      shippingData: {
+        logisticsInfo,
+        selectedAddresses,
+      },
+    })
+
+    expect(result).toHaveLength(1)
+  })
+})
