@@ -216,18 +216,27 @@ describe('Items', () => {
     })
   })
 
-  it('should get the right items without the index property', () => {
-    const items = createItems(3)
+  it('should get the right item index', () => {
+    const items = [
+      { 'id': '0', 'quantity': 1, 'seller': '1', 'index': 0 },
+      { 'id': '3', 'quantity': 1, 'seller': '1', 'index': 3 },
+      { 'id': '4', 'quantity': 1, 'seller': '1', 'index': 4 },
+      { 'id': '5', 'quantity': 1, 'seller': '1', 'index': 5 },
+      { 'id': '6', 'quantity': 1, 'seller': '1', 'index': 6 },
+    ]
     const packages = [
       createPackage([
         { itemIndex: 0, quantity: 1 },
-        { itemIndex: 2, quantity: 1 },
+        { itemIndex: 3, quantity: 1 },
+        { itemIndex: 4, quantity: 1 },
+        { itemIndex: 5, quantity: 1 },
+        { itemIndex: 6, quantity: 1 },
       ]),
     ]
 
     const deliveredItems = getDeliveredItems({ items, packages })
 
-    expect(deliveredItems.toBeDelivered).toHaveLength(1)
-    expect(deliveredItems.delivered).toHaveLength(2)
+    expect(deliveredItems.toBeDelivered).toHaveLength(0)
+    expect(deliveredItems.delivered).toHaveLength(5)
   })
 })
