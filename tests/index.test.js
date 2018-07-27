@@ -325,32 +325,6 @@ describe('has one package one with deliveryWindow', () => {
   })
 })
 
-describe('has one pickup point', () => {
-  it('should return the receiverName', () => {
-    const items = createItems(1)
-    const selectedAddresses = [pickupPointAddress]
-    const logisticsInfo = [
-      {
-        ...baseLogisticsInfo.pickup,
-        itemIndex: 0,
-        slas: [pickupSla],
-      },
-    ]
-
-    const order = {
-      items,
-      shippingData: {
-        selectedAddresses,
-        logisticsInfo,
-      },
-    }
-
-    const result = parcelify(order)
-
-    expect(result[0].address.receiverName).toBe(pickupPointAddress.receiverName)
-  })
-})
-
 describe('has two deliveries', () => {
   it('with no selected sla should not crash', () => {
     const items = createItems(2)

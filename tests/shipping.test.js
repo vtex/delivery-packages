@@ -9,6 +9,7 @@ import {
 import { getDeliveredItems } from '../src/items'
 
 import {
+  baseLogisticsInfo,
   createLogisticsInfo,
   createItems,
   createPackage,
@@ -251,6 +252,36 @@ describe('Shipping', () => {
       )
 
       expect(newPkg).toEqual(expectedNewPkg)
+    })
+
+    it('should return the pickup point address receiverName', () => {
+      const items = createItems(1)
+      const packages = [
+        createPackage([{ itemIndex: 0, quantity: 1 }]),
+      ]
+      const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
+      const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
+      const logisticsInfo = [
+        {
+          ...baseLogisticsInfo.pickup,
+          itemIndex: 0,
+          slas: [slas.pickupSla],
+        },
+      ]
+      const selectedAddresses = [addresses.pickupPointAddress]
+      const deliveredItems = getDeliveredItems({
+        items: itemsWithIndex,
+        packages: packagesWithIndex,
+      })
+      const pkg = deliveredItems.delivered[0]
+
+      const result = hydratePackageWithLogisticsExtraInfo(
+        pkg,
+        logisticsInfo,
+        selectedAddresses
+      )
+
+      expect(result.address.receiverName).toBe(addresses.pickupPointAddress.receiverName)
     })
   })
 
