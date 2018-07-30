@@ -1545,6 +1545,69 @@ Object on the format `{logisticsInfo, itemIndex, selectedSla}` with logisticsInf
 Type: `object`
 the selectedSla object on the logisticsInfo item that itemIndex refer and optionally using another selectedSla then the one on logisticsInfo item
 
+### getSelectedSlas (logisticsInfo)
+
+Get all selected slas objects on logisticsInfo.
+
+##### Usage
+```js
+const { getSelectedSlas } = require('@vtex/delivery-packages/dist/sla')
+
+let logisticsInfo = [
+  {
+    // other logisticsInfo properties can be passed also
+    selectedSla: 'Normal',
+    itemIndex: 0,
+    slas: [
+      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+    ]
+  },
+  {
+    // other logisticsInfo properties can be passed also
+    selectedSla: 'Expressa',
+    itemIndex: 1,
+    slas: [
+      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+getSelectedSlas(logisticsInfo)
+// -> [{ itemIndex: 0, "id": "Normal", "deliveryChannel": "delivery" }, { itemIndex: 1, "id": "Expressa", "deliveryChannel": "delivery" }]
+
+logisticsInfo = [
+  {
+    // other logisticsInfo properties can be passed also
+    selectedSla: 'Normal',
+    itemIndex: 0,
+    slas: [
+      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+    ]
+  },
+  {
+    // other logisticsInfo properties can be passed also
+    selectedSla: null,
+    itemIndex: 1,
+    slas: [
+      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+getSelectedSlas(logisticsInfo)
+// -> [{ itemIndex: 0, "id": "Normal", "deliveryChannel": "delivery" }, null]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+
+**returns:**
+- **selectedSlas**
+Type: `Array<object>`
+the selected slas objects on the logisticsInfo items hydrated with itemIndex reference or empty array in case of wrong or empty params passed
+
 ## License
 
 MIT © [VTEX](https://www.vtex.com)
