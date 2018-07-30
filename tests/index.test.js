@@ -19,7 +19,7 @@ const {
   pickupSla,
 } = slas
 
-const { residentialAddress } = addresses
+const { residentialAddress, pickupPointAddress } = addresses
 
 describe('has one package with all items', () => {
   it('should create one parcel', () => {
@@ -565,7 +565,7 @@ describe('has two deliveries', () => {
           },
         ]
 
-        const selectedAddresses = [residentialAddress]
+        const selectedAddresses = [residentialAddress, pickupPointAddress]
         const logisticsInfo = [
           {
             ...baseLogisticsInfo.normal,

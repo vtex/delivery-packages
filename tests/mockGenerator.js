@@ -104,7 +104,10 @@ const slas = {
     pickupStoreInfo: {
       isPickupStore: true,
       friendlyName: 'Shopping da Gávea',
-      address: addresses.pickupPointAddress,
+      address: {
+        ...addresses.pickupPointAddress,
+        receiverName: null,
+      },
     },
   },
   pickupNormalSla: {
@@ -120,7 +123,10 @@ const slas = {
     pickupStoreInfo: {
       isPickupStore: true,
       friendlyName: 'Shopping da Gávea',
-      address: addresses.pickupPointAddress,
+      address: {
+        ...addresses.pickupPointAddress,
+        receiverName: null,
+      },
     },
   },
   expressSla: {

@@ -49,21 +49,7 @@ function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
   return sla && sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
 }
 
-function getPickupAddress({ itemIndex, logisticsInfo }) {
-  const sla = getSelectedSla({ itemIndex, logisticsInfo })
-  return sla.pickupStoreInfo ? sla.pickupStoreInfo.address : null
-}
-
 function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
-  const selectedSla = getSelectedSla({
-    itemIndex,
-    logisticsInfo,
-  })
-
-  if (selectedSla && selectedSla.deliveryChannel === 'pickup-in-point') {
-    return getPickupAddress({ itemIndex, logisticsInfo })
-  }
-
   const addressId = logisticsInfo[itemIndex].addressId
   return selectedAddresses.find(address => address.addressId === addressId)
 }
