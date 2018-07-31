@@ -103,3 +103,23 @@ export function excludePickupTypeFromSlas(slas) {
     sla => !sla.pickupStoreInfo || !sla.pickupStoreInfo.isPickupStore
   )
 }
+
+export function getSelectedSlas(logisticsInfo) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return []
+  }
+
+  return logisticsInfo.map(li => {
+    const selectedSlaObj = getSelectedSla({
+      logisticsInfo,
+      itemIndex: li.itemIndex,
+    })
+
+    return selectedSlaObj
+      ? {
+        itemIndex: li.itemIndex,
+        ...selectedSlaObj,
+      }
+      : null
+  })
+}
