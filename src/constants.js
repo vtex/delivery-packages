@@ -12,4 +12,7 @@ export const DELIVERY = 'delivery'
 export const PICKUP = 'pickup'
 
 export const RESIDENTIAL = 'residential'
+export const COMMERCIAL = 'commercial'
+export const GIFT_REGISTRY = 'giftRegistry'
+
 export const SEARCH = 'search'

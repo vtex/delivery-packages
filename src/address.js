@@ -1,4 +1,10 @@
-import { PICKUP, SEARCH, RESIDENTIAL } from './constants'
+import {
+  PICKUP,
+  SEARCH,
+  RESIDENTIAL,
+  COMMERCIAL,
+  GIFT_REGISTRY,
+} from './constants'
 
 export function isAddressComplete(address) {
   const { number, street, neighborhood, city, state } = address || {}
@@ -14,7 +20,14 @@ export function isSearchAddress(address) {
 }
 
 export function isDeliveryAddress(address) {
-  return address && address.addressType === RESIDENTIAL
+  if (!address || !address.addressType) {
+    return false
+  }
+  return (
+    address.addressType === RESIDENTIAL ||
+    address.addressType === COMMERCIAL ||
+    address.addressType === GIFT_REGISTRY
+  )
 }
 
 export function getDeliveryAvailableAddresses(addresses) {

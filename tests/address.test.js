@@ -103,8 +103,12 @@ describe('Address', () => {
 
     it('should be true if residential address is passed', () => {
       const isDeliveryAddress1 = isDeliveryAddress(addresses.residentialAddress)
+      const isDeliveryAddress2 = isDeliveryAddress(addresses.giftRegistryAddress)
+      const isDeliveryAddress3 = isDeliveryAddress(addresses.commercialAddress)
 
       expect(isDeliveryAddress1).toBeTruthy()
+      expect(isDeliveryAddress2).toBeTruthy()
+      expect(isDeliveryAddress3).toBeTruthy()
     })
   })
 
