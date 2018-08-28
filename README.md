@@ -268,6 +268,230 @@ parcelify(order, { criteria: { seller: false } })
 
 This module provide a lot of helper functions besides parcelify, that are worth checking below.
 
+## Address
+> @vtex/delivery-packages/dist/address
+
+### isAddressComplete (address)
+
+Verify address has all required basic fields
+
+##### Usage
+```js
+const { isAddressComplete } = require('@vtex/delivery-packages/dist/address')
+
+isAddressComplete({
+  addressId: '-4556418741084',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+})
+// -> true
+
+isAddressComplete({
+  addressId: '-4556418741084',
+  addressType: 'residential',
+  receiverName: null,
+  reference: null,
+  geoCoordinates: [],
+})
+// -> false
+```
+
+**params:**
+- **address**
+Type: `object`
+An object containing all address fields like on availableAddresses of orderForm
+
+**returns:**
+- **isAddressComplete**
+Type: `boolean`
+If the address has all required fields
+
+## isPickupAddress (address)
+
+Verify address refers to a pickup point
+
+##### Usage
+```js
+const { isPickupAddress } = require('@vtex/delivery-packages/dist/address')
+
+isPickupAddress({
+  addressId: '-4556418741084',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+})
+// -> false
+
+isPickupAddress({
+  addressId: '141125d',
+  addressType: 'pickup',
+  city: 'Rio de Janeiro',
+  complement: '',
+  country: 'BRA',
+  geoCoordinates: [-43.18080139160156, -22.96540069580078],
+  neighborhood: 'Copacabana',
+  number: '5',
+  postalCode: '22011050',
+  receiverName: 'auto auto',
+  reference: null,
+  state: 'RJ',
+  street: 'Rua General Azevedo Pimentel',
+})
+// -> true
+```
+
+**params:**
+- **address**
+Type: `object`
+An object containing all address fields like on availableAddresses of orderForm
+
+**returns:**
+- **isPickupAddress**
+Type: `boolean`
+If the address refers to a pickup point
+
+## isDeliveryAddress (address)
+
+Verify address refers to a residential address (to deliver items)
+
+##### Usage
+```js
+const { isDeliveryAddress } = require('@vtex/delivery-packages/dist/address')
+
+isDeliveryAddress({
+  addressId: '-4556418741084',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+})
+// -> true
+
+isDeliveryAddress({
+  addressId: '141125d',
+  addressType: 'pickup',
+  city: 'Rio de Janeiro',
+  complement: '',
+  country: 'BRA',
+  geoCoordinates: [-43.18080139160156, -22.96540069580078],
+  neighborhood: 'Copacabana',
+  number: '5',
+  postalCode: '22011050',
+  receiverName: 'auto auto',
+  reference: null,
+  state: 'RJ',
+  street: 'Rua General Azevedo Pimentel',
+})
+// -> false
+```
+
+**params:**
+- **address**
+Type: `object`
+An object containing all address fields like on availableAddresses of orderForm
+
+**returns:**
+- **isDeliveryAddress**
+Type: `boolean`
+If the address refers to a residential address (to deliver items)
+
+
+## getDeliveryAvailableAddresses (addresses)
+
+Filter only residential and complete address
+
+##### Usage
+```js
+const { getDeliveryAvailableAddresses } = require('@vtex/delivery-packages/dist/address')
+
+getDeliveryAvailableAddresses([
+  {
+    addressId: '-4556418741084',
+    addressType: 'residential',
+    receiverName: 'John Doe',
+    street: 'Rua Barão',
+    number: '2',
+    complement: null,
+    neighborhood: 'Botafogo',
+    postalCode: '22231-100',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    country: 'BRA',
+    reference: null,
+    geoCoordinates: [],
+  },
+  {
+    addressId: '141125d',
+    addressType: 'pickup',
+    city: 'Rio de Janeiro',
+    complement: '',
+    country: 'BRA',
+    geoCoordinates: [-43.18080139160156, -22.96540069580078],
+    neighborhood: 'Copacabana',
+    number: '5',
+    postalCode: '22011050',
+    receiverName: 'auto auto',
+    reference: null,
+    state: 'RJ',
+    street: 'Rua General Azevedo Pimentel',
+  }
+])
+// -> [
+//   {
+//     addressId: '-4556418741084',
+//     addressType: 'residential',
+//     receiverName: 'John Doe',
+//     street: 'Rua Barão',
+//     number: '2',
+//     complement: null,
+//     neighborhood: 'Botafogo',
+//     postalCode: '22231-100',
+//     city: 'Rio de Janeiro',
+//     state: 'RJ',
+//     country: 'BRA',
+//     reference: null,
+//     geoCoordinates: [],
+//   }
+// ]
+```
+
+**params:**
+- **addresses**
+Type: `Array<object>`
+An array which each item is an object containing all address fields like on availableAddresses of orderForm
+
+**returns:**
+- **filteredAddresses**
+Type: `Array<object>`
+Filtered addresses that contain only residential and complete address
+
 ## Delivery Channel
 > @vtex/delivery-packages/dist/delivery-channel
 
@@ -1543,7 +1767,7 @@ Object on the format `{logisticsInfo, itemIndex, selectedSla}` with logisticsInf
 **returns:**
 - **selectedSla**
 Type: `object`
-the selectedSla object on the logisticsInfo item that itemIndex refer and optionally using another selectedSla then the one on logisticsInfo item
+the selectedSla object on the logisticsInfo item that itemIndex refers and optionally using another selectedSla then the one on logisticsInfo item
 
 ### getSelectedSlas (logisticsInfo)
 
