@@ -318,7 +318,7 @@ If the address has all required fields
 
 ## isPickupAddress (address)
 
-Verify address refer to a pickup point
+Verify address refers to a pickup point
 
 ##### Usage
 ```js
@@ -367,11 +367,11 @@ An object containing all address fields like on availableAddresses of orderForm
 **returns:**
 - **isPickupAddress**
 Type: `boolean`
-If the address refer to a pickup point
+If the address refers to a pickup point
 
 ## isDeliveryAddress (address)
 
-Verify address refer to a residential address (to deliver items)
+Verify address refers to a residential address (to deliver items)
 
 ##### Usage
 ```js
@@ -420,12 +420,12 @@ An object containing all address fields like on availableAddresses of orderForm
 **returns:**
 - **isDeliveryAddress**
 Type: `boolean`
-If the address refer address refer to a residential address (to deliver items)
+If the address refers to a residential address (to deliver items)
 
 
 ## getDeliveryAvailableAddresses (addresses)
 
-Filter only residential and complete address (can be deliver items)
+Filter only residential and complete address
 
 ##### Usage
 ```js
@@ -1767,7 +1767,7 @@ Object on the format `{logisticsInfo, itemIndex, selectedSla}` with logisticsInf
 **returns:**
 - **selectedSla**
 Type: `object`
-the selectedSla object on the logisticsInfo item that itemIndex refer and optionally using another selectedSla then the one on logisticsInfo item
+the selectedSla object on the logisticsInfo item that itemIndex refers and optionally using another selectedSla then the one on logisticsInfo item
 
 ### getSelectedSlas (logisticsInfo)
 
