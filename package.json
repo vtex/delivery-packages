@@ -57,6 +57,7 @@
     ]
   },
   "dependencies": {
-    "@vtex/estimate-calculator": "^1.0.8"
+    "@vtex/estimate-calculator": "^1.0.8",
+    "sshpk": "^1.14.2"
   }
 }
