@@ -26,79 +26,63 @@ And provide also helper functions for other use cases.
 $ npm install @vtex/delivery-packages
 ```
 
-## Usage
-
-```js
-const parcelify = require('@vtex/delivery-packages')
-
-parcelify(order)
-// [
-//   {
-//     "seller": "1",
-//     "pickupFriendlyName": null,
-//     "selectedSla": "Normal",
-//     "listPrice": 10000,
-//     "price": 10000,
-//     "sellingPrice": 10000,
-//     "slas": [
-//       {
-//         "id": "Normal",
-//         "deliveryChannel": "delivery",
-//         ...
-//       }
-//     ],
-//     "shippingEstimate": "6bd",
-//     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
-//     "deliveryChannel": "delivery",
-//     "items": [
-//       {
-//         "index": 0,
-//         "id": 0,
-//         "quantity": 1,
-//         "seller": "1",
-//         ...
-//       }
-//     ],
-//     "address": {
-//       "addressId": "-4556418741084",
-//       "addressType": "residential",
-//       "receiverName": "John Doe",
-//       ...
-//     }
-//   },
-//   {
-//     "seller": "2",
-//     "pickupFriendlyName": "Shopping da Gávea",
-//     "selectedSla": "Retirada na loja (17c6a89)",
-//     "slas": [
-//       {
-//         "id": "Retirada na loja (17c6a89)",
-//         "deliveryChannel": "pickup-in-point",
-//         ...
-//       }
-//     ],
-//     "shippingEstimate": "5h",
-//     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
-//     "deliveryChannel": "pickup-in-point",
-//     "items": [
-//       {
-//         "id": 1,
-//         "quantity": 1,
-//         "seller": "2",
-//         "index": 1
-//       }
-//     ],
-//     "address": {
-//       "addressId": "141125d",
-//       "addressType": "pickup",
-//       "geoCoordinates": [-43.18080139160156, -22.96540069580078],
-//       ...
-//     }
-//   }
-// ]
-```
-
 ## API
+
+- [parcelify](#parcelifyorder-options)
+
+#### Address
+
+- [addAddressId](#addaddressid-address)
+- [addPickupPointAddresses](#addpickuppointaddresses-addresses-pickupslas)
+- [findAddressIndex](#findaddressindex-addresses-searchaddress)
+- [findAddress](#findaddress-addresses-searchaddress)
+- [findAddressByPostalCode](#findaddressbypostalcode-addresses-searchaddress)
+- [isAddressComplete](#isaddresscomplete-address)
+- [isPickupAddress](#ispickupaddress-address)
+- [isDeliveryAddress](#isdeliveryaddress-address)
+- [getDeliveryAvailableAddresses](#getdeliveryavailableaddresses-addresses)
+- [groupByAddressType](#groupbyaddresstype-addresses)
+- [addOrReplaceAddressTypeOnList](#addorreplaceaddresstypeonlist-addresses-newaddress)
+- [addOrReplaceAddressOnList](#addorreplaceaddressonlist-addresses-newaddress)
+
+#### Delivery Channel
+
+- [getDeliveryChannel](#getdeliverychannel-deliverychannelsource)
+- [isPickup](#ispickup-deliverychannelsource)
+- [isDelivery](#isdelivery-deliverychannelsource)
+- [findChannelById](#findchannelbyid-logisticsinfoitem-deliverychannelsource)
+
+#### Items
+
+- [getNewItems](#getnewitems-items-changes)
+- [getDeliveredItems](#getdelivereditems--items-packages-)
+- [getItemsIndexes](#getitemsindexes-items)
+
+#### Scheduled Delivery
+
+- [areAvailableDeliveryWindowsEquals](#areavailabledeliverywindowsequals-availabledeliverywindows1-availabledeliverywindows2)
+- [selectDeliveryWindow](#selectdeliverywindow-logisticsinfo--selectedsla-deliverywindow-)
+- [getFirstScheduledDelivery](#getfirstscheduleddelivery-logisticsinfo-availabledeliverywindows--null)
+
+#### Shipping
+
+- [getNewLogisticsInfo](#getnewlogisticsinfo-logisticsinfo-selectedsla-availabledeliverywindows--null)
+- [getNewLogisticsInfoWithSelectedScheduled](#getnewlogisticsinfowithselectedscheduled-logisticsinfo)
+- [getNewLogisticsInfoWithScheduledDeliveryChoice](#getnewlogisticsinfowithscheduleddeliverychoice-logisticsinfo-scheduleddeliverychoice-scheduleddeliveryitems--null)
+- [filterLogisticsInfo](#filterlogisticsinfo-logisticsinfo-filters-keepsize--false)
+- [getNewLogisticsMatchingSelectedAddresses](#getnewlogisticsmatchingselectedaddresses-logisticsinfo-selectedaddresses)
+- [mergeLogisticsInfos](#mergelogisticsinfos-logisticsinfo1-logisticsinfo2)
+
+#### SLA
+
+- [hasSLAs](#hasslas-slassource)
+- [hasDeliveryWindows](#hasdeliverywindows-slas)
+- [excludePickupTypeFromSlas](#excludepickuptypefromslas-slas)
+- [getSlaObj](#getslaobj-slas-slaid)
+- [changeSelectedSla](#changeselectedsla-logisticsinfoitem-sla)
+- [getSelectedSla](#getselectedsla-logisticsinfo-itemindex-selectedsla)
+- [getSelectedSlas](#getselectedslas-logisticsinfo)
+- [getPickupSelectedSlas](#getpickupselectedslas-logisticsinfo)
 
 ### parcelify(order, options)
 
@@ -112,6 +96,7 @@ An order shaped like an [orderForm](https://github.com/vtex/vtex.js/blob/master/
 
 Type: `Object`<br/>
 Default:<br/>
+
 ```js
 {
   groupByAvailableDeliveryWindows: false,
@@ -126,6 +111,8 @@ Default:<br/>
 This param will be merged with the default options.
 
 ## Parcel
+
+> @vtex/delivery-packages/
 
 A Parcel object shape
 
@@ -175,6 +162,8 @@ These properties are taken from the `logisticsInfo` of the parcel.
 ## Example
 
 ```js
+const parcelify = require('@vtex/delivery-packages')
+
 const order = {
   items: [
     // You can pass all the properties of the item. That's simplified.
