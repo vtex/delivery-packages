@@ -1105,6 +1105,9 @@ describe('has one package with scheduled delivery and the other with the normal 
       selectedSla: null,
       shippingEstimate: undefined,
       shippingEstimateDate: undefined,
+      price: 0,
+      listPrice: 0,
+      sellingPrice: 0,
     }
     const expectedParcel2 = {
       deliveryIds: undefined,
@@ -1123,6 +1126,9 @@ describe('has one package with scheduled delivery and the other with the normal 
       selectedSla: null,
       shippingEstimate: undefined,
       shippingEstimateDate: undefined,
+      price: 0,
+      listPrice: 0,
+      sellingPrice: 0,
     }
 
     const result = parcelify(
@@ -1205,6 +1211,9 @@ describe('has three package with two scheduled delivery and the other with the n
       selectedSla: null,
       shippingEstimate: undefined,
       shippingEstimateDate: undefined,
+      price: 0,
+      listPrice: 0,
+      sellingPrice: 0,
     }
     const expectedParcel2 = {
       deliveryIds: undefined,
@@ -1223,6 +1232,9 @@ describe('has three package with two scheduled delivery and the other with the n
       selectedSla: null,
       shippingEstimate: undefined,
       shippingEstimateDate: undefined,
+      price: 0,
+      listPrice: 0,
+      sellingPrice: 0,
     }
     const expectedParcel3 = {
       deliveryIds: undefined,
@@ -1240,6 +1252,9 @@ describe('has three package with two scheduled delivery and the other with the n
       selectedSla: null,
       shippingEstimate: undefined,
       shippingEstimateDate: undefined,
+      price: 0,
+      listPrice: 0,
+      sellingPrice: 0,
     }
 
     const result = parcelify(
@@ -1288,10 +1303,7 @@ describe('Order with changes and all delivered', () => {
     const changesAttachment = {
       changesData: [
         {
-          itemsRemoved: [
-            { id: '1', quantity: 1 },
-            { id: '2', quantity: 1 },
-          ],
+          itemsRemoved: [{ id: '1', quantity: 1 }, { id: '2', quantity: 1 }],
         },
       ],
     }
