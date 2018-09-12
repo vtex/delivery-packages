@@ -312,7 +312,7 @@ const createPackage = items => ({
   items,
 })
 
-const createLogisticsInfo = (slaTypes, quantity) => {
+const createLogisticsInfo = (slaTypes, quantity, price = 0) => {
   const liSlas = slaTypes.map(slaType => ({
     ...slas[slaType],
   }))
@@ -334,9 +334,9 @@ const createLogisticsInfo = (slaTypes, quantity) => {
     itemId: itemIndex,
     deliveryChannels,
     slas: liSlas,
-    price: 0,
-    listPrice: 0,
-    sellingPrice: 0,
+    price: price,
+    listPrice: price,
+    sellingPrice: price,
   }))
 }
 
