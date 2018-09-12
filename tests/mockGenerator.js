@@ -145,6 +145,7 @@ const slas = {
     deliveryWindow: null,
     price: 0,
     listPrice: 0,
+    sellingPrice: 0,
     tax: 0,
     pickupStoreInfo: {
       isPickupStore: true,
@@ -164,6 +165,7 @@ const slas = {
     deliveryWindow: null,
     price: 0,
     listPrice: 0,
+    sellingPrice: 0,
     tax: 0,
     pickupStoreInfo: {
       isPickupStore: true,
@@ -183,6 +185,7 @@ const slas = {
     deliveryWindow: null,
     price: 10000,
     listPrice: 10000,
+    sellingPrice: 10000,
     tax: 0,
   },
   normalSla: {
@@ -194,6 +197,7 @@ const slas = {
     deliveryWindow: null,
     price: 5000,
     listPrice: 5000,
+    sellingPrice: 5000,
     tax: 0,
   },
   normalFastestSla: {
@@ -204,6 +208,7 @@ const slas = {
     deliveryWindow: null,
     price: 20000,
     listPrice: 20000,
+    sellingPrice: 20000,
     tax: 0,
   },
   normalScheduledDeliverySla: {
@@ -215,6 +220,7 @@ const slas = {
     availableDeliveryWindows: availableDeliveryWindows.slice(0, 3),
     price: 5000,
     listPrice: 5000,
+    sellingPrice: 5000,
     tax: 0,
   },
   biggerWindowScheduledDeliverySla: {
@@ -226,6 +232,7 @@ const slas = {
     availableDeliveryWindows,
     price: 5000,
     listPrice: 5000,
+    sellingPrice: 5000,
     tax: 0,
   },
 }
@@ -235,36 +242,57 @@ const baseLogisticsInfo = {
     addressId: addresses.pickupPointAddress.addressId,
     selectedSla: slas.pickupSla.id,
     selectedDeliveryChannel: 'pickup-in-point',
+    listPrice: slas.pickupSla.listPrice,
+    price: slas.pickupSla.price,
+    sellingPrice: slas.pickupSla.sellingPrice,
   },
   pickupNormal: {
     addressId: addresses.pickupPointAddress.addressId,
     selectedSla: slas.pickupNormalSla.id,
     selectedDeliveryChannel: 'pickup-in-point',
+    listPrice: slas.pickupNormalSla.listPrice,
+    price: slas.pickupNormalSla.price,
+    sellingPrice: slas.pickupNormalSla.sellingPrice,
   },
   express: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.expressSla.id,
     selectedDeliveryChannel: 'delivery',
+    listPrice: slas.expressSla.listPrice,
+    price: slas.expressSla.price,
+    sellingPrice: slas.expressSla.sellingPrice,
   },
   normal: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalSla.id,
     selectedDeliveryChannel: 'delivery',
+    listPrice: slas.normalSla.listPrice,
+    price: slas.normalSla.price,
+    sellingPrice: slas.normalSla.sellingPrice,
   },
   normalFastest: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalFastestSla.id,
     selectedDeliveryChannel: 'delivery',
+    listPrice: slas.normalFastestSla.listPrice,
+    price: slas.normalFastestSla.price,
+    sellingPrice: slas.normalFastestSla.sellingPrice,
   },
   scheduled: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalScheduledDeliverySla.id,
     selectedDeliveryChannel: 'delivery',
+    listPrice: slas.normalScheduledDeliverySla.listPrice,
+    price: slas.normalScheduledDeliverySla.price,
+    sellingPrice: slas.normalScheduledDeliverySla.sellingPrice,
   },
   normalOms: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalSla.id,
     deliveryIds: [{ courierId: '123' }],
+    listPrice: slas.normalSla.listPrice,
+    price: slas.normalSla.price,
+    sellingPrice: slas.normalSla.sellingPrice,
   },
 }
 
@@ -284,7 +312,7 @@ const createPackage = items => ({
   items,
 })
 
-const createLogisticsInfo = (slaTypes, quantity) => {
+const createLogisticsInfo = (slaTypes, quantity, price = 0) => {
   const liSlas = slaTypes.map(slaType => ({
     ...slas[slaType],
   }))
@@ -306,6 +334,9 @@ const createLogisticsInfo = (slaTypes, quantity) => {
     itemId: itemIndex,
     deliveryChannels,
     slas: liSlas,
+    price: price,
+    listPrice: price,
+    sellingPrice: price,
   }))
 }
 

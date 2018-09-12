@@ -23,6 +23,7 @@ export function getLogisticsInfoData(params) {
 
   return {
     selectedSla: logisticsInfo[itemIndex].selectedSla,
+    selectedSlaObj: selectedSla,
     shippingEstimate: selectedSla
       ? selectedSla.shippingEstimate
       : logisticsInfo[itemIndex].shippingEstimate

@@ -37,6 +37,9 @@ parcelify(order)
 //     "seller": "1",
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Normal",
+//     "listPrice": 10000,
+//     "price": 10000,
+//     "sellingPrice": 10000,
 //     "slas": [
 //       {
 //         "id": "Normal",
@@ -129,6 +132,9 @@ A Parcel object shape
 ```js
 {
   address: Object,
+  listPrice: Number,
+  price: Number,
+  sellingPrice: Number,
   pickupFriendlyName: String,
   seller: String,
   items: [Object],
@@ -190,7 +196,7 @@ const order = {
         "itemIndex": 0,
         "slas": [
           // You can pass all the properties of the sla
-          { "id": "Expressa", "deliveryChannel": "delivery" }
+          { "id": "Expressa", "deliveryChannel": "delivery", "price": 20000 }
         ]
       },
       {
@@ -201,7 +207,7 @@ const order = {
         "deliveryChannel": "delivery",
         "itemIndex": 1,
         "slas": [
-          { "id": "Normal", "deliveryChannel": "delivery" }
+          { "id": "Normal", "deliveryChannel": "delivery", "price": 10000 }
         ]
       }
     ]
@@ -237,6 +243,7 @@ parcelify(order, { criteria: { seller: false } })
 //       "index": 0
 //     },
 //     "address": { "addressId": "-4556418741084", "street": "Rua Barão" },
+//     "price": 20000,
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Expressa",
 //     "slas": [{ "id": "Expressa", "deliveryChannel": "delivery" }],
@@ -250,6 +257,7 @@ parcelify(order, { criteria: { seller: false } })
 //   },
 //   {
 //     "address": { "addressId": "-4556418741084", "street": "Rua Barão" },
+//     "price": 10000,
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Normal",
 //     "slas": [{ "id": "Normal", "deliveryChannel": "delivery" }],

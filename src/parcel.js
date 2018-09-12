@@ -88,6 +88,22 @@ function groupDeliveries(items, criteria) {
   })
 }
 
+function getItemSelectedSlaPrices(item) {
+  if (!item || !item.selectedSlaObj) {
+    return {
+      listPrice: 0,
+      price: 0,
+      sellingPrice: 0,
+    }
+  }
+
+  return {
+    listPrice: item.selectedSlaObj.listPrice,
+    price: item.selectedSlaObj.price,
+    sellingPrice: item.selectedSlaObj.sellingPrice,
+  }
+}
+
 function addToPackage(items, criteria, fn) {
   return items.reduce((packages, item) => {
     const pack = fn(packages, item)
@@ -107,6 +123,11 @@ function addToPackage(items, criteria, fn) {
       }
 
       pack.items = pack.items.concat(item.item)
+      const slaPrices = getItemSelectedSlaPrices(item)
+      pack.listPrice += slaPrices.listPrice
+      pack.price += slaPrices.price
+      pack.sellingPrice += slaPrices.sellingPrice
+
       return packages
     }
 
@@ -114,6 +135,7 @@ function addToPackage(items, criteria, fn) {
       getSlaObj(item.slas, item.selectedSla) || getScheduledDeliverySLA(item)
 
     const newPackage = {
+      ...getItemSelectedSlaPrices(item),
       items: [item.item],
       package: item.package,
       slas: item.slas,

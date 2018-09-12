@@ -1,6 +1,6 @@
 {
   "name": "@vtex/delivery-packages",
-  "version": "2.9.1",
+  "version": "2.10.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -15,7 +15,11 @@
     "prepublishOnly": "npm run build",
     "postreleasy": "npm publish",
     "lint": "eslint src",
-    "lint-fix": "eslint src --fix --max-warnings 0"
+    "lint-fix": "eslint src --fix --max-warnings 0",
+    "branch": "echo $(git rev-parse --abbrev-ref HEAD) > /tmp/branch",
+    "lint-only-changed": "LIST=`git diff-index --name-only HEAD | uniq | grep /.*\\.js$ | grep -v json`; if [ \"$LIST\" ]; then eslint $LIST; fi",
+    "lint-not-beta": "npm run branch && if [ $(cat /tmp/branch) != \"beta\" ]; then npm run lint-only-changed; else echo 'skip lint on beta' ; fi",
+    "test-not-beta": "npm run branch && if [ $(cat /tmp/branch) != \"beta\" ]; then npm run test; else echo 'skip tests on beta' ; fi"
   },
   "keywords": [
     "vtex",
@@ -30,6 +34,12 @@
     "url": "https://github.com/vtex/delivery-packages/issues"
   },
   "homepage": "https://github.com/vtex/delivery-packages#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo 'Use --no-verify to avoid pre-commit hook'; npm run lint-not-beta",
+      "pre-push": "echo 'Use --no-verify to avoid pre-push hook'; npm run test-not-beta"
+    }
+  },
   "devDependencies": {
     "babel-core": "6",
     "babel-eslint": "^8.2.2",
@@ -41,6 +51,7 @@
     "eslint": "^4.18.0",
     "eslint-config-vtex": "^8.0.0",
     "eslint-plugin-jest": "^21.12.2",
+    "husky": "^1.0.0-rc.14",
     "jest": "^22.3.0",
     "rollup": "^0.56.2",
     "rollup-plugin-babel": "^3.0.3",

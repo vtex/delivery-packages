@@ -58,6 +58,7 @@ describe('Shipping', () => {
         deliveryIds: slas.biggerWindowScheduledDeliverySla.deliveryIds,
         deliveryWindow: slas.biggerWindowScheduledDeliverySla.deliveryWindow,
         selectedSla: slas.biggerWindowScheduledDeliverySla.id,
+        selectedSlaObj: slas.biggerWindowScheduledDeliverySla,
         shippingEstimate:
           slas.biggerWindowScheduledDeliverySla.shippingEstimate,
         shippingEstimateDate:
@@ -123,6 +124,7 @@ describe('Shipping', () => {
         deliveryWindow: null,
         deliveryChannel: 'delivery',
         selectedSla: slas.normalSla.id,
+        selectedSlaObj: slas.normalSla,
         address: addresses.residentialAddress,
         shippingEstimate: slas.normalSla.shippingEstimate,
         shippingEstimateDate: slas.normalSla.shippingEstimateDate,
@@ -181,6 +183,10 @@ describe('Shipping', () => {
         deliveryChannel: 'delivery',
         deliveryWindow: availableDeliveryWindows[1],
         selectedSla: slas.normalScheduledDeliverySla.id,
+        selectedSlaObj: {
+          ...slas.normalScheduledDeliverySla,
+          deliveryWindow: availableDeliveryWindows[1],
+        },
         address: addresses.residentialAddress,
         shippingEstimate: slas.normalScheduledDeliverySla.shippingEstimate,
         shippingEstimateDate:
@@ -239,6 +245,7 @@ describe('Shipping', () => {
         deliveryChannel: 'pickup-in-point',
         pickupFriendlyName: slas.pickupSla.pickupStoreInfo.friendlyName,
         selectedSla: slas.pickupSla.id,
+        selectedSlaObj: slas.pickupSla,
         address: addresses.pickupPointAddress,
         shippingEstimate: slas.pickupSla.shippingEstimate,
         shippingEstimateDate: slas.pickupSla.shippingEstimateDate,
@@ -707,11 +714,7 @@ describe('Shipping', () => {
 
       const expectedLogisticsInfo = [logisticsInfo[0], logisticsInfo[2]]
 
-      window.debug = true
-
       const newLogisticsInfo = filterLogisticsInfo(logisticsInfo, { items })
-
-      window.debug = false
 
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
