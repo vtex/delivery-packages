@@ -6,6 +6,7 @@ import {
   createPackage,
   slas,
   addresses,
+  availableDeliveryWindows,
   createLogisticsInfo,
 } from './mockGenerator'
 import orderMock from './Order'
@@ -286,7 +287,7 @@ describe('has one package one with deliveryWindow', () => {
           {
             ...normalSla,
             availableDeliveryWindows: [deliveryWindow],
-            deliveryWindow: deliveryWindow,
+            deliveryWindow,
           },
         ],
       },
@@ -297,7 +298,7 @@ describe('has one package one with deliveryWindow', () => {
           {
             ...normalSla,
             availableDeliveryWindows: [deliveryWindow],
-            deliveryWindow: deliveryWindow,
+            deliveryWindow,
           },
         ],
       },
@@ -1363,6 +1364,166 @@ describe('has three package with different prices', () => {
       price: 40000,
       listPrice: 40000,
       sellingPrice: 40000,
+    }
+    const expectedParcel3 = {
+      deliveryIds: undefined,
+      deliveryWindow: null,
+      hasAvailableDeliveryWindows: undefined,
+      item: undefined,
+      deliveryChannel: 'delivery',
+      address: residentialAddress,
+      items: [{ ...items[2], index: 2 }, { ...items[5], index: 5 }],
+      slas: [pickupNormalSla, expressSla],
+      availableDeliveryWindows: undefined,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: slas.expressSla.id,
+      shippingEstimate: '5bd',
+      shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
+      price: 20000,
+      listPrice: 20000,
+      sellingPrice: 20000,
+    }
+
+    const result = parcelify({
+      items,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    })
+
+    expect(result).toHaveLength(3)
+    expect(result[0]).toEqual(expectedParcel1)
+    expect(result[1]).toEqual(expectedParcel2)
+    expect(result[2]).toEqual(expectedParcel3)
+  })
+})
+
+describe('has three package with different prices and including scheduled delivery', () => {
+  it('should create three parcels with different selectedSla and with matching price', () => {
+    const items = createItems(6)
+    const selectedAddresses = [residentialAddress]
+    const deliveryWindow = {
+      ...availableDeliveryWindows[0],
+      price: 10000,
+      lisPrice: 10000,
+    }
+    const logisticsInfo = [
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1, 5000)[0],
+        selectedSla: slas.normalSla.id,
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 0,
+        itemId: 0,
+      },
+      {
+        ...createLogisticsInfo(
+          ['normalScheduledDeliverySla', 'expressSla'],
+          1,
+          5000
+        )[0],
+        selectedSla: slas.normalScheduledDeliverySla.id,
+        deliveryWindow,
+        slas: [
+          {
+            ...slas.normalScheduledDeliverySla,
+            deliveryWindow,
+          },
+          slas.expressSla,
+        ],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 1,
+        itemId: 1,
+      },
+      {
+        ...createLogisticsInfo(['pickupNormalSla', 'expressSla'], 1, 10000)[0],
+        selectedSla: slas.expressSla.id,
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 2,
+        itemId: 2,
+      },
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1, 5000)[0],
+        selectedSla: slas.normalSla.id,
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 3,
+        itemId: 3,
+      },
+      {
+        ...createLogisticsInfo(
+          ['normalScheduledDeliverySla', 'expressSla'],
+          1,
+          5000
+        )[0],
+        selectedSla: slas.normalScheduledDeliverySla.id,
+        deliveryWindow,
+        slas: [
+          {
+            ...slas.normalScheduledDeliverySla,
+            deliveryWindow,
+          },
+          slas.expressSla,
+        ],
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 4,
+        itemId: 4,
+      },
+      {
+        ...createLogisticsInfo(['pickupNormalSla', 'expressSla'], 1, 10000)[0],
+        selectedSla: slas.expressSla.id,
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 5,
+        itemId: 5,
+      },
+    ]
+
+    const expectedParcel1 = {
+      deliveryIds: undefined,
+      deliveryWindow: null,
+      hasAvailableDeliveryWindows: undefined,
+      item: undefined,
+      deliveryChannel: 'delivery',
+      address: residentialAddress,
+      items: [{ ...items[0], index: 0 }, { ...items[3], index: 3 }],
+      slas: [normalSla, expressSla],
+      availableDeliveryWindows: undefined,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: slas.normalSla.id,
+      shippingEstimate: '6bd',
+      shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
+      price: 10000,
+      listPrice: 10000,
+      sellingPrice: 10000,
+    }
+    const expectedParcel2 = {
+      deliveryIds: undefined,
+      deliveryWindow,
+      hasAvailableDeliveryWindows: undefined,
+      item: undefined,
+      deliveryChannel: 'delivery',
+      address: residentialAddress,
+      items: [{ ...items[1], index: 1 }, { ...items[4], index: 4 }],
+      slas: [
+        {
+          ...slas.normalScheduledDeliverySla,
+          deliveryWindow,
+        },
+        expressSla,
+      ],
+      availableDeliveryWindows: undefined,
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: slas.normalScheduledDeliverySla.id,
+      shippingEstimate: '6bd',
+      shippingEstimateDate: '2018-05-26T09:00:00+00:00',
+      price: 20000,
+      listPrice: 20000,
+      sellingPrice: 20000,
     }
     const expectedParcel3 = {
       deliveryIds: undefined,

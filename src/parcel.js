@@ -88,7 +88,7 @@ function groupDeliveries(items, criteria) {
   })
 }
 
-function getItemSelectedSlaPrices(item) {
+function getItemSelectedSlaPrices(item, shouldSumDeliveryWindow = false) {
   if (!item || !item.selectedSlaObj) {
     return {
       listPrice: 0,
@@ -97,11 +97,21 @@ function getItemSelectedSlaPrices(item) {
     }
   }
 
-  return {
+  let prices = {
     listPrice: item.selectedSlaObj.listPrice,
     price: item.selectedSlaObj.price,
     sellingPrice: item.selectedSlaObj.sellingPrice,
   }
+
+  if (item.deliveryWindow && shouldSumDeliveryWindow) {
+    prices = {
+      listPrice: prices.listPrice + item.deliveryWindow.lisPrice,
+      price: prices.price + item.deliveryWindow.price,
+      sellingPrice: prices.sellingPrice + item.deliveryWindow.price,
+    }
+  }
+
+  return prices
 }
 
 function addToPackage(items, criteria, fn) {
@@ -135,7 +145,7 @@ function addToPackage(items, criteria, fn) {
       getSlaObj(item.slas, item.selectedSla) || getScheduledDeliverySLA(item)
 
     const newPackage = {
-      ...getItemSelectedSlaPrices(item),
+      ...getItemSelectedSlaPrices(item, true),
       items: [item.item],
       package: item.package,
       slas: item.slas,
