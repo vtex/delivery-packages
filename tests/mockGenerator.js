@@ -30,7 +30,7 @@ const addresses = {
     geoCoordinates: [],
   },
   residentialAddress: {
-    addressId: '-4556418741084',
+    addressId: '-4556418741085',
     addressType: 'residential',
     receiverName: 'John Doe',
     street: 'Rua Barão',
@@ -45,7 +45,7 @@ const addresses = {
     geoCoordinates: [],
   },
   giftRegistryAddress: {
-    addressId: '-4556418741084',
+    addressId: '-4556418741086',
     addressType: 'giftRegistry',
     receiverName: 'John Doe',
     street: 'Rua Barão',
@@ -60,7 +60,7 @@ const addresses = {
     geoCoordinates: [],
   },
   commercialAddress: {
-    addressId: '-4556418741084',
+    addressId: '-4556418741087',
     addressType: 'commercial',
     receiverName: 'John Doe',
     street: 'Rua Barão',
