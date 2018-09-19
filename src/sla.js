@@ -104,6 +104,16 @@ export function excludePickupTypeFromSlas(slas) {
   )
 }
 
+export function filterPickupTypeFromSlas(slas) {
+  if (!slas || slas.length === 0) {
+    return []
+  }
+
+  return slas.filter(
+    sla => sla.pickupStoreInfo && sla.pickupStoreInfo.isPickupStore
+  )
+}
+
 export function getSelectedSlas(logisticsInfo) {
   if (!logisticsInfo || logisticsInfo.length === 0) {
     return []
@@ -122,4 +132,9 @@ export function getSelectedSlas(logisticsInfo) {
       }
       : null
   })
+}
+
+export function getPickupSelectedSlas(logisticsInfo) {
+  const selectedSlas = getSelectedSlas(logisticsInfo)
+  return filterPickupTypeFromSlas(selectedSlas)
 }

@@ -18,6 +18,39 @@ export function getFirstAddressForType(addresses, addressType) {
   return groupAddresses && groupAddresses.length > 0 ? groupAddresses[0] : null
 }
 
+export function getFirstAddressOnAnyOfTheseTypes(addresses, addressesTypes) {
+  return addressesTypes.reduce((address, addressType) => {
+    return address || getFirstAddressForType(addresses, addressType)
+  }, null)
+}
+
+export function getFirstAddressForDelivery(addresses) {
+  return getFirstAddressOnAnyOfTheseTypes(addresses, [
+    RESIDENTIAL,
+    COMMERCIAL,
+    GIFT_REGISTRY,
+  ])
+}
+
+export function getPickupAddress(pickupSla) {
+  return (
+    (pickupSla &&
+      pickupSla.pickupStoreInfo &&
+      pickupSla.pickupStoreInfo.address) ||
+    null
+  )
+}
+
+export function findAddress(addresses, searchAddress) {
+  if (!addresses || addresses.length === 0 || !searchAddress) {
+    return null
+  }
+
+  return addresses.find(
+    address => address.addressId === searchAddress.addressId
+  )
+}
+
 /** PUBLIC **/
 
 export function isAddressComplete(address) {
@@ -91,4 +124,31 @@ export function addOrReplaceAddressOnList(addresses, newAddress) {
   }
 
   return newAddresses
+}
+
+export function addPickupPointAddresses(addresses, pickupSlas) {
+  if (
+    !addresses ||
+    addresses.length === 0 ||
+    !pickupSlas ||
+    pickupSlas.length === 0
+  ) {
+    return addresses
+  }
+
+  return pickupSlas.reduce(
+    (newAddresses, pickupSla) => {
+      const searchAddress = findAddress(addresses, searchAddress)
+      if (searchAddress) {
+        return newAddresses
+      }
+
+      const newAddress = {
+        ...getPickupAddress(pickupSla),
+        addressType: SEARCH,
+      }
+      return addOrReplaceAddressOnList(newAddresses, newAddress)
+    },
+    [...addresses]
+  )
 }

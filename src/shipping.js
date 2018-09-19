@@ -1,5 +1,17 @@
 import './polyfills'
-import { hasDeliveryWindows, getSelectedSla, getSlaAsId } from './sla'
+import {
+  addPickupPointAddresses,
+  getPickupAddress,
+  getFirstAddressForDelivery,
+} from './address'
+import { isPickup, isDelivery } from './delivery-channel'
+import {
+  hasDeliveryWindows,
+  getSelectedSla,
+  getSlaObj,
+  getPickupSelectedSlas,
+  getSlaAsId,
+} from './sla'
 import {
   filterSlaByAvailableDeliveryWindows,
   getFirstScheduledDelivery,
@@ -90,6 +102,35 @@ export function hydratePackageWithLogisticsExtraInfo(
   }
 }
 
+export function replaceAddressIdOnLogisticsInfo(
+  logisticsInfo,
+  selectedAddresses
+) {
+  return logisticsInfo.map(li => {
+    const selectedSlaObj = getSlaObj(li.slas, li.selectedSla)
+    if (!selectedSlaObj || !selectedSlaObj.selectedDeliveryChannel) {
+      return li
+    }
+
+    const { selectedDeliveryChannel } = selectedSlaObj
+
+    let selectedAddress = null
+
+    if (isPickup(selectedDeliveryChannel)) {
+      selectedAddress = getPickupAddress(selectedSlaObj)
+    }
+
+    if (isDelivery(selectedDeliveryChannel)) {
+      selectedAddress = getFirstAddressForDelivery(selectedAddresses)
+    }
+
+    return {
+      ...li,
+      addressId: (selectedAddress && selectedAddress.addressId) || li.addressId,
+    }
+  })
+}
+
 /** PUBLIC **/
 
 export function getNewLogisticsInfo(
@@ -108,11 +149,7 @@ export function getNewLogisticsInfo(
       return li
     }
 
-    const selectedSlaObj = getSelectedSla({
-      logisticsInfo,
-      itemIndex: li.itemIndex,
-      selectedSla,
-    })
+    const selectedSlaObj = getSlaObj(li.slas, selectedSla)
 
     if (
       !selectedSlaObj ||
@@ -130,6 +167,34 @@ export function getNewLogisticsInfo(
       selectedDeliveryChannel: selectedSlaObj.deliveryChannel,
     }
   })
+}
+
+export function getNewLogisticsAndSelectedAddresses(
+  logisticsInfo,
+  selectedSla,
+  selectedAddresses,
+  availableDeliveryWindows = null
+) {
+  let newLogisticsInfo = getNewLogisticsInfo(
+    logisticsInfo,
+    selectedSla,
+    availableDeliveryWindows
+  )
+
+  const newSelectedAddresses = addPickupPointAddresses(
+    selectedAddresses,
+    getPickupSelectedSlas(logisticsInfo)
+  )
+
+  newLogisticsInfo = replaceAddressIdOnLogisticsInfo(
+    newLogisticsInfo,
+    newSelectedAddresses
+  )
+
+  return {
+    logisticsInfo: newLogisticsInfo,
+    selectedAddresses: newSelectedAddresses,
+  }
 }
 
 export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {
