@@ -110,7 +110,7 @@ export function filterPickupTypeFromSlas(slas) {
   }
 
   return slas.filter(
-    sla => sla.pickupStoreInfo && sla.pickupStoreInfo.isPickupStore
+    sla => sla && sla.pickupStoreInfo && sla.pickupStoreInfo.isPickupStore
   )
 }
 
