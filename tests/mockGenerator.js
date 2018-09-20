@@ -37,7 +37,7 @@ const addresses = {
     number: '2',
     complement: null,
     neighborhood: 'Botafogo',
-    postalCode: '22231-100',
+    postalCode: '22250-040',
     city: 'Rio de Janeiro',
     state: 'RJ',
     country: 'BRA',

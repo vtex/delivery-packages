@@ -5,6 +5,7 @@ import {
   COMMERCIAL,
   GIFT_REGISTRY,
 } from './constants'
+import uuid from './uuid'
 
 /** PRIVATE **/
 
@@ -41,16 +42,6 @@ export function getPickupAddress(pickupSla) {
   )
 }
 
-export function findAddress(addresses, searchAddress) {
-  if (!addresses || addresses.length === 0 || !searchAddress) {
-    return null
-  }
-
-  return addresses.find(
-    address => address.addressId === searchAddress.addressId
-  )
-}
-
 /** PUBLIC **/
 
 export function isAddressComplete(address) {
@@ -75,6 +66,30 @@ export function isDeliveryAddress(address) {
     address.addressType === COMMERCIAL ||
     address.addressType === GIFT_REGISTRY
   )
+}
+
+export function addAddressId(address) {
+  if (!address || address.addressId) {
+    return address
+  }
+  return {
+    ...address,
+    addressId: uuid(),
+  }
+}
+
+export function findAddress(addresses, searchAddress, prop = 'addressId') {
+  if (!addresses || addresses.length === 0 || !searchAddress) {
+    return null
+  }
+
+  return (
+    addresses.find(address => address[prop] === searchAddress[prop]) || null
+  )
+}
+
+export function findAddressByPostalCode(addresses, searchAddress) {
+  return findAddress(addresses, searchAddress, 'postalCode')
 }
 
 export function getDeliveryAvailableAddresses(addresses) {

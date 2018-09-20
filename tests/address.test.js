@@ -8,6 +8,9 @@ import {
   getFirstAddressForType,
   addOrReplaceAddressOnList,
   addPickupPointAddresses,
+  addAddressId,
+  findAddress,
+  findAddressByPostalCode,
 } from '../src/address'
 import { PICKUP, SEARCH, RESIDENTIAL } from '../src/constants'
 
@@ -337,9 +340,7 @@ describe('Address', () => {
     it('should add address but with search type on empty addresses', () => {
       const pickupAddress = addresses.pickupPointAddress
       const addresses1 = []
-      const pickupSlas = [
-        slas.pickupSla,
-      ]
+      const pickupSlas = [slas.pickupSla]
       const expectedAddresses = [
         {
           ...pickupAddress,
@@ -356,9 +357,7 @@ describe('Address', () => {
       const pickupAddress = addresses.pickupPointAddress
       const residentialAddress1 = addresses.residentialAddress
       const addresses1 = [residentialAddress1]
-      const pickupSlas = [
-        slas.pickupSla,
-      ]
+      const pickupSlas = [slas.pickupSla]
       const expectedAddresses = [
         ...addresses1,
         {
@@ -376,16 +375,114 @@ describe('Address', () => {
       const pickupAddress = addresses.pickupPointAddress
       const residentialAddress1 = addresses.residentialAddress
       const addresses1 = [pickupAddress, residentialAddress1]
-      const pickupSlas = [
-        slas.pickupSla,
-      ]
-      const expectedAddresses = [
-        ...addresses1,
-      ]
+      const pickupSlas = [slas.pickupSla]
+      const expectedAddresses = [...addresses1]
 
       const newAddresses = addPickupPointAddresses(addresses1, pickupSlas)
 
       expect(newAddresses).toEqual(expectedAddresses)
+    })
+  })
+
+  describe('addAddressId', () => {
+    it('should be empty if empty params are passed', () => {
+      const address1 = addAddressId()
+      const address2 = addAddressId(null)
+
+      expect(address1).toBeUndefined()
+      expect(address2).toBeNull()
+    })
+
+    it('should add addressId on empty object', () => {
+      const address1 = addAddressId({})
+
+      expect(address1.addressId).toBeTruthy()
+    })
+
+    it('should add addressId on incomplete address', () => {
+      const address1 = addAddressId({
+        ...addresses.residentialAddress.addressId,
+        addressId: null,
+      })
+
+      expect(address1.addressId).toBeTruthy()
+    })
+
+    it('shouldnt add addressId on complete address', () => {
+      const address1 = addAddressId(addresses.residentialAddress)
+
+      expect(address1.addressId).toEqual(addresses.residentialAddress.addressId)
+    })
+  })
+
+  describe('findAddress', () => {
+    it('should be empty if empty params are passed', () => {
+      const address1 = findAddress()
+      const address2 = findAddress([], null)
+
+      expect(address1).toBeNull()
+      expect(address2).toBeNull()
+    })
+
+    it('shouldnt find address not on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+      const address1 = findAddress(addresses1, searchAddress)
+
+      expect(address1).toBeNull()
+    })
+
+    it('should find address on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+      const address1 = findAddress(addresses1, pickupAddress)
+
+      expect(address1).toEqual(pickupAddress)
+    })
+  })
+
+  describe('findAddressByPostalCode', () => {
+    it('should be empty if empty params are passed', () => {
+      const address1 = findAddressByPostalCode()
+      const address2 = findAddressByPostalCode([], null)
+
+      expect(address1).toBeNull()
+      expect(address2).toBeNull()
+    })
+
+    it('shouldnt find address not on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+      const address1 = findAddressByPostalCode(addresses1, searchAddress)
+
+      expect(address1).toBeNull()
+    })
+
+    it('should find address on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+      const address1 = findAddressByPostalCode(addresses1, pickupAddress)
+
+      expect(address1).toEqual(pickupAddress)
+    })
+
+    it('should find postalcode on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const samePostalCodeAddress = addresses.commercialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+      const address1 = findAddressByPostalCode(
+        addresses1,
+        samePostalCodeAddress
+      )
+
+      expect(address1).toEqual(residentialAddress1)
     })
   })
 })
