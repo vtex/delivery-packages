@@ -7,10 +7,11 @@ import {
   groupByAddressType,
   getFirstAddressForType,
   addOrReplaceAddressOnList,
+  addPickupPointAddresses,
 } from '../src/address'
 import { PICKUP, SEARCH, RESIDENTIAL } from '../src/constants'
 
-import { addresses } from './mockGenerator'
+import { slas, addresses } from './mockGenerator'
 
 describe('Address', () => {
   describe('isAddressComplete', () => {
@@ -149,8 +150,8 @@ describe('Address', () => {
         ...addresses.residentialAddress,
         street: null,
       }
-      const pickupAdress = addresses.pickupPointAddress
-      const searchAdress = addresses.searchAddress
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const residentialAddress2 = {
         ...addresses.residentialAddress,
@@ -161,9 +162,9 @@ describe('Address', () => {
       const addresses1 = getDeliveryAvailableAddresses([
         incompleteAddress1,
         residentialAddress1,
-        pickupAdress,
+        pickupAddress,
         residentialAddress2,
-        searchAdress,
+        searchAddress,
       ])
 
       expect(addresses1).toEqual([residentialAddress1, residentialAddress2])
@@ -180,24 +181,24 @@ describe('Address', () => {
     })
 
     it('should group by addressType', () => {
-      const pickupAdress = addresses.pickupPointAddress
+      const pickupAddress = addresses.pickupPointAddress
       const residentialAddress = addresses.residentialAddress
       const expectedGroups1 = {
-        [PICKUP]: [pickupAdress],
+        [PICKUP]: [pickupAddress],
         [RESIDENTIAL]: [residentialAddress],
       }
 
       const addressGroups1 = groupByAddressType([
         residentialAddress,
-        pickupAdress,
+        pickupAddress,
       ])
 
       expect(addressGroups1).toEqual(expectedGroups1)
     })
 
     it('should group all types by addressType', () => {
-      const pickupAdress = addresses.pickupPointAddress
-      const searchAdress = addresses.searchAddress
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const residentialAddress2 = {
         ...addresses.residentialAddress,
@@ -205,16 +206,16 @@ describe('Address', () => {
         receiverName: 'Other Doe',
       }
       const expectedGroups1 = {
-        [PICKUP]: [pickupAdress],
-        [SEARCH]: [searchAdress],
+        [PICKUP]: [pickupAddress],
+        [SEARCH]: [searchAddress],
         [RESIDENTIAL]: [residentialAddress1, residentialAddress2],
       }
 
       const addressGroups1 = groupByAddressType([
         residentialAddress1,
-        pickupAdress,
+        pickupAddress,
         residentialAddress2,
-        searchAdress,
+        searchAddress,
       ])
 
       expect(addressGroups1).toEqual(expectedGroups1)
@@ -231,9 +232,9 @@ describe('Address', () => {
     })
 
     it('should return null if address not found', () => {
-      const pickupAdress = addresses.pickupPointAddress
-      const searchAdress = addresses.searchAddress
-      const addresses1 = [pickupAdress, searchAdress]
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const addresses1 = [pickupAddress, searchAddress]
 
       const address1 = getFirstAddressForType(addresses1, RESIDENTIAL)
 
@@ -241,8 +242,8 @@ describe('Address', () => {
     })
 
     it('should get correct address by addressType', () => {
-      const pickupAdress = addresses.pickupPointAddress
-      const searchAdress = addresses.searchAddress
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const residentialAddress2 = {
         ...addresses.residentialAddress,
@@ -251,18 +252,18 @@ describe('Address', () => {
       }
       const addresses1 = [
         residentialAddress1,
-        pickupAdress,
+        pickupAddress,
         residentialAddress2,
-        searchAdress,
+        searchAddress,
       ]
 
       const address1 = getFirstAddressForType(addresses1, PICKUP)
       const address2 = getFirstAddressForType(addresses1, RESIDENTIAL)
       const address3 = getFirstAddressForType(addresses1, SEARCH)
 
-      expect(address1).toEqual(pickupAdress)
+      expect(address1).toEqual(pickupAddress)
       expect(address2).toEqual(residentialAddress1)
-      expect(address3).toEqual(searchAdress)
+      expect(address3).toEqual(searchAddress)
     })
   })
 
@@ -275,11 +276,24 @@ describe('Address', () => {
       expect(addresses2).toEqual([])
     })
 
-    it('should add address', () => {
-      const pickupAdress = addresses.pickupPointAddress
-      const searchAdress = addresses.searchAddress
+    it('should add address on empty address list', () => {
       const residentialAddress1 = addresses.residentialAddress
-      const addresses1 = [pickupAdress, searchAdress]
+      const addresses1 = []
+      const expectedAddresses1 = [...addresses1, residentialAddress1]
+
+      const resultAddresses1 = addOrReplaceAddressOnList(
+        addresses1,
+        residentialAddress1
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should add address', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, searchAddress]
       const expectedAddresses1 = [...addresses1, residentialAddress1]
 
       const resultAddresses1 = addOrReplaceAddressOnList(
@@ -291,14 +305,14 @@ describe('Address', () => {
     })
 
     it('should replace address with all info', () => {
-      const pickupAdress = addresses.pickupPointAddress
-      const searchAdress = addresses.searchAddress
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const residentialAddress2 = {
         ...addresses.residentialAddress,
         receiverName: 'Other Doe',
       }
-      const baseAddresses = [pickupAdress, searchAdress]
+      const baseAddresses = [pickupAddress, searchAddress]
       const addresses1 = [...baseAddresses, residentialAddress1]
       const expectedAddresses1 = [...baseAddresses, residentialAddress2]
 
@@ -308,6 +322,70 @@ describe('Address', () => {
       )
 
       expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+  })
+
+  describe('addPickupPointAddresses', () => {
+    it('should be empty if empty params are passed', () => {
+      const addresses1 = addPickupPointAddresses()
+      const addresses2 = addPickupPointAddresses([], null)
+
+      expect(addresses1).toBeUndefined()
+      expect(addresses2).toEqual([])
+    })
+
+    it('should add address but with search type on empty addresses', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const addresses1 = []
+      const pickupSlas = [
+        slas.pickupSla,
+      ]
+      const expectedAddresses = [
+        {
+          ...pickupAddress,
+          addressType: SEARCH,
+        },
+      ]
+
+      const newAddresses = addPickupPointAddresses(addresses1, pickupSlas)
+
+      expect(newAddresses).toEqual(expectedAddresses)
+    })
+
+    it('should add address but with search type on list of addresses', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [residentialAddress1]
+      const pickupSlas = [
+        slas.pickupSla,
+      ]
+      const expectedAddresses = [
+        ...addresses1,
+        {
+          ...pickupAddress,
+          addressType: SEARCH,
+        },
+      ]
+
+      const newAddresses = addPickupPointAddresses(addresses1, pickupSlas)
+
+      expect(newAddresses).toEqual(expectedAddresses)
+    })
+
+    it('shouldnt add address if already on list of addresses', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+      const pickupSlas = [
+        slas.pickupSla,
+      ]
+      const expectedAddresses = [
+        ...addresses1,
+      ]
+
+      const newAddresses = addPickupPointAddresses(addresses1, pickupSlas)
+
+      expect(newAddresses).toEqual(expectedAddresses)
     })
   })
 })

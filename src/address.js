@@ -105,7 +105,7 @@ export function groupByAddressType(addresses) {
 }
 
 export function addOrReplaceAddressOnList(addresses, newAddress) {
-  if (!addresses || addresses.length === 0 || !newAddress) {
+  if (!addresses || !newAddress) {
     return addresses
   }
 
@@ -127,24 +127,20 @@ export function addOrReplaceAddressOnList(addresses, newAddress) {
 }
 
 export function addPickupPointAddresses(addresses, pickupSlas) {
-  if (
-    !addresses ||
-    addresses.length === 0 ||
-    !pickupSlas ||
-    pickupSlas.length === 0
-  ) {
+  if (!addresses || !pickupSlas || pickupSlas.length === 0) {
     return addresses
   }
 
   return pickupSlas.reduce(
     (newAddresses, pickupSla) => {
-      const searchAddress = findAddress(addresses, searchAddress)
+      const pickupAddress = getPickupAddress(pickupSla)
+      const searchAddress = findAddress(addresses, pickupAddress)
       if (searchAddress) {
         return newAddresses
       }
 
       const newAddress = {
-        ...getPickupAddress(pickupSla),
+        ...pickupAddress,
         addressType: SEARCH,
       }
       return addOrReplaceAddressOnList(newAddresses, newAddress)

@@ -9,7 +9,22 @@ const addresses = {
     neighborhood: 'Copacabana',
     number: '5',
     postalCode: '22011050',
-    receiverName: 'auto auto',
+    receiverName: null,
+    reference: null,
+    state: 'RJ',
+    street: 'Rua General Azevedo Pimentel',
+  },
+  pickupPointAddress2: {
+    addressId: '141125e',
+    addressType: 'pickup',
+    city: 'Rio de Janeiro',
+    complement: '',
+    country: 'BRA',
+    geoCoordinates: [-43.18080139160156, -22.96540069580078],
+    neighborhood: 'Copacabana',
+    number: '5',
+    postalCode: '22011050',
+    receiverName: null,
     reference: null,
     state: 'RJ',
     street: 'Rua General Azevedo Pimentel',
@@ -150,10 +165,7 @@ const slas = {
     pickupStoreInfo: {
       isPickupStore: true,
       friendlyName: 'Shopping da Gávea',
-      address: {
-        ...addresses.pickupPointAddress,
-        receiverName: null,
-      },
+      address: addresses.pickupPointAddress,
     },
   },
   pickupNormalSla: {
@@ -170,10 +182,7 @@ const slas = {
     pickupStoreInfo: {
       isPickupStore: true,
       friendlyName: 'Shopping da Gávea',
-      address: {
-        ...addresses.pickupPointAddress,
-        receiverName: null,
-      },
+      address: addresses.pickupPointAddress2,
     },
   },
   expressSla: {
