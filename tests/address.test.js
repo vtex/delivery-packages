@@ -6,6 +6,7 @@ import {
   getDeliveryAvailableAddresses,
   groupByAddressType,
   getFirstAddressForType,
+  getPickupAddress,
   addOrReplaceAddressOnList,
   addPickupPointAddresses,
   addAddressId,
@@ -267,6 +268,31 @@ describe('Address', () => {
       expect(address1).toEqual(pickupAddress)
       expect(address2).toEqual(residentialAddress1)
       expect(address3).toEqual(searchAddress)
+    })
+  })
+
+  describe('getPickupAddress', () => {
+    it('should be empty if empty params are passed', () => {
+      const address1 = getPickupAddress()
+      const address2 = getPickupAddress(null)
+
+      expect(address1).toBeNull()
+      expect(address2).toBeNull()
+    })
+
+    it('should return null if address not found', () => {
+      const address1 = getPickupAddress(slas.normalSla)
+
+      expect(address1).toBeNull()
+    })
+
+    it('should get correct address if sla contains address', () => {
+      const pickupSla = slas.pickupSla
+      const expectedAddress = addresses.pickupPointAddress
+
+      const address1 = getPickupAddress(pickupSla)
+
+      expect(address1).toEqual(expectedAddress)
     })
   })
 

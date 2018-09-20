@@ -59,7 +59,9 @@ export function getLogisticsInfoData(params) {
 
 function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
   const sla = getSelectedSla({ itemIndex, logisticsInfo })
-  return sla && sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
+  return sla && sla.pickupStoreInfo && sla.pickupStoreInfo.friendlyName
+    ? sla.pickupStoreInfo.friendlyName
+    : null
 }
 
 function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
@@ -169,24 +171,16 @@ export function getNewLogisticsInfo(
   })
 }
 
-export function getNewLogisticsAndSelectedAddresses(
+export function getNewLogisticsMatchingSelectedAddresses(
   logisticsInfo,
-  selectedSla,
-  selectedAddresses,
-  availableDeliveryWindows = null
+  selectedAddresses
 ) {
-  let newLogisticsInfo = getNewLogisticsInfo(
-    logisticsInfo,
-    selectedSla,
-    availableDeliveryWindows
-  )
-
   const newSelectedAddresses = addPickupPointAddresses(
     selectedAddresses,
     getPickupSelectedSlas(logisticsInfo)
   )
 
-  newLogisticsInfo = replaceAddressIdOnLogisticsInfo(
+  const newLogisticsInfo = replaceAddressIdOnLogisticsInfo(
     newLogisticsInfo,
     newSelectedAddresses
   )

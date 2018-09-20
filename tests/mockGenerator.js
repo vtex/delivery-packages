@@ -196,6 +196,9 @@ const slas = {
     listPrice: 10000,
     sellingPrice: 10000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   normalSla: {
     id: 'Normal',
@@ -208,6 +211,9 @@ const slas = {
     listPrice: 5000,
     sellingPrice: 5000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   normalFastestSla: {
     id: 'Normal',
@@ -219,6 +225,9 @@ const slas = {
     listPrice: 20000,
     sellingPrice: 20000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   normalScheduledDeliverySla: {
     id: 'Agendada',
@@ -231,6 +240,9 @@ const slas = {
     listPrice: 5000,
     sellingPrice: 5000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   biggerWindowScheduledDeliverySla: {
     id: 'SuperAgendada',
@@ -243,6 +255,9 @@ const slas = {
     listPrice: 5000,
     sellingPrice: 5000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
 }
 
