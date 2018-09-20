@@ -4,7 +4,7 @@ import {
   getPickupAddress,
   getFirstAddressForDelivery,
 } from './address'
-import { isPickup, isDelivery } from './delivery-channel'
+import { isPickup, isDelivery, getDeliveryChannel } from './delivery-channel'
 import {
   hasDeliveryWindows,
   getSelectedSla,
@@ -108,21 +108,30 @@ export function replaceAddressIdOnLogisticsInfo(
   logisticsInfo,
   selectedAddresses
 ) {
+  if (
+    !logisticsInfo ||
+    logisticsInfo.length === 0 ||
+    !selectedAddresses ||
+    selectedAddresses.length === 0
+  ) {
+    return logisticsInfo
+  }
+
   return logisticsInfo.map(li => {
     const selectedSlaObj = getSlaObj(li.slas, li.selectedSla)
-    if (!selectedSlaObj || !selectedSlaObj.selectedDeliveryChannel) {
+    const deliveryChannel = getDeliveryChannel(selectedSlaObj)
+
+    if (!selectedSlaObj || !deliveryChannel) {
       return li
     }
 
-    const { selectedDeliveryChannel } = selectedSlaObj
-
     let selectedAddress = null
 
-    if (isPickup(selectedDeliveryChannel)) {
+    if (isPickup(deliveryChannel)) {
       selectedAddress = getPickupAddress(selectedSlaObj)
     }
 
-    if (isDelivery(selectedDeliveryChannel)) {
+    if (isDelivery(deliveryChannel)) {
       selectedAddress = getFirstAddressForDelivery(selectedAddresses)
     }
 

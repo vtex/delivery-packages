@@ -59,6 +59,21 @@ const addresses = {
     reference: null,
     geoCoordinates: [],
   },
+  residentialAddress2: {
+    addressId: '-4556418741088',
+    addressType: 'residential',
+    receiverName: 'John Doe',
+    street: 'Rua Barão',
+    number: '2',
+    complement: null,
+    neighborhood: 'Botafogo',
+    postalCode: '22231-100',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    country: 'BRA',
+    reference: null,
+    geoCoordinates: [],
+  },
   giftRegistryAddress: {
     addressId: '-4556418741086',
     addressType: 'giftRegistry',
@@ -364,6 +379,23 @@ const createLogisticsInfo = (slaTypes, quantity, price = 0) => {
   }))
 }
 
+const createLogisticsInfoItem = ({
+  slas: slaTypes,
+  selectedSla: selectedSlaType,
+  price,
+  addressId,
+  index,
+}) => {
+  return {
+    ...createLogisticsInfo(slaTypes, 1, price)[0],
+    selectedSla: slas[selectedSlaType].id,
+    selectedDeliveryChannel: slas[selectedSlaType].deliveryChannel,
+    addressId,
+    itemIndex: index,
+    itemId: index,
+  }
+}
+
 module.exports = {
   addresses,
   slas,
@@ -372,4 +404,5 @@ module.exports = {
   createPackage,
   createItems,
   createLogisticsInfo,
+  createLogisticsInfoItem,
 }
