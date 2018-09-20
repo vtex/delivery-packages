@@ -12,6 +12,7 @@ import {
   addAddressId,
   findAddress,
   findAddressByPostalCode,
+  getFirstAddressForDelivery,
 } from '../src/address'
 import { PICKUP, SEARCH, RESIDENTIAL } from '../src/constants'
 
@@ -455,6 +456,7 @@ describe('Address', () => {
       const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const addresses1 = [pickupAddress, residentialAddress1]
+
       const address1 = findAddress(addresses1, searchAddress)
 
       expect(address1).toBeNull()
@@ -464,6 +466,7 @@ describe('Address', () => {
       const pickupAddress = addresses.pickupPointAddress
       const residentialAddress1 = addresses.residentialAddress
       const addresses1 = [pickupAddress, residentialAddress1]
+
       const address1 = findAddress(addresses1, pickupAddress)
 
       expect(address1).toEqual(pickupAddress)
@@ -484,6 +487,7 @@ describe('Address', () => {
       const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const addresses1 = [pickupAddress, residentialAddress1]
+
       const address1 = findAddressByPostalCode(addresses1, searchAddress)
 
       expect(address1).toBeNull()
@@ -493,6 +497,7 @@ describe('Address', () => {
       const pickupAddress = addresses.pickupPointAddress
       const residentialAddress1 = addresses.residentialAddress
       const addresses1 = [pickupAddress, residentialAddress1]
+
       const address1 = findAddressByPostalCode(addresses1, pickupAddress)
 
       expect(address1).toEqual(pickupAddress)
@@ -503,10 +508,41 @@ describe('Address', () => {
       const residentialAddress1 = addresses.residentialAddress
       const samePostalCodeAddress = addresses.commercialAddress
       const addresses1 = [pickupAddress, residentialAddress1]
+
       const address1 = findAddressByPostalCode(
         addresses1,
         samePostalCodeAddress
       )
+
+      expect(address1).toEqual(residentialAddress1)
+    })
+  })
+
+  describe('getFirstAddressForDelivery', () => {
+    it('should be empty if empty params are passed', () => {
+      const address1 = getFirstAddressForDelivery()
+      const address2 = getFirstAddressForDelivery([])
+
+      expect(address1).toBeNull()
+      expect(address2).toBeNull()
+    })
+
+    it('shouldnt find address if no delivery address is on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const addresses1 = [pickupAddress, searchAddress]
+
+      const address1 = getFirstAddressForDelivery(addresses1)
+
+      expect(address1).toBeNull()
+    })
+
+    it('should find delivery address on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, residentialAddress1]
+
+      const address1 = getFirstAddressForDelivery(addresses1)
 
       expect(address1).toEqual(residentialAddress1)
     })
