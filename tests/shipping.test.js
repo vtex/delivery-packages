@@ -6,6 +6,7 @@ import {
   filterLogisticsInfo,
   getNewLogisticsInfoWithScheduledDeliveryChoice,
   replaceAddressIdOnLogisticsInfo,
+  getNewLogisticsMatchingSelectedAddresses,
 } from '../src/shipping'
 import { getDeliveredItems } from '../src/items'
 
@@ -1060,6 +1061,34 @@ describe('Shipping', () => {
       )
 
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+  })
+
+  describe('getNewLogisticsMatchingSelectedAddresses', () => {
+    it('should return empty if empty params are passed', () => {
+      const {
+        logisticsInfo: logisticsInfo1,
+        selectedAddresses: selectedAddresses1,
+      } = getNewLogisticsMatchingSelectedAddresses()
+
+      const {
+        logisticsInfo: logisticsInfo2,
+        selectedAddresses: selectedAddresses2,
+      } = getNewLogisticsMatchingSelectedAddresses([])
+
+      const {
+        logisticsInfo: logisticsInfo3,
+        selectedAddresses: selectedAddresses3,
+      } = getNewLogisticsMatchingSelectedAddresses([], [])
+
+      expect(logisticsInfo1).toEqual([])
+      expect(selectedAddresses1).toBeUndefined()
+
+      expect(logisticsInfo2).toEqual([])
+      expect(selectedAddresses2).toBeUndefined()
+
+      expect(logisticsInfo3).toEqual([])
+      expect(selectedAddresses3).toEqual([])
     })
   })
 })

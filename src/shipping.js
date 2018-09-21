@@ -184,10 +184,24 @@ export function getNewLogisticsMatchingSelectedAddresses(
   logisticsInfo,
   selectedAddresses
 ) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return {
+      logisticsInfo: [],
+      selectedAddresses,
+    }
+  }
+
   const newSelectedAddresses = addPickupPointAddresses(
     selectedAddresses,
     getPickupSelectedSlas(logisticsInfo)
   )
+
+  if (!newSelectedAddresses || newSelectedAddresses.length === 0) {
+    return {
+      logisticsInfo,
+      selectedAddresses: [],
+    }
+  }
 
   const newLogisticsInfo = replaceAddressIdOnLogisticsInfo(
     newLogisticsInfo,
