@@ -276,6 +276,20 @@ parcelify(order, { criteria: { seller: false } })
 
 This module provide a lot of helper functions besides parcelify, that are worth checking below.
 
+address:
+addAddressId
+findAddressIndex
+findAddress
+findAddressByPostalCode
+addOrReplaceAddressOnList
+addPickupPointAddresses
+
+sla:
+getPickupSelectedSlas
+
+shipping:
+getNewLogisticsMatchingSelectedAddresses
+
 ## Address
 > @vtex/delivery-packages/dist/address
 
@@ -1149,7 +1163,7 @@ selectDeliveryWindow(logisticsInfo, {
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 - **action**
 Type: `object`
@@ -1256,7 +1270,7 @@ getFirstScheduledDelivery(logisticsInfo, [
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 - **availableDeliveryWindows1**
 Type: `Array<object>`
@@ -1444,7 +1458,7 @@ getNewLogisticsInfo(logisticsInfo, 'Agendada', [
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 - **selectedSla**
 Type: `string`
@@ -1568,7 +1582,7 @@ getNewLogisticsInfoWithSelectedScheduled(logisticsInfo)
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 **returns:**
 - **new logisticsInfo**
@@ -1707,7 +1721,7 @@ getNewLogisticsInfoWithScheduledDeliveryChoice(logisticsInfo, { selectedSla: 'Ag
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 - **scheduledDeliveryChoice**
 Type: `object`
 An object like `{ selectedSla, deliveryWindow }` saying what sla and deliveryWindow to choose the delivery
@@ -1803,7 +1817,7 @@ filterLogisticsInfo(logisticsInfo, { items }, keepSize)
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 - **filters**
 Type: `object`
 An object like `{ items: [{ index or itemIndex: number }, ...], }` saying what items to filter on logisticsInfo
@@ -1815,6 +1829,169 @@ Flag to inform if the missing items are maintained on the new array as `null` va
 - **new logisticsInfo**
 Type: `Array<object>`
 New logisticsInfo filtered by the `filters` param and with the size according to `keepSize` param
+
+### getNewLogisticsMatchingSelectedAddresses (logisticsInfo, selectedAddresses)
+
+Get new logisticsInfo and selectedAddresses making sure all pickup addresses that are on a selectedSla are included on selectedAddresses list and then making sure all logisticsInfo items have addressIds matching the ones on selectedAddresses.
+
+##### Usage
+```js
+const { getNewLogisticsMatchingSelectedAddresses } = require('@vtex/delivery-packages/dist/shipping')
+
+const logisticsInfo = [
+  {
+    // You can pass all the properties of the logisticsInfo
+    "addressId": "-4556418741084",
+    "selectedSla": "MeuPickupPoint",
+    "selectedDeliveryChannel": "pickup-in-point",
+    "itemIndex": 0,
+    "slas": [
+      {
+      	"id": "MeuPickupPoint",
+      	"deliveryChannel": "pickup-in-point",
+      	"name": "VTEX RJ (1b4e9b2)",
+      	"shippingEstimate": "0bd",
+      	"price": 0,
+      	"pickupPointId": "1_1b4e9b2",
+      	"pickupStoreInfo": {
+      		"isPickupStore": true,
+      		"friendlyName": "VTEX RJ",
+      		"address": {
+      			"addressType": "pickup",
+      			"receiverName": null,
+      			"addressId": "1b4e9b2",
+      			"postalCode": "22250040",
+      			"city": "Rio de Janeiro",
+      			"state": "RJ",
+      			"country": "BRA",
+      			"street": "Praia de Botafogo",
+      			"number": "300",
+      			"neighborhood": "Botafogo",
+      			"complement": "",
+      			"reference": null,
+      			"geoCoordinates": [-43.1822662, -22.9459858]
+      		}
+      	}
+      }
+    ]
+  },
+  {
+    "addressId": null,
+    "selectedSla": "Normal",
+    "selectedDeliveryChannel": "delivery",
+    "itemIndex": 1,
+    "slas": [
+      // You can pass all the properties of the sla
+      { "id": "Normal", "deliveryChannel": "delivery" }
+    ]
+  }
+]
+
+const selectedAddresses = [{
+  "addressId": "-4556418741084",
+  "addressType": "residential",
+  "receiverName": "John Doe",
+  "street": "Rua Barão",
+  "number": "2",
+  "complement": null,
+  "neighborhood": "Botafogo",
+  "postalCode": "22231-100",
+  "city": "Rio de Janeiro",
+  "state": "RJ",
+  "country": "BRA",
+  "reference": null,
+  "geoCoordinates": [],
+}]
+
+getNewLogisticsMatchingSelectedAddresses(logisticsInfo, selectedAddresses)
+// -> {
+//   logisticsInfo: [{
+//     "addressId": "1b4e9b2",
+//     "selectedSla": "MeuPickupPoint",
+//     "selectedDeliveryChannel": "pickup-in-point",
+//     "itemIndex": 0,
+//     "slas": [
+//       {
+//       	"id": "MeuPickupPoint",
+//       	"deliveryChannel": "pickup-in-point",
+//       	"name": "VTEX RJ (1b4e9b2)",
+//       	"shippingEstimate": "0bd",
+//       	"price": 0,
+//       	"pickupPointId": "1_1b4e9b2",
+//       	"pickupStoreInfo": {
+//       		"isPickupStore": true,
+//       		"friendlyName": "VTEX RJ",
+//       		"address": {
+//       			"addressType": "pickup",
+//       			"receiverName": null,
+//       			"addressId": "1b4e9b2",
+//       			"postalCode": "22250040",
+//       			"city": "Rio de Janeiro",
+//       			"state": "RJ",
+//       			"country": "BRA",
+//       			"street": "Praia de Botafogo",
+//       			"number": "300",
+//       			"neighborhood": "Botafogo",
+//       			"complement": "",
+//       			"reference": null,
+//       			"geoCoordinates": [-43.1822662, -22.9459858]
+//       		}
+//       	}
+//       }
+//     ]
+//   },
+//   {
+//     "addressId": "-4556418741084",
+//     "selectedSla": "Normal",
+//     "selectedDeliveryChannel": "delivery",
+//     "itemIndex": 1,
+//     "slas": [
+//       { "id": "Normal", "deliveryChannel": "delivery" }
+//     ]
+//   }],
+//   selectedAddresses: [{
+//     "addressId": "-4556418741084",
+//     "addressType": "residential",
+//     "receiverName": "John Doe",
+//     "street": "Rua Barão",
+//     "number": "2",
+//     "complement": null,
+//     "neighborhood": "Botafogo",
+//     "postalCode": "22231-100",
+//     "city": "Rio de Janeiro",
+//     "state": "RJ",
+//     "country": "BRA",
+//     "reference": null,
+//     "geoCoordinates": [],
+//   }, {
+//     "addressType": "pickup",
+//     "receiverName": null,
+//     "addressId": "1b4e9b2",
+//     "postalCode": "22250040",
+//     "city": "Rio de Janeiro",
+//     "state": "RJ",
+//     "country": "BRA",
+//     "street": "Praia de Botafogo",
+//     "number": "300",
+//     "neighborhood": "Botafogo",
+//     "complement": "",
+//     "reference": null,
+//     "geoCoordinates": [-43.1822662, -22.9459858]
+//   }]
+// }
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
+- **selectedAddresses**
+Type: `Array<object>`
+The selectedAddresses like the one inside `orderForm.shippingData` with address objects that are related to the order
+**returns:**
+- **new object with new logisticsInfo and new selectedAddresses**
+Type: `{ logisticsInfo: Array<object>, selectedAddresses: Array<object> }`
+New logisticsInfo and selectedAddresses with matching addressIds and with all pickup addresses included
 
 ## SLA
 > @vtex/delivery-packages/dist/sla
@@ -2084,7 +2261,7 @@ getSelectedSlas(logisticsInfo)
 **params:**
 - **logisticsInfo**
 Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm` with `selectedSla` and `slas`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 **returns:**
 - **selectedSlas**
