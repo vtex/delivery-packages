@@ -8,6 +8,7 @@ import {
   replaceAddressIdOnLogisticsInfo,
   getNewLogisticsMatchingSelectedAddresses,
 } from '../src/shipping'
+import { SEARCH } from '../src/constants'
 import { getDeliveredItems } from '../src/items'
 
 import {
@@ -1089,6 +1090,164 @@ describe('Shipping', () => {
 
       expect(logisticsInfo3).toEqual([])
       expect(selectedAddresses3).toEqual([])
+    })
+
+    it('should maintain same logisticsInfo and selectedAddresses if nothing changed', () => {
+      const logisticsInfo = [
+        createLogisticsInfoItem({
+          slas: ['normalSla', 'expressSla'],
+          addressId: addresses.residentialAddress.addressId,
+          selectedSla: 'normalSla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['normalSla', 'expressSla'],
+          addressId: addresses.residentialAddress.addressId,
+          selectedSla: 'normalSla',
+          index: 1,
+        }),
+      ]
+      const selectedAddresses = [addresses.residentialAddress]
+      const expectedLogisticsInfo = [...logisticsInfo]
+      const expectedSelectedAddresses = [...selectedAddresses]
+
+      const {
+        logisticsInfo: newLogisticsInfo,
+        selectedAddresses: newSelectedAddresses,
+      } = getNewLogisticsMatchingSelectedAddresses(
+        logisticsInfo,
+        selectedAddresses
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+      expect(newSelectedAddresses).toEqual(expectedSelectedAddresses)
+    })
+
+    it('should create pickup address and match it if not present', () => {
+      const logisticsInfo = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'normalScheduledDeliverySla'],
+          selectedSla: 'pickupSla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['normalSla', 'pickupNormalSla'],
+          selectedSla: 'pickupNormalSla',
+          index: 1,
+        }),
+      ]
+      const selectedAddresses = []
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          addressId: addresses.pickupPointAddress.addressId,
+        },
+        {
+          ...logisticsInfo[1],
+          addressId: addresses.pickupPointAddress2.addressId,
+        },
+      ]
+      const expectedSelectedAddresses = [
+        { ...addresses.pickupPointAddress, addressType: SEARCH },
+        { ...addresses.pickupPointAddress2, addressType: SEARCH },
+      ]
+
+      const {
+        logisticsInfo: newLogisticsInfo,
+        selectedAddresses: newSelectedAddresses,
+      } = getNewLogisticsMatchingSelectedAddresses(
+        logisticsInfo,
+        selectedAddresses
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+      expect(newSelectedAddresses).toEqual(expectedSelectedAddresses)
+    })
+
+    it('should reassign addressIds on delivery changes', () => {
+      const logisticsInfo = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla', 'normalScheduledDeliverySla'],
+          addressId: addresses.residentialAddress2.addressId,
+          selectedSla: 'normalScheduledDeliverySla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['normalSla', 'expressSla', 'pickupNormalSla'],
+          addressId: addresses.residentialAddress2.addressId,
+          selectedSla: 'normalSla',
+          index: 1,
+        }),
+      ]
+      const selectedAddresses = [addresses.residentialAddress]
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          addressId: addresses.residentialAddress.addressId,
+        },
+        {
+          ...logisticsInfo[1],
+          addressId: addresses.residentialAddress.addressId,
+        },
+      ]
+      const expectedSelectedAddresses = [...selectedAddresses]
+
+      const {
+        logisticsInfo: newLogisticsInfo,
+        selectedAddresses: newSelectedAddresses,
+      } = getNewLogisticsMatchingSelectedAddresses(
+        logisticsInfo,
+        selectedAddresses
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+      expect(newSelectedAddresses).toEqual(expectedSelectedAddresses)
+    })
+
+    it('should reassign addressIds on delivery changes from pickups', () => {
+      const logisticsInfo = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla', 'normalScheduledDeliverySla'],
+          addressId: addresses.residentialAddress2.addressId,
+          selectedSla: 'pickupSla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['normalSla', 'expressSla', 'pickupNormalSla'],
+          addressId: addresses.residentialAddress2.addressId,
+          selectedSla: 'pickupNormalSla',
+          index: 1,
+        }),
+      ]
+      const selectedAddresses = [
+        addresses.residentialAddress2,
+        addresses.pickupPointAddress,
+      ]
+      const expectedLogisticsInfo = [
+        {
+          ...logisticsInfo[0],
+          addressId: addresses.pickupPointAddress.addressId,
+        },
+        {
+          ...logisticsInfo[1],
+          addressId: addresses.pickupPointAddress2.addressId,
+        },
+      ]
+      const expectedSelectedAddresses = [
+        ...selectedAddresses,
+        { ...addresses.pickupPointAddress2, addressType: SEARCH },
+      ]
+
+      const {
+        logisticsInfo: newLogisticsInfo,
+        selectedAddresses: newSelectedAddresses,
+      } = getNewLogisticsMatchingSelectedAddresses(
+        logisticsInfo,
+        selectedAddresses
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+      expect(newSelectedAddresses).toEqual(expectedSelectedAddresses)
     })
   })
 })

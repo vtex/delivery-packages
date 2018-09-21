@@ -204,7 +204,7 @@ export function getNewLogisticsMatchingSelectedAddresses(
   }
 
   const newLogisticsInfo = replaceAddressIdOnLogisticsInfo(
-    newLogisticsInfo,
+    logisticsInfo,
     newSelectedAddresses
   )
 

@@ -7,6 +7,7 @@ import {
   groupByAddressType,
   getFirstAddressForType,
   getPickupAddress,
+  addOrReplaceAddressTypeOnList,
   addOrReplaceAddressOnList,
   addPickupPointAddresses,
   addAddressId,
@@ -297,6 +298,64 @@ describe('Address', () => {
     })
   })
 
+  describe('addOrReplaceAddressTypeOnList', () => {
+    it('should be empty if empty params are passed', () => {
+      const addresses1 = addOrReplaceAddressTypeOnList()
+      const addresses2 = addOrReplaceAddressTypeOnList([], null)
+
+      expect(addresses1).toBeUndefined()
+      expect(addresses2).toEqual([])
+    })
+
+    it('should add address on empty address list', () => {
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = []
+      const expectedAddresses1 = [...addresses1, residentialAddress1]
+
+      const resultAddresses1 = addOrReplaceAddressTypeOnList(
+        addresses1,
+        residentialAddress1
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should add address', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, searchAddress]
+      const expectedAddresses1 = [...addresses1, residentialAddress1]
+
+      const resultAddresses1 = addOrReplaceAddressTypeOnList(
+        addresses1,
+        residentialAddress1
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should replace address with all info', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const residentialAddress2 = {
+        ...residentialAddress1,
+        receiverName: 'Other Doe',
+      }
+      const baseAddresses = [pickupAddress, searchAddress]
+      const addresses1 = [...baseAddresses, residentialAddress1]
+      const expectedAddresses1 = [...baseAddresses, residentialAddress2]
+
+      const resultAddresses1 = addOrReplaceAddressTypeOnList(
+        addresses1,
+        residentialAddress2
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+  })
+
   describe('addOrReplaceAddressOnList', () => {
     it('should be empty if empty params are passed', () => {
       const addresses1 = addOrReplaceAddressOnList()
@@ -334,17 +393,33 @@ describe('Address', () => {
       expect(resultAddresses1).toEqual(expectedAddresses1)
     })
 
-    it('should replace address with all info', () => {
+    it('should replace addresses with unique id', () => {
       const pickupAddress = addresses.pickupPointAddress
       const searchAddress = addresses.searchAddress
       const residentialAddress1 = addresses.residentialAddress
       const residentialAddress2 = {
-        ...addresses.residentialAddress,
+        ...residentialAddress1,
         receiverName: 'Other Doe',
       }
       const baseAddresses = [pickupAddress, searchAddress]
       const addresses1 = [...baseAddresses, residentialAddress1]
       const expectedAddresses1 = [...baseAddresses, residentialAddress2]
+
+      const resultAddresses1 = addOrReplaceAddressOnList(
+        addresses1,
+        residentialAddress2
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should add multiple addresses of same type if different ids', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const residentialAddress2 = addresses.residentialAddress2
+      const addresses1 = [pickupAddress, searchAddress, residentialAddress1]
+      const expectedAddresses1 = [...addresses1, residentialAddress2]
 
       const resultAddresses1 = addOrReplaceAddressOnList(
         addresses1,

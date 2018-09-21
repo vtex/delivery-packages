@@ -584,15 +584,15 @@ An array which each item is an object containing all address fields like on sele
 Type: `object`
 An object where each key is an address type and each value is an array of addresses grouped by each address type
 
-## addOrReplaceAddressOnList (addresses, newAddress)
+## addOrReplaceAddressTypeOnList (addresses, newAddress)
 
 Adds new address if the addressType of newAddress is not found or replace an existing address of that type
 
 ##### Usage
 ```js
-const { addOrReplaceAddressOnList } = require('@vtex/delivery-packages/dist/address')
+const { addOrReplaceAddressTypeOnList } = require('@vtex/delivery-packages/dist/address')
 
-addOrReplaceAddressOnList([
+addOrReplaceAddressTypeOnList([
   {
     addressId: '-4556418741084',
     addressType: 'residential',
@@ -657,7 +657,7 @@ addOrReplaceAddressOnList([
 //   }
 // ]
 
-addOrReplaceAddressOnList([
+addOrReplaceAddressTypeOnList([
   {
     addressId: '-4556418741084',
     addressType: 'residential',

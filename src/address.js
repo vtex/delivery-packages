@@ -78,6 +78,14 @@ export function addAddressId(address) {
   }
 }
 
+export function findAddressIndex(addresses, searchAddress, prop = 'addressId') {
+  if (!addresses || addresses.length === 0 || !searchAddress) {
+    return -1
+  }
+
+  return addresses.findIndex(address => address[prop] === searchAddress[prop])
+}
+
 export function findAddress(addresses, searchAddress, prop = 'addressId') {
   if (!addresses || addresses.length === 0 || !searchAddress) {
     return null
@@ -119,7 +127,7 @@ export function groupByAddressType(addresses) {
   }, {})
 }
 
-export function addOrReplaceAddressOnList(addresses, newAddress) {
+export function addOrReplaceAddressTypeOnList(addresses, newAddress) {
   if (!addresses || !newAddress) {
     return addresses
   }
@@ -133,6 +141,27 @@ export function addOrReplaceAddressOnList(addresses, newAddress) {
   }
 
   const addressIndex = address.index
+  newAddresses[addressIndex] = {
+    ...newAddresses[addressIndex],
+    ...newAddress,
+  }
+
+  return newAddresses
+}
+
+export function addOrReplaceAddressOnList(addresses, newAddress) {
+  if (!addresses || !newAddress) {
+    return addresses
+  }
+
+  const newAddresses = [...addresses]
+
+  const addressIndex = findAddressIndex(newAddresses, newAddress)
+
+  if (addressIndex === -1) {
+    return [...newAddresses, newAddress]
+  }
+
   newAddresses[addressIndex] = {
     ...newAddresses[addressIndex],
     ...newAddress,
@@ -158,6 +187,7 @@ export function addPickupPointAddresses(addresses, pickupSlas) {
         ...pickupAddress,
         addressType: SEARCH,
       }
+
       return addOrReplaceAddressOnList(newAddresses, newAddress)
     },
     [...addresses]
