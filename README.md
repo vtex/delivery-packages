@@ -276,16 +276,412 @@ parcelify(order, { criteria: { seller: false } })
 
 This module provide a lot of helper functions besides parcelify, that are worth checking below.
 
-address:
-addAddressId
-findAddressIndex
-findAddress
-findAddressByPostalCode
-addOrReplaceAddressOnList
-addPickupPointAddresses
-
 ## Address
 > @vtex/delivery-packages/dist/address
+
+### addAddressId (address)
+
+Add property addressId with random hash string (uuid) if not present on address object passed
+
+#### Usage
+```js
+const { addAddressId } = require('@vtex/delivery-packages/dist/address')
+
+addAddressId({
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+})
+// -> {
+//   addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+//   addressType: 'residential',
+//   receiverName: 'John Doe',
+//   street: 'Rua Barão',
+//   number: '2',
+//   complement: null,
+//   neighborhood: 'Botafogo',
+//   postalCode: '22231-100',
+//   city: 'Rio de Janeiro',
+//   state: 'RJ',
+//   country: 'BRA',
+//   reference: null,
+//   geoCoordinates: [],
+// }
+
+addAddressId({
+  addressId: '1234',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+})
+// -> {
+//   addressId: '1234',
+//   addressType: 'residential',
+//   receiverName: 'John Doe',
+//   street: 'Rua Barão',
+//   number: '2',
+//   complement: null,
+//   neighborhood: 'Botafogo',
+//   postalCode: '22231-100',
+//   city: 'Rio de Janeiro',
+//   state: 'RJ',
+//   country: 'BRA',
+//   reference: null,
+//   geoCoordinates: [],
+// }
+```
+
+**params:**
+- **address**
+Type: `object`
+An object containing all address fields like on availableAddresses of orderForm
+
+**returns:**
+- **newAddress**
+Type: `object`
+An object containing all address fields like on availableAddresses of orderForm with an addressId included
+
+### addPickupPointAddresses (addresses, pickupSlas)
+
+Add all addresses present on pickupSlas that are not already on addresses list
+
+#### Usage
+```js
+const { addPickupPointAddresses } = require('@vtex/delivery-packages/dist/address')
+
+addPickupPointAddresses([{
+  addressId: '1234',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}], [{
+  id: 'Retirada normal',
+  deliveryChannel: 'pickup-in-point',
+  pickupStoreInfo: {
+    isPickupStore: true,
+    friendlyName: 'Shopping da Gávea',
+    address: {
+      addressId: '141125e',
+      addressType: 'pickup',
+      city: 'Rio de Janeiro',
+      complement: '',
+      country: 'BRA',
+      geoCoordinates: [-43.18080139160156, -22.96540069580078],
+      neighborhood: 'Copacabana',
+      number: '5',
+      postalCode: '22011050',
+      receiverName: null,
+      reference: null,
+      state: 'RJ',
+      street: 'Rua General Azevedo Pimentel',
+    },
+  },
+}])
+// -> [{
+//   addressId: '1234',
+//   addressType: 'residential',
+//   receiverName: 'John Doe',
+//   street: 'Rua Barão',
+//   number: '2',
+//   complement: null,
+//   neighborhood: 'Botafogo',
+//   postalCode: '22231-100',
+//   city: 'Rio de Janeiro',
+//   state: 'RJ',
+//   country: 'BRA',
+//   reference: null,
+//   geoCoordinates: [],
+// }, {
+//   addressId: '141125e',
+//   addressType: 'pickup',
+//   city: 'Rio de Janeiro',
+//   complement: '',
+//   country: 'BRA',
+//   geoCoordinates: [-43.18080139160156, -22.96540069580078],
+//   neighborhood: 'Copacabana',
+//   number: '5',
+//   postalCode: '22011050',
+//   receiverName: null,
+//   reference: null,
+//   state: 'RJ',
+//   street: 'Rua General Azevedo Pimentel',
+// }]
+```
+**params:**
+- **addresses**
+Type: `Array<object>`
+An array which each item is an object containing all address fields like on availableAddresses of orderForm
+- **pickupSlas**
+Type: `Array<object>`
+An array which each item is an object containing a list of slas of the pickup-in-point deliveryChannel
+
+**returns:**
+- **newAddresses**
+Type: `Array<object>`
+New list of addresses containing the pickup addresses
+
+### findAddressIndex (addresses, searchAddress)
+
+Find a reference address index on addresses list according to the reference addressId or -1 if it doesn't find it
+
+#### Usage
+```js
+const { findAddressIndex } = require('@vtex/delivery-packages/dist/address')
+
+findAddressIndex([{
+  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}, {
+  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+  addressType: 'commercial',
+  receiverName: 'John Doe',
+  street: 'Rua dos bobos',
+  number: '0',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22250-040',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}], { addressId: '935befd9-dcc3-45f3-e327-9d8611e43630' })
+// -> 0
+
+findAddressIndex([{
+  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}, {
+  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+  addressType: 'commercial',
+  receiverName: 'John Doe',
+  street: 'Rua dos bobos',
+  number: '0',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22250-040',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}], { addressId: 'not-found' })
+// -> -1
+```
+
+**params:**
+- **addresses**
+Type: `Array<object>`
+An array which each item is an object containing all address fields like on availableAddresses of orderForm
+- **searchAddress**
+Type: `object`
+An object with addressId reference to be used to search
+
+**returns:**
+- **index**
+Type: `number`
+Position on addresses of the searchAddress reference according to its addressId
+
+### findAddress (addresses, searchAddress)
+
+Find a reference address on addresses list according to the reference addressId or null if it doesn't find it
+
+#### Usage
+```js
+const { findAddress } = require('@vtex/delivery-packages/dist/address')
+
+findAddress([{
+  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}, {
+  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+  addressType: 'commercial',
+  receiverName: 'John Doe',
+  street: 'Rua dos bobos',
+  number: '0',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22250-040',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}], { addressId: '935befd9-dcc3-45f3-e327-9d8611e43630' })
+// -> {
+//   addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+//   addressType: 'residential',
+//   receiverName: 'John Doe',
+//   street: 'Rua Barão',
+//   number: '2',
+//   complement: null,
+//   neighborhood: 'Botafogo',
+//   postalCode: '22231-100',
+//   city: 'Rio de Janeiro',
+//   state: 'RJ',
+//   country: 'BRA',
+//   reference: null,
+//   geoCoordinates: []
+// }
+
+findAddress([{
+  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}, {
+  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+  addressType: 'commercial',
+  receiverName: 'John Doe',
+  street: 'Rua dos bobos',
+  number: '0',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22250-040',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}], { addressId: 'not-found' })
+// -> null
+```
+
+**params:**
+- **addresses**
+Type: `Array<object>`
+An array which each item is an object containing all address fields like on availableAddresses of orderForm
+- **searchAddress**
+Type: `object`
+An object with addressId reference to be used to search
+
+**returns:**
+- **addressFound**
+Type: `object`
+The address found
+
+### findAddressByPostalCode (addresses, searchAddress)
+
+Works like findAddress above but the searchAddress postalCode property is used instead
+
+#### Usage
+```js
+const { findAddress } = require('@vtex/delivery-packages/dist/address')
+
+findAddress([{
+  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}, {
+  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+  addressType: 'commercial',
+  receiverName: 'John Doe',
+  street: 'Rua dos bobos',
+  number: '0',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22250-040',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}], { postalCode: '22250-040' })
+// -> {
+//   addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+//   addressType: 'commercial',
+//   receiverName: 'John Doe',
+//   street: 'Rua dos bobos',
+//   number: '0',
+//   complement: null,
+//   neighborhood: 'Botafogo',
+//   postalCode: '22250-040',
+//   city: 'Rio de Janeiro',
+//   state: 'RJ',
+//   country: 'BRA',
+//   reference: null,
+//   geoCoordinates: [],
+// }
+```
 
 ### isAddressComplete (address)
 
@@ -758,6 +1154,171 @@ New address to be included on the list of addresses
 Type: `object`
 New list of addresses with the newAddress included
 
+## addOrReplaceAddressOnList (addresses, newAddress)
+
+Adds new address if the newAddress is not found or replace an existing address with the same addressId
+
+##### Usage
+```js
+const { addOrReplaceAddressOnList } = require('@vtex/delivery-packages/dist/address')
+
+addOrReplaceAddressOnList([
+  {
+    addressId: '-4556418741084',
+    addressType: 'residential',
+    receiverName: 'John Doe',
+    street: 'Rua Barão',
+    number: '2',
+    complement: null,
+    neighborhood: 'Botafogo',
+    postalCode: '22231-100',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    country: 'BRA',
+    reference: null,
+    geoCoordinates: [],
+  }
+],
+{
+  addressId: '141125d',
+  addressType: 'pickup',
+  city: 'Rio de Janeiro',
+  complement: '',
+  country: 'BRA',
+  geoCoordinates: [-43.18080139160156, -22.96540069580078],
+  neighborhood: 'Copacabana',
+  number: '5',
+  postalCode: '22011050',
+  receiverName: 'auto auto',
+  reference: null,
+  state: 'RJ',
+  street: 'Rua General Azevedo Pimentel',
+})
+// -> [
+//   {
+//     addressId: '-4556418741084',
+//     addressType: 'residential',
+//     receiverName: 'John Doe',
+//     street: 'Rua Barão',
+//     number: '2',
+//     complement: null,
+//     neighborhood: 'Botafogo',
+//     postalCode: '22231-100',
+//     city: 'Rio de Janeiro',
+//     state: 'RJ',
+//     country: 'BRA',
+//     reference: null,
+//     geoCoordinates: [],
+//   },
+//   {
+//     addressId: '141125d',
+//     addressType: 'pickup',
+//     city: 'Rio de Janeiro',
+//     complement: '',
+//     country: 'BRA',
+//     geoCoordinates: [-43.18080139160156, -22.96540069580078],
+//     neighborhood: 'Copacabana',
+//     number: '5',
+//     postalCode: '22011050',
+//     receiverName: 'auto auto',
+//     reference: null,
+//     state: 'RJ',
+//     street: 'Rua General Azevedo Pimentel',
+//   }
+// ]
+
+addOrReplaceAddressTypeOnList([
+  {
+    addressId: '-4556418741084',
+    addressType: 'residential',
+    receiverName: 'John Doe',
+    street: 'Rua Barão',
+    number: '2',
+    complement: null,
+    neighborhood: 'Botafogo',
+    postalCode: '22231-100',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    country: 'BRA',
+    reference: null,
+    geoCoordinates: [],
+  },
+  {
+    addressId: '1234',
+    addressType: 'pickup',
+    city: 'Rio de Janeiro',
+    complement: '',
+    country: 'BRA',
+    geoCoordinates: [-43.18080139160156, -22.96540069580078],
+    neighborhood: 'Copacabana',
+    number: '5',
+    postalCode: '22011050',
+    receiverName: 'auto auto',
+    reference: null,
+    state: 'RJ',
+    street: 'Rua General Azevedo Pimentel',
+  }
+], {
+  addressId: '1234',
+  addressType: 'pickup',
+  city: 'Rio de Janeiro',
+  complement: '',
+  country: 'BRA',
+  geoCoordinates: [],
+  neighborhood: 'Botafogo',
+  number: '300',
+  postalCode: '22250040',
+  receiverName: 'auto auto',
+  reference: null,
+  state: 'RJ',
+  street: 'Praia de botafogo',
+})
+// -> [
+//   {
+//     addressId: '-4556418741084',
+//     addressType: 'residential',
+//     receiverName: 'John Doe',
+//     street: 'Rua Barão',
+//     number: '2',
+//     complement: null,
+//     neighborhood: 'Botafogo',
+//     postalCode: '22231-100',
+//     city: 'Rio de Janeiro',
+//     state: 'RJ',
+//     country: 'BRA',
+//     reference: null,
+//     geoCoordinates: [],
+//   },
+//   {
+//     addressId: '1234',
+//     addressType: 'pickup',
+//     city: 'Rio de Janeiro',
+//     complement: '',
+//     country: 'BRA',
+//     geoCoordinates: [],
+//     neighborhood: 'Botafogo',
+//     number: '300',
+//     postalCode: '22250040',
+//     receiverName: 'auto auto',
+//     reference: null,
+//     state: 'RJ',
+//     street: 'Praia de botafogo',
+//   }
+// ]
+```
+
+**params:**
+- **addresses**
+Type: `Array<object>`
+An array which each item is an object containing all address fields like on selectedAddresses of orderForm
+- **newAddress**
+Type: `string`
+New address to be included on the list of addresses
+
+**returns:**
+- **new addresses**
+Type: `object`
+New list of addresses with the newAddress included
 
 ## Delivery Channel
 > @vtex/delivery-packages/dist/delivery-channel
