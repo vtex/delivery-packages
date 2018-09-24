@@ -284,12 +284,6 @@ findAddressByPostalCode
 addOrReplaceAddressOnList
 addPickupPointAddresses
 
-sla:
-getPickupSelectedSlas
-
-shipping:
-getNewLogisticsMatchingSelectedAddresses
-
 ## Address
 > @vtex/delivery-packages/dist/address
 
@@ -2267,6 +2261,47 @@ The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla
 - **selectedSlas**
 Type: `Array<object>`
 the selected slas objects on the logisticsInfo items hydrated with itemIndex reference or empty array in case of wrong or empty params passed
+
+## getPickupSelectedSlas (logisticsInfo)
+
+Get the selected slas objects on logisticsInfo filtered by pickup points type.
+
+##### Usage
+```js
+const { getPickupSelectedSlas } = require('@vtex/delivery-packages/dist/sla')
+
+let logisticsInfo = [
+  {
+    // other logisticsInfo properties can be passed also
+    selectedSla: 'Normal',
+    itemIndex: 0,
+    slas: [
+      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
+    ]
+  },
+  {
+    // other logisticsInfo properties can be passed also
+    selectedSla: 'Pickup',
+    itemIndex: 1,
+    slas: [
+      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Pickup", "deliveryChannel": "pickup-in-point" }
+    ]
+  }
+]
+
+getPickupSelectedSlas(logisticsInfo)
+// -> [{ "itemIndex": 1,  "id": "Pickup", "deliveryChannel": "pickup-in-point" }]
+```
+
+**params:**
+- **logisticsInfo**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
+
+**returns:**
+- **selectedPickupSlas**
+Type: `Array<object>`
+the selected slas objects on the logisticsInfo items hydrated with itemIndex reference and filtered by pickup type or empty array in case of wrong or empty params passed
 
 ## License
 
