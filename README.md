@@ -2708,10 +2708,10 @@ const { changeSelectedSla } = require('@vtex/delivery-packages/dist/sla')
 
 changeSelectedSla(
   // Pode passar qualquer outra propriedade de um logisticsInfo item
-  { "selectedSla": "Pickup", "deliveryChannel": "pickup-in-point" },
+  { "itemIndex": 0, "selectedSla": "Pickup", "selectedDeliveryChannel": "pickup-in-point" },
   { "id": "Normal", "deliveryChannel": "delivery" }
 )
-// -> { "selectedSla": "Normal", "deliveryChannel": "delivery" }
+// -> { "itemIndex": 0, "selectedSla": "Normal", "selectedDeliveryChannel": "delivery" }
 ```
 
 **params:**
