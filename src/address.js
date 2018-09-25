@@ -5,6 +5,7 @@ import {
   COMMERCIAL,
   GIFT_REGISTRY,
 } from './constants'
+import uuid from './uuid'
 
 /** PRIVATE **/
 
@@ -16,6 +17,29 @@ export function getFirstAddressForType(addresses, addressType) {
   const groups = groupByAddressType(addresses)
   const groupAddresses = groups[addressType]
   return groupAddresses && groupAddresses.length > 0 ? groupAddresses[0] : null
+}
+
+export function getFirstAddressOnAnyOfTheseTypes(addresses, addressesTypes) {
+  return addressesTypes.reduce((address, addressType) => {
+    return address || getFirstAddressForType(addresses, addressType)
+  }, null)
+}
+
+export function getFirstAddressForDelivery(addresses) {
+  return getFirstAddressOnAnyOfTheseTypes(addresses, [
+    RESIDENTIAL,
+    COMMERCIAL,
+    GIFT_REGISTRY,
+  ])
+}
+
+export function getPickupAddress(pickupSla) {
+  return (
+    (pickupSla &&
+      pickupSla.pickupStoreInfo &&
+      pickupSla.pickupStoreInfo.address) ||
+    null
+  )
 }
 
 /** PUBLIC **/
@@ -42,6 +66,38 @@ export function isDeliveryAddress(address) {
     address.addressType === COMMERCIAL ||
     address.addressType === GIFT_REGISTRY
   )
+}
+
+export function addAddressId(address) {
+  if (!address || address.addressId) {
+    return address
+  }
+  return {
+    ...address,
+    addressId: uuid(),
+  }
+}
+
+export function findAddressIndex(addresses, searchAddress, prop = 'addressId') {
+  if (!addresses || addresses.length === 0 || !searchAddress) {
+    return -1
+  }
+
+  return addresses.findIndex(address => address[prop] === searchAddress[prop])
+}
+
+export function findAddress(addresses, searchAddress, prop = 'addressId') {
+  if (!addresses || addresses.length === 0 || !searchAddress) {
+    return null
+  }
+
+  return (
+    addresses.find(address => address[prop] === searchAddress[prop]) || null
+  )
+}
+
+export function findAddressByPostalCode(addresses, searchAddress) {
+  return findAddress(addresses, searchAddress, 'postalCode')
 }
 
 export function getDeliveryAvailableAddresses(addresses) {
@@ -71,8 +127,8 @@ export function groupByAddressType(addresses) {
   }, {})
 }
 
-export function addOrReplaceAddressOnList(addresses, newAddress) {
-  if (!addresses || addresses.length === 0 || !newAddress) {
+export function addOrReplaceAddressTypeOnList(addresses, newAddress) {
+  if (!addresses || !newAddress) {
     return addresses
   }
 
@@ -91,4 +147,49 @@ export function addOrReplaceAddressOnList(addresses, newAddress) {
   }
 
   return newAddresses
+}
+
+export function addOrReplaceAddressOnList(addresses, newAddress) {
+  if (!addresses || !newAddress) {
+    return addresses
+  }
+
+  const newAddresses = [...addresses]
+
+  const addressIndex = findAddressIndex(newAddresses, newAddress)
+
+  if (addressIndex === -1) {
+    return [...newAddresses, newAddress]
+  }
+
+  newAddresses[addressIndex] = {
+    ...newAddresses[addressIndex],
+    ...newAddress,
+  }
+
+  return newAddresses
+}
+
+export function addPickupPointAddresses(addresses, pickupSlas) {
+  if (!addresses || !pickupSlas || pickupSlas.length === 0) {
+    return addresses
+  }
+
+  return pickupSlas.reduce(
+    (newAddresses, pickupSla) => {
+      const pickupAddress = getPickupAddress(pickupSla)
+      const searchAddress = findAddress(addresses, pickupAddress)
+      if (searchAddress) {
+        return newAddresses
+      }
+
+      const newAddress = {
+        ...pickupAddress,
+        addressType: SEARCH,
+      }
+
+      return addOrReplaceAddressOnList(newAddresses, newAddress)
+    },
+    [...addresses]
+  )
 }

@@ -1,6 +1,7 @@
 import {
   getSelectedSla,
   getSelectedSlas,
+  getPickupSelectedSlas,
   getSlaObj,
   findSlaWithChannel,
   getSelectedSlaInSlas,
@@ -113,6 +114,51 @@ describe('Sla', () => {
       ]
 
       const selectedSlas = getSelectedSlas(logisticsInfo)
+
+      expect(selectedSlas).toEqual(expectedSlas)
+    })
+  })
+
+  describe('getPickupSelectedSlas', () => {
+    it('should return empty array if empty params are passed', () => {
+      const selectedSlas1 = getPickupSelectedSlas()
+      const selectedSlas2 = getPickupSelectedSlas([])
+
+      expect(selectedSlas1).toEqual([])
+      expect(selectedSlas2).toEqual([])
+    })
+
+    it('should return correct slas if logisticsInfo with selectedSlas are passed', () => {
+      const logisticsInfo = createLogisticsInfo(
+        ['normalSla', 'expressSla', 'pickupSla'],
+        3
+      )
+      logisticsInfo[0].selectedSla = slas.expressSla.id
+      logisticsInfo[1].selectedSla = slas.normalSla.id
+      logisticsInfo[2].selectedSla = slas.pickupSla.id
+
+      const expectedSlas = [
+        { ...slas.pickupSla, itemIndex: 2 },
+      ]
+
+      const selectedSlas = getPickupSelectedSlas(logisticsInfo)
+
+      expect(selectedSlas).toEqual(expectedSlas)
+    })
+
+    it('should return correct slas even if logisticsInfo dont have all selectedSlas', () => {
+      const logisticsInfo = createLogisticsInfo(
+        ['normalSla', 'expressSla', 'pickupSla'],
+        3
+      )
+      logisticsInfo[0].selectedSla = slas.expressSla.id
+      logisticsInfo[2].selectedSla = slas.pickupSla.id
+
+      const expectedSlas = [
+        { ...slas.pickupSla, itemIndex: 2 },
+      ]
+
+      const selectedSlas = getPickupSelectedSlas(logisticsInfo)
 
       expect(selectedSlas).toEqual(expectedSlas)
     })

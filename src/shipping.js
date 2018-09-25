@@ -1,5 +1,17 @@
 import './polyfills'
-import { hasDeliveryWindows, getSelectedSla, getSlaAsId } from './sla'
+import {
+  addPickupPointAddresses,
+  getPickupAddress,
+  getFirstAddressForDelivery,
+} from './address'
+import { isPickup, isDelivery, getDeliveryChannel } from './delivery-channel'
+import {
+  hasDeliveryWindows,
+  getSelectedSla,
+  getSlaObj,
+  getPickupSelectedSlas,
+  getSlaAsId,
+} from './sla'
 import {
   filterSlaByAvailableDeliveryWindows,
   getFirstScheduledDelivery,
@@ -47,7 +59,9 @@ export function getLogisticsInfoData(params) {
 
 function getPickupFriendlyName({ itemIndex, logisticsInfo }) {
   const sla = getSelectedSla({ itemIndex, logisticsInfo })
-  return sla && sla.pickupStoreInfo ? sla.pickupStoreInfo.friendlyName : null
+  return sla && sla.pickupStoreInfo && sla.pickupStoreInfo.friendlyName
+    ? sla.pickupStoreInfo.friendlyName
+    : null
 }
 
 function getAddress({ itemIndex, logisticsInfo, selectedAddresses }) {
@@ -90,6 +104,44 @@ export function hydratePackageWithLogisticsExtraInfo(
   }
 }
 
+export function replaceAddressIdOnLogisticsInfo(
+  logisticsInfo,
+  selectedAddresses
+) {
+  if (
+    !logisticsInfo ||
+    logisticsInfo.length === 0 ||
+    !selectedAddresses ||
+    selectedAddresses.length === 0
+  ) {
+    return logisticsInfo
+  }
+
+  return logisticsInfo.map(li => {
+    const selectedSlaObj = getSlaObj(li.slas, li.selectedSla)
+    const deliveryChannel = getDeliveryChannel(selectedSlaObj)
+
+    if (!selectedSlaObj || !deliveryChannel) {
+      return li
+    }
+
+    let selectedAddress = null
+
+    if (isPickup(deliveryChannel)) {
+      selectedAddress = getPickupAddress(selectedSlaObj)
+    }
+
+    if (isDelivery(deliveryChannel)) {
+      selectedAddress = getFirstAddressForDelivery(selectedAddresses)
+    }
+
+    return {
+      ...li,
+      addressId: (selectedAddress && selectedAddress.addressId) || li.addressId,
+    }
+  })
+}
+
 /** PUBLIC **/
 
 export function getNewLogisticsInfo(
@@ -108,11 +160,7 @@ export function getNewLogisticsInfo(
       return li
     }
 
-    const selectedSlaObj = getSelectedSla({
-      logisticsInfo,
-      itemIndex: li.itemIndex,
-      selectedSla,
-    })
+    const selectedSlaObj = getSlaObj(li.slas, selectedSla)
 
     if (
       !selectedSlaObj ||
@@ -130,6 +178,40 @@ export function getNewLogisticsInfo(
       selectedDeliveryChannel: selectedSlaObj.deliveryChannel,
     }
   })
+}
+
+export function getNewLogisticsMatchingSelectedAddresses(
+  logisticsInfo,
+  selectedAddresses
+) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return {
+      logisticsInfo: [],
+      selectedAddresses,
+    }
+  }
+
+  const newSelectedAddresses = addPickupPointAddresses(
+    selectedAddresses,
+    getPickupSelectedSlas(logisticsInfo)
+  )
+
+  if (!newSelectedAddresses || newSelectedAddresses.length === 0) {
+    return {
+      logisticsInfo,
+      selectedAddresses: [],
+    }
+  }
+
+  const newLogisticsInfo = replaceAddressIdOnLogisticsInfo(
+    logisticsInfo,
+    newSelectedAddresses
+  )
+
+  return {
+    logisticsInfo: newLogisticsInfo,
+    selectedAddresses: newSelectedAddresses,
+  }
 }
 
 export function getNewLogisticsInfoWithSelectedScheduled(logisticsInfo) {

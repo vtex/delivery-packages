@@ -9,7 +9,22 @@ const addresses = {
     neighborhood: 'Copacabana',
     number: '5',
     postalCode: '22011050',
-    receiverName: 'auto auto',
+    receiverName: null,
+    reference: null,
+    state: 'RJ',
+    street: 'Rua General Azevedo Pimentel',
+  },
+  pickupPointAddress2: {
+    addressId: '141125e',
+    addressType: 'pickup',
+    city: 'Rio de Janeiro',
+    complement: '',
+    country: 'BRA',
+    geoCoordinates: [-43.18080139160156, -22.96540069580078],
+    neighborhood: 'Copacabana',
+    number: '5',
+    postalCode: '22011050',
+    receiverName: null,
     reference: null,
     state: 'RJ',
     street: 'Rua General Azevedo Pimentel',
@@ -22,7 +37,7 @@ const addresses = {
     number: '2',
     complement: null,
     neighborhood: 'Botafogo',
-    postalCode: '22231-100',
+    postalCode: '22250-040',
     city: 'Rio de Janeiro',
     state: 'RJ',
     country: 'BRA',
@@ -31,6 +46,21 @@ const addresses = {
   },
   residentialAddress: {
     addressId: '-4556418741085',
+    addressType: 'residential',
+    receiverName: 'John Doe',
+    street: 'Rua Barão',
+    number: '2',
+    complement: null,
+    neighborhood: 'Botafogo',
+    postalCode: '22231-100',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    country: 'BRA',
+    reference: null,
+    geoCoordinates: [],
+  },
+  residentialAddress2: {
+    addressId: '-4556418741088',
     addressType: 'residential',
     receiverName: 'John Doe',
     street: 'Rua Barão',
@@ -150,10 +180,7 @@ const slas = {
     pickupStoreInfo: {
       isPickupStore: true,
       friendlyName: 'Shopping da Gávea',
-      address: {
-        ...addresses.pickupPointAddress,
-        receiverName: null,
-      },
+      address: addresses.pickupPointAddress,
     },
   },
   pickupNormalSla: {
@@ -170,10 +197,7 @@ const slas = {
     pickupStoreInfo: {
       isPickupStore: true,
       friendlyName: 'Shopping da Gávea',
-      address: {
-        ...addresses.pickupPointAddress,
-        receiverName: null,
-      },
+      address: addresses.pickupPointAddress2,
     },
   },
   expressSla: {
@@ -187,6 +211,9 @@ const slas = {
     listPrice: 10000,
     sellingPrice: 10000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   normalSla: {
     id: 'Normal',
@@ -199,6 +226,9 @@ const slas = {
     listPrice: 5000,
     sellingPrice: 5000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   normalFastestSla: {
     id: 'Normal',
@@ -210,6 +240,9 @@ const slas = {
     listPrice: 20000,
     sellingPrice: 20000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   normalScheduledDeliverySla: {
     id: 'Agendada',
@@ -222,6 +255,9 @@ const slas = {
     listPrice: 5000,
     sellingPrice: 5000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
   biggerWindowScheduledDeliverySla: {
     id: 'SuperAgendada',
@@ -234,6 +270,9 @@ const slas = {
     listPrice: 5000,
     sellingPrice: 5000,
     tax: 0,
+    pickupStoreInfo: {
+      isPickupStore: false,
+    },
   },
 }
 
@@ -340,6 +379,23 @@ const createLogisticsInfo = (slaTypes, quantity, price = 0) => {
   }))
 }
 
+const createLogisticsInfoItem = ({
+  slas: slaTypes,
+  selectedSla: selectedSlaType,
+  price,
+  addressId,
+  index,
+}) => {
+  return {
+    ...createLogisticsInfo(slaTypes, 1, price)[0],
+    selectedSla: slas[selectedSlaType].id,
+    selectedDeliveryChannel: slas[selectedSlaType].deliveryChannel,
+    addressId,
+    itemIndex: index,
+    itemId: index,
+  }
+}
+
 module.exports = {
   addresses,
   slas,
@@ -348,4 +404,5 @@ module.exports = {
   createPackage,
   createItems,
   createLogisticsInfo,
+  createLogisticsInfoItem,
 }
