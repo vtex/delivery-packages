@@ -9,6 +9,7 @@ import {
   hasDeliveryWindows,
   hasSLAs,
   excludePickupTypeFromSlas,
+  changeSelectedSla,
 } from '../src/sla'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
 
@@ -468,6 +469,72 @@ describe('Sla', () => {
       const deliverySlas = excludePickupTypeFromSlas(slasObjs)
 
       expect(deliverySlas).toEqual(expectedSlas)
+    })
+  })
+
+  describe('changeSelectedSla', () => {
+    it('should return same object passed', () => {
+      const newLogisticsInfoItem1 = changeSelectedSla()
+      const newLogisticsInfoItem2 = changeSelectedSla(null)
+      const newLogisticsInfoItem3 = changeSelectedSla(null, null)
+
+      expect(newLogisticsInfoItem1).toBeUndefined()
+      expect(newLogisticsInfoItem2).toBeNull()
+      expect(newLogisticsInfoItem3).toBeNull()
+    })
+
+    it('should return same logisticsInfoItem if passed same selected sla', () => {
+      const logisticsInfoItem = {
+        selectedSla: 'Normal',
+        selectedDeliveryChannel: 'delivery',
+      }
+      const sla = {
+        id: 'Normal',
+        deliveryChannel: 'delivery',
+      }
+      const expectedLogisticsInfoItem = logisticsInfoItem
+
+      const newLogisticsInfoItem = changeSelectedSla(logisticsInfoItem, sla)
+
+      expect(newLogisticsInfoItem).toEqual(expectedLogisticsInfoItem)
+    })
+
+    it('should return new delivery logisticsInfoItem with selected sla values', () => {
+      const logisticsInfoItem = {
+        selectedSla: 'Normal',
+        selectedDeliveryChannel: 'delivery',
+      }
+      const sla = {
+        id: 'Express',
+        deliveryChannel: 'delivery',
+      }
+      const expectedLogisticsInfoItem = {
+        selectedSla: 'Express',
+        selectedDeliveryChannel: 'delivery',
+      }
+
+      const newLogisticsInfoItem = changeSelectedSla(logisticsInfoItem, sla)
+
+      expect(newLogisticsInfoItem).toEqual(expectedLogisticsInfoItem)
+    })
+
+    it('should return new pickup logisticsInfoItem with selected sla values', () => {
+      const logisticsInfoItem = {
+        selectedSla: 'Normal',
+        selectedDeliveryChannel: 'delivery',
+      }
+      const sla = {
+        id: 'Pickup',
+        deliveryChannel: 'pickup-in-point',
+      }
+      const expectedLogisticsInfoItem = {
+        selectedSla: 'Pickup',
+        selectedDeliveryChannel: 'pickup-in-point',
+      }
+
+      const newLogisticsInfoItem = changeSelectedSla(logisticsInfoItem, sla)
+
+      expect(newLogisticsInfoItem).toEqual(expectedLogisticsInfoItem)
     })
   })
 })

@@ -2698,6 +2698,35 @@ The id of a sla of the list passed
 Type: `object`
 the sla object on the array that match the slaId passed or null if it doesn't find it
 
+### changeSelectedSla (logisticsInfoItem, sla)
+
+Change logisticsInfoItem info to match the sla passed
+
+##### Usage
+```js
+const { changeSelectedSla } = require('@vtex/delivery-packages/dist/sla')
+
+changeSelectedSla(
+  // Pode passar qualquer outra propriedade de um logisticsInfo item
+  { "itemIndex": 0, "selectedSla": "Pickup", "selectedDeliveryChannel": "pickup-in-point" },
+  { "id": "Normal", "deliveryChannel": "delivery" }
+)
+// -> { "itemIndex": 0, "selectedSla": "Normal", "selectedDeliveryChannel": "delivery" }
+```
+
+**params:**
+- **logisticsInfoItem**
+Type: `object`
+An object like the ones on logisticsInfo of the orderForm
+- **sla**
+Type: `object`
+An object like the ones on logisticsInfoItem.slas
+
+**returns:**
+- **newLogisticsInfoItem**
+Type: `object`
+The new logisticsInfoItem with the selectedSla infos changed to match the sla param
+
 ### getSelectedSla ({logisticsInfo, itemIndex, selectedSla})
 
 Get the select sla object on logisticsInfo at the itemIndex position and optionally passing another selectedSla as reference.

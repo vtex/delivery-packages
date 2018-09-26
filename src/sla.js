@@ -138,3 +138,14 @@ export function getPickupSelectedSlas(logisticsInfo) {
   const selectedSlas = getSelectedSlas(logisticsInfo)
   return filterPickupTypeFromSlas(selectedSlas)
 }
+
+export function changeSelectedSla(logisticsInfoItem, sla) {
+  if (!logisticsInfoItem || !sla) {
+    return logisticsInfoItem
+  }
+  return {
+    ...logisticsInfoItem,
+    selectedSla: sla.id,
+    selectedDeliveryChannel: sla.deliveryChannel,
+  }
+}
