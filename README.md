@@ -1528,6 +1528,45 @@ Object on the format `{ items, packages }` containing the items and packages of 
 Type: `object`
 Object contained the keys delivered and toBeDelivered containing the right items and packages
 
+### getItemsIndexes (items)
+
+Return multiple values with information about the items indexes
+
+##### Usage
+```js
+const { getItemsIndexes } = require('@vtex/delivery-packages/dist/items')
+
+const items = [
+  { itemIndex: 0, sla: 'sla1' },
+  { itemIndex: 2, sla: 'sla2' },
+]
+
+getItemsIndexes(items)
+// -> {
+//   indexes: [0, 2],
+//   otherIndexes: [1],
+//   indexesMap: { 0: items[0], 2: items[1] },
+//   maxIndex: 2,
+// }
+```
+
+**params:**
+- **items**
+Type: `Array<object>`
+Array of items with itemIndex keys like the logisticsInfo of the orderForm
+
+**returns:**
+- **indexes context**
+Type: { indexes: `Array<number>`, otherIndexes: `Array<number>`, indexesMap: `object`, maxIndex: `number`}
+
+indexes: an array with all the numbers matching the items passed
+
+otherIndexes: an array with all the numbers not matching the items passed until maxIndex
+
+indexesMap: an object where the keys are the indexes and the values are the original items
+
+maxIndex: the maximum index found in the list of items
+
 ## Scheduled Delivery
 > @vtex/delivery-packages/dist/scheduled-delivery
 
