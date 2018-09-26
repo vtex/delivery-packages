@@ -2587,6 +2587,62 @@ The selectedAddresses like the one inside `orderForm.shippingData` with address 
 Type: `{ logisticsInfo: Array<object>, selectedAddresses: Array<object> }`
 New logisticsInfo and selectedAddresses with matching addressIds and with all pickup addresses included
 
+### mergeLogisticsInfos (logisticsInfo1, logisticsInfo2)
+
+Get new logisticsInfo with the merged items from logisticsInfo1 and logisticsInfo2
+
+##### Usage
+```js
+const { mergeLogisticsInfos } = require('@vtex/delivery-packages/dist/shipping')
+
+const logisticsInfo1 = [
+  {
+    // You can pass all the properties of the logisticsInfo
+    "itemIndex": 0,
+    "selectedSla": "sla1",
+  },
+  {
+    // You can pass all the properties of the logisticsInfo
+    "itemIndex": 2,
+    "selectedSla": "sla3",
+  }
+]
+const logisticsInfo2 = [
+  {
+    // You can pass all the properties of the logisticsInfo
+    "itemIndex": 1,
+    "selectedSla": "sla2",
+  }
+]
+mergeLogisticsInfos(logisticsInfo1, logisticsInfo2)
+// -> [
+//   {
+//     "itemIndex": 0,
+//     "selectedSla": "sla1",
+//   },
+//   {
+//     "itemIndex": 1,
+//     "selectedSla": "sla2",
+//   },
+//   {
+//     "itemIndex": 2,
+//     "selectedSla": "sla3",
+//   },
+// ]
+```
+
+**params:**
+- **logisticsInfo1**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm.shippingData` with `itemIndex`
+- **logisticsInfo2**
+Type: `Array<object>`
+The logisticsInfo like the one inside `orderForm.shippingData` with `itemIndex`
+**returns:**
+- **new logisticsInfo**
+Type: `Array<object>`
+Return all items of logisticsInfo2 completing its missing items from the logisticsInfo1 (merge operation)
+
 ## SLA
 > @vtex/delivery-packages/dist/sla
 

@@ -5,6 +5,7 @@ import {
   getFirstAddressForDelivery,
 } from './address'
 import { isPickup, isDelivery, getDeliveryChannel } from './delivery-channel'
+import { getItemIndex, getItemsIndexes } from './items'
 import {
   hasDeliveryWindows,
   getSelectedSla,
@@ -142,6 +143,30 @@ export function replaceAddressIdOnLogisticsInfo(
   })
 }
 
+export function fillGapsInLogisticsInfo(logisticsInfo, fillWithIndex = true) {
+  if (!logisticsInfo || logisticsInfo.length === 0) {
+    return []
+  }
+
+  const { maxIndex, indexesMap } = getItemsIndexes(logisticsInfo)
+
+  const newLogisticsInfo = []
+
+  for (let index = 0; index <= maxIndex; index++) {
+    if (indexesMap[index]) {
+      newLogisticsInfo.push(indexesMap[index])
+    } else {
+      if (fillWithIndex) {
+        newLogisticsInfo.push({ itemIndex: index })
+      } else {
+        newLogisticsInfo.push(null)
+      }
+    }
+  }
+
+  return newLogisticsInfo
+}
+
 /** PUBLIC **/
 
 export function getNewLogisticsInfo(
@@ -266,6 +291,32 @@ export function filterLogisticsInfo(logisticsInfo, filters, keepSize = false) {
       )
       : logisticsInfo.filter(li => indexes.indexOf(li.itemIndex) !== -1)
     : logisticsInfo
+}
+
+export function mergeLogisticsInfos(logisticsInfo1, logisticsInfo2) {
+  if (!logisticsInfo1 || logisticsInfo1.length === 0) {
+    return []
+  }
+
+  if (!logisticsInfo2 || logisticsInfo2.length === 0) {
+    return logisticsInfo1
+  }
+
+  logisticsInfo1 = fillGapsInLogisticsInfo(logisticsInfo1, false)
+  logisticsInfo2 = fillGapsInLogisticsInfo(logisticsInfo2, false)
+
+  return logisticsInfo1.reduce((newLogisticsInfo, li, index) => {
+    let itemIndex = getItemIndex(li)
+    if (itemIndex === -1) {
+      itemIndex = index
+    }
+
+    if (itemIndex >= 0 && logisticsInfo2[itemIndex]) {
+      return [...newLogisticsInfo, logisticsInfo2[itemIndex]]
+    }
+
+    return [...newLogisticsInfo, li]
+  }, [])
 }
 
 export function getNewLogisticsInfoWithScheduledDeliveryChoice(

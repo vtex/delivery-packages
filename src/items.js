@@ -2,7 +2,7 @@ import './polyfills'
 
 /** PRIVATE **/
 
-function getItemIndex(item) {
+export function getItemIndex(item) {
   if (!item) {
     return -1
   }
