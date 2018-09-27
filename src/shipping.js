@@ -5,7 +5,7 @@ import {
   getFirstAddressForDelivery,
 } from './address'
 import { isPickup, isDelivery, getDeliveryChannel } from './delivery-channel'
-import { getItemIndex, getItemsIndexes } from './items'
+import { getItemsIndexes } from './items'
 import {
   hasDeliveryWindows,
   getSelectedSla,
@@ -305,18 +305,16 @@ export function mergeLogisticsInfos(logisticsInfo1, logisticsInfo2) {
   logisticsInfo1 = fillGapsInLogisticsInfo(logisticsInfo1, false)
   logisticsInfo2 = fillGapsInLogisticsInfo(logisticsInfo2, false)
 
-  return logisticsInfo1.reduce((newLogisticsInfo, li, index) => {
-    let itemIndex = getItemIndex(li)
-    if (itemIndex === -1) {
-      itemIndex = index
-    }
+  const maxLen = Math.max(logisticsInfo1.length, logisticsInfo2.length)
 
-    if (itemIndex >= 0 && logisticsInfo2[itemIndex]) {
-      return [...newLogisticsInfo, logisticsInfo2[itemIndex]]
-    }
+  const newLogisticsInfo = []
 
-    return [...newLogisticsInfo, li]
-  }, [])
+  for (let itemIndex = 0; itemIndex < maxLen; itemIndex++) {
+    const newItem = logisticsInfo2[itemIndex] || logisticsInfo1[itemIndex]
+    newLogisticsInfo.push(newItem)
+  }
+
+  return newLogisticsInfo
 }
 
 export function getNewLogisticsInfoWithScheduledDeliveryChoice(

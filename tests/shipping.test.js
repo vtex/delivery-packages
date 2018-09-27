@@ -1408,5 +1408,39 @@ describe('Shipping', () => {
 
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
+
+    it('should return merged logisticsInfo if logisticsInfo1 is different than logisticsInfo2 and logisticsInfo2 have items with more index', () => {
+      const logisticsInfo1 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla'],
+          selectedSla: 'expressSla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla'],
+          selectedSla: 'expressSla',
+          index: 1,
+        }),
+      ]
+      const logisticsInfo2 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'normalScheduledDeliverySla'],
+          selectedSla: 'pickupSla',
+          index: 2,
+        }),
+      ]
+      const expectedLogisticsInfo = [
+        logisticsInfo1[0],
+        logisticsInfo1[1],
+        logisticsInfo2[0],
+      ]
+
+      const newLogisticsInfo = mergeLogisticsInfos(
+        logisticsInfo1,
+        logisticsInfo2
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
   })
 })
