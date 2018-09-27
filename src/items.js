@@ -112,7 +112,7 @@ export function getDeliveredItems(params) {
   return deliveredItems
 }
 
-export function getItemsIndexes(items) {
+export function getItemsIndexes(items, len = -1) {
   if (!items || items.length === 0) {
     return {
       indexes: [],
@@ -136,7 +136,9 @@ export function getItemsIndexes(items) {
     }
   })
 
-  for (let index = 0; index < maxIndex; index++) {
+  len = Math.max(len, maxIndex)
+
+  for (let index = 0; index < len; index++) {
     if (!indexesMap[index]) {
       otherIndexes.push(index)
     }

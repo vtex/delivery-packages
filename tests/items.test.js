@@ -284,5 +284,21 @@ describe('Items', () => {
       expect(indexesMap).toEqual({ 0: items[0], 1: items[1], 2: items[2] })
       expect(maxIndex).toEqual(2)
     })
+
+    it('should return indexes values and map with more lenght on list', () => {
+      const items = [
+        { itemIndex: 1, sla: 'sla2' },
+      ]
+      const totalItems = 3
+
+      const { indexes, otherIndexes, indexesMap, maxIndex } = getItemsIndexes(
+        items, totalItems
+      )
+
+      expect(indexes).toEqual([1])
+      expect(otherIndexes).toEqual([0, 2])
+      expect(indexesMap).toEqual({ 1: items[0] })
+      expect(maxIndex).toEqual(1)
+    })
   })
 })
