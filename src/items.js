@@ -1,5 +1,15 @@
 import './polyfills'
 
+/** PRIVATE **/
+
+export function getItemIndex(item) {
+  if (!item) {
+    return -1
+  }
+  const index = item.index != null ? item.index : item.itemIndex
+  return index != null ? index : -1
+}
+
 /** PUBLIC **/
 
 export function getNewItems(items, changes) {
@@ -53,8 +63,8 @@ export function getDeliveredItems(params) {
     (groups, item) => {
       const packagesWithItem =
         packages &&
-        packages.filter(
-          pack => pack.items.some(packageItem => packageItem.itemIndex === item.index)
+        packages.filter(pack =>
+          pack.items.some(packageItem => packageItem.itemIndex === item.index)
         )
 
       if (packagesWithItem.length === 0) {
@@ -100,4 +110,44 @@ export function getDeliveredItems(params) {
   )
 
   return deliveredItems
+}
+
+export function getItemsIndexes(items, len = -1) {
+  if (!items || items.length === 0) {
+    return {
+      indexes: [],
+      otherIndexes: [],
+      indexesMap: {},
+      maxIndex: -1,
+    }
+  }
+
+  const indexesMap = {}
+  const indexes = []
+  const otherIndexes = []
+  let maxIndex = 0
+
+  items.forEach(item => {
+    const itemIndex = getItemIndex(item)
+    maxIndex = Math.max(maxIndex, itemIndex)
+    if (itemIndex !== -1) {
+      indexesMap[itemIndex] = item
+      indexes.push(itemIndex)
+    }
+  })
+
+  len = Math.max(len, maxIndex)
+
+  for (let index = 0; index < len; index++) {
+    if (!indexesMap[index]) {
+      otherIndexes.push(index)
+    }
+  }
+
+  return {
+    indexes,
+    otherIndexes,
+    indexesMap,
+    maxIndex,
+  }
 }

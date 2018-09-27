@@ -1,4 +1,4 @@
-import { getNewItems, getDeliveredItems } from '../src/items'
+import { getNewItems, getDeliveredItems, getItemsIndexes } from '../src/items'
 
 import { createItems, createPackage } from './mockGenerator'
 
@@ -218,11 +218,11 @@ describe('Items', () => {
 
   it('should get the right item index', () => {
     const items = [
-      { 'id': '0', 'quantity': 1, 'seller': '1', 'index': 0 },
-      { 'id': '3', 'quantity': 1, 'seller': '1', 'index': 3 },
-      { 'id': '4', 'quantity': 1, 'seller': '1', 'index': 4 },
-      { 'id': '5', 'quantity': 1, 'seller': '1', 'index': 5 },
-      { 'id': '6', 'quantity': 1, 'seller': '1', 'index': 6 },
+      { id: '0', quantity: 1, seller: '1', index: 0 },
+      { id: '3', quantity: 1, seller: '1', index: 3 },
+      { id: '4', quantity: 1, seller: '1', index: 4 },
+      { id: '5', quantity: 1, seller: '1', index: 5 },
+      { id: '6', quantity: 1, seller: '1', index: 6 },
     ]
     const packages = [
       createPackage([
@@ -238,5 +238,67 @@ describe('Items', () => {
 
     expect(deliveredItems.toBeDelivered).toHaveLength(0)
     expect(deliveredItems.delivered).toHaveLength(5)
+  })
+
+  describe('getItemsIndexes', () => {
+    it('should return empty values if empty logisticsInfo is passed', () => {
+      const { indexes, otherIndexes, indexesMap, maxIndex } = getItemsIndexes(
+        []
+      )
+
+      expect(indexes).toEqual([])
+      expect(otherIndexes).toEqual([])
+      expect(indexesMap).toEqual({})
+      expect(maxIndex).toEqual(-1)
+    })
+
+    it('should return indexes values and map with incomplete items list', () => {
+      const items = [
+        { itemIndex: 0, sla: 'sla1' },
+        { itemIndex: 2, sla: 'sla2' },
+      ]
+
+      const { indexes, otherIndexes, indexesMap, maxIndex } = getItemsIndexes(
+        items
+      )
+
+      expect(indexes).toEqual([0, 2])
+      expect(otherIndexes).toEqual([1])
+      expect(indexesMap).toEqual({ 0: items[0], 2: items[1] })
+      expect(maxIndex).toEqual(2)
+    })
+
+    it('should return indexes values and map with complete items list', () => {
+      const items = [
+        { itemIndex: 0, sla: 'sla1' },
+        { itemIndex: 1, sla: 'sla2' },
+        { itemIndex: 2, sla: 'sla3' },
+      ]
+
+      const { indexes, otherIndexes, indexesMap, maxIndex } = getItemsIndexes(
+        items
+      )
+
+      expect(indexes).toEqual([0, 1, 2])
+      expect(otherIndexes).toEqual([])
+      expect(indexesMap).toEqual({ 0: items[0], 1: items[1], 2: items[2] })
+      expect(maxIndex).toEqual(2)
+    })
+
+    it('should return indexes values and map with more lenght on list', () => {
+      const items = [
+        { itemIndex: 1, sla: 'sla2' },
+      ]
+      const totalItems = 3
+
+      const { indexes, otherIndexes, indexesMap, maxIndex } = getItemsIndexes(
+        items, totalItems
+      )
+
+      expect(indexes).toEqual([1])
+      expect(otherIndexes).toEqual([0, 2])
+      expect(indexesMap).toEqual({ 1: items[0] })
+      expect(maxIndex).toEqual(1)
+    })
   })
 })

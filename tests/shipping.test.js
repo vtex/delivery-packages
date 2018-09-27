@@ -7,6 +7,8 @@ import {
   getNewLogisticsInfoWithScheduledDeliveryChoice,
   replaceAddressIdOnLogisticsInfo,
   getNewLogisticsMatchingSelectedAddresses,
+  fillGapsInLogisticsInfo,
+  mergeLogisticsInfos,
 } from '../src/shipping'
 import { SEARCH } from '../src/constants'
 import { getDeliveredItems } from '../src/items'
@@ -1248,6 +1250,197 @@ describe('Shipping', () => {
 
       expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
       expect(newSelectedAddresses).toEqual(expectedSelectedAddresses)
+    })
+  })
+
+  describe('fillGapsInLogisticsInfo', () => {
+    it('should return empty array when passing empty array', () => {
+      expect(fillGapsInLogisticsInfo([])).toEqual([])
+    })
+
+    it('should return same logisticsInfo with no gaps', () => {
+      const logisticsInfo = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      const expectedLogisticsInfo = logisticsInfo
+
+      const newLogisticsInfo = fillGapsInLogisticsInfo(logisticsInfo)
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should complete the gaps of logisticsInfo', () => {
+      const logisticsInfo = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      logisticsInfo[1] = null
+      const expectedLogisticsInfo = [
+        logisticsInfo[0],
+        { itemIndex: 1 },
+        logisticsInfo[2],
+      ]
+
+      const newLogisticsInfo = fillGapsInLogisticsInfo(logisticsInfo)
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+    it('should complete the gaps of logisticsInfo with null values if fillWithIndex is passed as false', () => {
+      const logisticsInfo = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      logisticsInfo[1] = null
+      const fillWithIndex = false
+      const expectedLogisticsInfo = [logisticsInfo[0], null, logisticsInfo[2]]
+
+      const newLogisticsInfo = fillGapsInLogisticsInfo(
+        logisticsInfo,
+        fillWithIndex
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+  })
+
+  describe('mergeLogisticsInfos', () => {
+    it('should return empty array when passing empty array', () => {
+      expect(mergeLogisticsInfos()).toEqual([])
+      expect(mergeLogisticsInfos([])).toEqual([])
+      expect(mergeLogisticsInfos([], [])).toEqual([])
+    })
+
+    it('should return same logisticsInfo if empty logisticsInfo2 is passed', () => {
+      const logisticsInfo1 = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      const expectedLogisticsInfo = logisticsInfo1
+
+      const newLogisticsInfo = mergeLogisticsInfos(logisticsInfo1, [])
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return logisticsInfo2 if logisticsInfo1 is different than logisticsInfo2 and have the same size', () => {
+      const logisticsInfo1 = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      const logisticsInfo2 = createLogisticsInfo(
+        ['pickupSla', 'normalScheduledDeliverySla'],
+        3
+      )
+      const expectedLogisticsInfo = logisticsInfo2
+
+      const newLogisticsInfo = mergeLogisticsInfos(
+        logisticsInfo1,
+        logisticsInfo2
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return merged logisticsInfo if logisticsInfo1 is different than logisticsInfo2 and dont the same indexes', () => {
+      const logisticsInfo1 = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      const logisticsInfo2 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'normalScheduledDeliverySla'],
+          selectedSla: 'pickupSla',
+          index: 1,
+        }),
+      ]
+      const expectedLogisticsInfo = [
+        logisticsInfo1[0],
+        logisticsInfo2[0],
+        logisticsInfo1[2],
+      ]
+
+      const newLogisticsInfo = mergeLogisticsInfos(
+        logisticsInfo1,
+        logisticsInfo2
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return merged logisticsInfo if logisticsInfo1 is different than logisticsInfo2, dont the same indexes and both have null gaps', () => {
+      const logisticsInfo1 = createLogisticsInfo(['pickupSla', 'expressSla'], 3)
+      logisticsInfo1[1] = null
+      const logisticsInfo2 = [
+        null,
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'normalScheduledDeliverySla'],
+          selectedSla: 'pickupSla',
+          index: 1,
+        }),
+      ]
+      const expectedLogisticsInfo = [
+        logisticsInfo1[0],
+        logisticsInfo2[1],
+        logisticsInfo1[2],
+      ]
+
+      const newLogisticsInfo = mergeLogisticsInfos(
+        logisticsInfo1,
+        logisticsInfo2
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return merged logisticsInfo if logisticsInfo1 is different than logisticsInfo2, dont the same indexes and both have gaps', () => {
+      const logisticsInfo1 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla'],
+          selectedSla: 'expressSla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla'],
+          selectedSla: 'expressSla',
+          index: 2,
+        }),
+      ]
+      const logisticsInfo2 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'normalScheduledDeliverySla'],
+          selectedSla: 'pickupSla',
+          index: 1,
+        }),
+      ]
+      const expectedLogisticsInfo = [
+        logisticsInfo1[0],
+        logisticsInfo2[0],
+        logisticsInfo1[1],
+      ]
+
+      const newLogisticsInfo = mergeLogisticsInfos(
+        logisticsInfo1,
+        logisticsInfo2
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
+    })
+
+    it('should return merged logisticsInfo if logisticsInfo1 is different than logisticsInfo2 and logisticsInfo2 have items with more index', () => {
+      const logisticsInfo1 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla'],
+          selectedSla: 'expressSla',
+          index: 0,
+        }),
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'expressSla'],
+          selectedSla: 'expressSla',
+          index: 1,
+        }),
+      ]
+      const logisticsInfo2 = [
+        createLogisticsInfoItem({
+          slas: ['pickupSla', 'normalScheduledDeliverySla'],
+          selectedSla: 'pickupSla',
+          index: 2,
+        }),
+      ]
+      const expectedLogisticsInfo = [
+        logisticsInfo1[0],
+        logisticsInfo1[1],
+        logisticsInfo2[0],
+      ]
+
+      const newLogisticsInfo = mergeLogisticsInfos(
+        logisticsInfo1,
+        logisticsInfo2
+      )
+
+      expect(newLogisticsInfo).toEqual(expectedLogisticsInfo)
     })
   })
 })
