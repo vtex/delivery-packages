@@ -127,10 +127,12 @@ A Parcel object shape
   items: [Object],
   package: Object,
   selectedSla: String,
+  selectedSlaObj: Object,
   slas: [Object],
   shippingEstimate: String,
   shippingEstimateDate: String,
   deliveryChannel: String,
+  selectedSlaType: String,
   deliveryIds: [Object]
 }
 ```
@@ -228,10 +230,12 @@ parcelify(order, { criteria: { seller: false } })
 //     "price": 20000,
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Expressa",
+//     "selectedSlaObj": { "id": "Expressa", "deliveryChannel": "delivery" },
 //     "slas": [{ "id": "Expressa", "deliveryChannel": "delivery" }],
 //     "shippingEstimate": "5bd",
 //     "shippingEstimateDate": "2018-02-23T19:01:07.0336412+00:00",
 //     "deliveryChannel": "delivery",
+//     "selectedSlaType": "delivery",
 //     "items": [
 //       { "id": 0, "quantity": 1, "seller": "1", "index": 0 }
 //     ],
@@ -242,10 +246,12 @@ parcelify(order, { criteria: { seller: false } })
 //     "price": 10000,
 //     "pickupFriendlyName": null,
 //     "selectedSla": "Normal",
+//     "selectedSlaObj": { "id": "Normal", "deliveryChannel": "delivery" },
 //     "slas": [{ "id": "Normal", "deliveryChannel": "delivery" }],
 //     "shippingEstimate": "6bd",
 //     "shippingEstimateDate": "2018-02-24T19:01:07.0336412+00:00",
 //     "deliveryChannel": "delivery",
+//     "selectedSlaType": "delivery",
 //     "items": [
 //       { "id": 1, "quantity": 1, "seller": "1", "index": 1 }
 //     ],
@@ -2855,6 +2861,48 @@ getSlaObj(
 - **sla**
   Type: `object`
   the sla object on the array that match the slaId passed or null if it doesn't find it
+
+### getSlaType (slaObj, order)
+
+Get the sla type (`delivery`, `pickup-in-point` or `take-away`) based on the sla deliveryChannel and if order is checkedIn
+
+##### Usage
+
+```js
+const { getSlaType } = require('@vtex/delivery-packages/dist/sla')
+
+getSlaType(
+  { id: 'Normal', deliveryChannel: 'delivery' }
+)
+// -> "delivery"
+
+getSlaType(
+  { id: 'Pickup', deliveryChannel: 'pickup-in-point' }
+)
+// -> "pickup-in-point"
+
+getSlaType(
+  { id: 'Pickup checked In', deliveryChannel: 'pickup-in-point', pickupPointId: '1_2' },
+  { orderId: '123', checkedInPickupPointId: '1_2' }
+)
+// -> "take-away"
+```
+
+**params:**
+
+- **sla**
+  Type: `object`
+  An sla object
+
+- **order**
+  Type: `object`
+  An optional order object with the `checkedInPickupPointId` information
+
+**returns:**
+
+- **sla type**
+  Type: `string`
+  the sla type (`delivery`, `pickup-in-point` or `take-away`)
 
 ### changeSelectedSla (logisticsInfoItem, sla)
 
