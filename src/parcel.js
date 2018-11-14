@@ -156,7 +156,13 @@ function addToPackage(items, criteria, order, fn) {
         ? item.pickupFriendlyName
         : undefined,
       seller: criteria.seller ? item.item.seller : undefined,
-      address: criteria.selectedSla ? item.address : undefined,
+      address: criteria.selectedSla
+        ? item.address ||
+          (selectedSlaObj &&
+            selectedSlaObj.pickupStoreInfo &&
+            selectedSlaObj.pickupStoreInfo.address) ||
+          undefined
+        : undefined,
       selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
       selectedSlaObj,
       selectedSlaType,
