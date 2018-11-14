@@ -3,6 +3,7 @@ import {
   getSelectedSlas,
   getPickupSelectedSlas,
   getSlaObj,
+  getSlaType,
   findSlaWithChannel,
   getSelectedSlaInSlas,
   getSelectedSlaIfMatchSlaId,
@@ -11,12 +12,13 @@ import {
   excludePickupTypeFromSlas,
   changeSelectedSla,
 } from '../src/sla'
-import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
+import { DELIVERY, PICKUP_IN_STORE, SLA_TYPES } from '../src/constants'
 
 import {
   createLogisticsInfo,
   slas,
   availableDeliveryWindows,
+  checkedInPickupPointId,
 } from './mockGenerator'
 
 describe('Sla', () => {
@@ -138,9 +140,7 @@ describe('Sla', () => {
       logisticsInfo[1].selectedSla = slas.normalSla.id
       logisticsInfo[2].selectedSla = slas.pickupSla.id
 
-      const expectedSlas = [
-        { ...slas.pickupSla, itemIndex: 2 },
-      ]
+      const expectedSlas = [{ ...slas.pickupSla, itemIndex: 2 }]
 
       const selectedSlas = getPickupSelectedSlas(logisticsInfo)
 
@@ -155,9 +155,7 @@ describe('Sla', () => {
       logisticsInfo[0].selectedSla = slas.expressSla.id
       logisticsInfo[2].selectedSla = slas.pickupSla.id
 
-      const expectedSlas = [
-        { ...slas.pickupSla, itemIndex: 2 },
-      ]
+      const expectedSlas = [{ ...slas.pickupSla, itemIndex: 2 }]
 
       const selectedSlas = getPickupSelectedSlas(logisticsInfo)
 
@@ -200,6 +198,46 @@ describe('Sla', () => {
       const newSelectedSla = getSlaObj(logisticsInfoItem.slas, slaId)
 
       expect(newSelectedSla).toEqual(expectedSelectedSla)
+    })
+  })
+
+  describe('getSlaType', () => {
+    it('should return null if empty params are passed', () => {
+      const slaType1 = getSlaType()
+      const slaType2 = getSlaType(null)
+      const slaType3 = getSlaType(null, null)
+
+      expect(slaType1).toBeNull()
+      expect(slaType2).toBeNull()
+      expect(slaType3).toBeNull()
+    })
+
+    it('should return pickup sla type when pickup sla is passed', () => {
+      const slaObj = { deliveryChannel: PICKUP_IN_STORE }
+
+      const slaType = getSlaType(slaObj)
+
+      expect(slaType).toEqual(SLA_TYPES.PICKUP_IN_STORE)
+    })
+
+    it('should return delivery sla type when delivery sla is passed', () => {
+      const slaObj = { deliveryChannel: DELIVERY }
+
+      const slaType = getSlaType(slaObj)
+
+      expect(slaType).toEqual(SLA_TYPES.DELIVERY)
+    })
+
+    it('should return take away sla type when checkedIn pickup sla and order are passed', () => {
+      const slaObj = {
+        deliveryChannel: PICKUP_IN_STORE,
+        pickupPointId: checkedInPickupPointId,
+      }
+      const order = { isCheckedIn: true, checkedInPickupPointId }
+
+      const slaType = getSlaType(slaObj, order)
+
+      expect(slaType).toEqual(SLA_TYPES.TAKE_AWAY)
     })
   })
 

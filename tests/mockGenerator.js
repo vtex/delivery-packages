@@ -165,6 +165,26 @@ const availableDeliveryWindows = [
   },
 ]
 
+const checkedInPickupPointId = 'lojabruzzi_1f03419'
+
+const pickupNormalSla = {
+  id: 'Retirada normal',
+  shippingEstimate: '6bd',
+  shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
+  deliveryChannel: 'pickup-in-point',
+  availableDeliveryWindows: [],
+  deliveryWindow: null,
+  price: 0,
+  listPrice: 0,
+  sellingPrice: 0,
+  tax: 0,
+  pickupStoreInfo: {
+    isPickupStore: true,
+    friendlyName: 'Shopping da Gávea',
+    address: addresses.pickupPointAddress2,
+  },
+}
+
 const slas = {
   pickupSla: {
     id: 'Retirada na loja (17c6a89)',
@@ -183,22 +203,12 @@ const slas = {
       address: addresses.pickupPointAddress,
     },
   },
-  pickupNormalSla: {
-    id: 'Retirada normal',
-    shippingEstimate: '6bd',
-    shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
-    deliveryChannel: 'pickup-in-point',
-    availableDeliveryWindows: [],
-    deliveryWindow: null,
-    price: 0,
-    listPrice: 0,
-    sellingPrice: 0,
-    tax: 0,
-    pickupStoreInfo: {
-      isPickupStore: true,
-      friendlyName: 'Shopping da Gávea',
-      address: addresses.pickupPointAddress2,
-    },
+  pickupNormalSla,
+  pickupCheckedInSla: {
+    ...pickupNormalSla,
+    id: 'Retirar agora (1f03419)',
+    shippingEstimate: '0bd',
+    pickupPointId: checkedInPickupPointId,
   },
   expressSla: {
     id: 'Expressa',
@@ -281,6 +291,8 @@ const baseLogisticsInfo = {
     addressId: addresses.pickupPointAddress.addressId,
     selectedSla: slas.pickupSla.id,
     selectedDeliveryChannel: 'pickup-in-point',
+    selectedSlaObj: slas.pickupSla,
+    selectedSlaType: 'pickup-in-point',
     listPrice: slas.pickupSla.listPrice,
     price: slas.pickupSla.price,
     sellingPrice: slas.pickupSla.sellingPrice,
@@ -289,6 +301,8 @@ const baseLogisticsInfo = {
     addressId: addresses.pickupPointAddress.addressId,
     selectedSla: slas.pickupNormalSla.id,
     selectedDeliveryChannel: 'pickup-in-point',
+    selectedSlaObj: slas.pickupNormalSla,
+    selectedSlaType: 'pickup-in-point',
     listPrice: slas.pickupNormalSla.listPrice,
     price: slas.pickupNormalSla.price,
     sellingPrice: slas.pickupNormalSla.sellingPrice,
@@ -297,6 +311,8 @@ const baseLogisticsInfo = {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.expressSla.id,
     selectedDeliveryChannel: 'delivery',
+    selectedSlaObj: slas.expressSla,
+    selectedSlaType: 'delivery',
     listPrice: slas.expressSla.listPrice,
     price: slas.expressSla.price,
     sellingPrice: slas.expressSla.sellingPrice,
@@ -305,6 +321,8 @@ const baseLogisticsInfo = {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalSla.id,
     selectedDeliveryChannel: 'delivery',
+    selectedSlaObj: slas.normalSla,
+    selectedSlaType: 'delivery',
     listPrice: slas.normalSla.listPrice,
     price: slas.normalSla.price,
     sellingPrice: slas.normalSla.sellingPrice,
@@ -313,6 +331,8 @@ const baseLogisticsInfo = {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalFastestSla.id,
     selectedDeliveryChannel: 'delivery',
+    selectedSlaObj: slas.normalFastestSla,
+    selectedSlaType: 'delivery',
     listPrice: slas.normalFastestSla.listPrice,
     price: slas.normalFastestSla.price,
     sellingPrice: slas.normalFastestSla.sellingPrice,
@@ -321,6 +341,8 @@ const baseLogisticsInfo = {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalScheduledDeliverySla.id,
     selectedDeliveryChannel: 'delivery',
+    selectedSlaObj: slas.normalScheduledDeliverySla,
+    selectedSlaType: 'delivery',
     listPrice: slas.normalScheduledDeliverySla.listPrice,
     price: slas.normalScheduledDeliverySla.price,
     sellingPrice: slas.normalScheduledDeliverySla.sellingPrice,
@@ -328,6 +350,8 @@ const baseLogisticsInfo = {
   normalOms: {
     addressId: addresses.residentialAddress.addressId,
     selectedSla: slas.normalSla.id,
+    selectedSlaObj: slas.normalSla,
+    selectedSlaType: 'delivery',
     deliveryIds: [{ courierId: '123' }],
     listPrice: slas.normalSla.listPrice,
     price: slas.normalSla.price,
@@ -398,6 +422,7 @@ const createLogisticsInfoItem = ({
 
 module.exports = {
   addresses,
+  checkedInPickupPointId,
   slas,
   availableDeliveryWindows,
   baseLogisticsInfo,

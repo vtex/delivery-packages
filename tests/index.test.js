@@ -4,6 +4,7 @@ import {
   baseLogisticsInfo,
   createItems,
   createPackage,
+  checkedInPickupPointId,
   slas,
   addresses,
   availableDeliveryWindows,
@@ -16,6 +17,7 @@ const {
   normalFastestSla,
   normalSla,
   normalScheduledDeliverySla,
+  pickupCheckedInSla,
   pickupNormalSla,
   pickupSla,
 } = slas
@@ -1012,6 +1014,7 @@ describe('has one package with scheduled delivery and the other with the normal 
       deliveryWindow: null,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[0], index: 0 }],
       slas: [expressSla, normalScheduledDeliverySla],
@@ -1054,7 +1057,7 @@ describe('has one package with scheduled delivery and the other with the normal 
     expect(result[1]).toEqual(expectedParcel2)
   })
 
-  it('should create two parcels with different selectedSla, one with a scheduled delivery and one delivery', () => {
+  it('should create two parcels with different selectedSla, one with a scheduled delivery and one delivery and including multiple items', () => {
     const items = createItems(4)
     const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
@@ -1095,6 +1098,8 @@ describe('has one package with scheduled delivery and the other with the normal 
       deliveryWindow: undefined,
       item: undefined,
       deliveryChannel: undefined,
+      selectedSlaObj: null,
+      selectedSlaType: null,
       address: residentialAddress,
       items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
       slas: [normalSla, expressSla],
@@ -1115,6 +1120,8 @@ describe('has one package with scheduled delivery and the other with the normal 
       deliveryWindow: undefined,
       item: undefined,
       deliveryChannel: undefined,
+      selectedSlaObj: null,
+      selectedSlaType: null,
       address: residentialAddress,
       items: [{ ...items[1], index: 1 }, { ...items[3], index: 3 }],
       slas: [normalSla, normalScheduledDeliverySla],
@@ -1139,6 +1146,110 @@ describe('has one package with scheduled delivery and the other with the normal 
           selectedAddresses,
           logisticsInfo,
         },
+      },
+      { criteria: { groupByAvailableDeliveryWindows: true } }
+    )
+
+    expect(result).toHaveLength(2)
+    expect(result[0]).toEqual(expectedParcel1)
+    expect(result[1]).toEqual(expectedParcel2)
+  })
+})
+
+describe('has one package with pickup checked in and the other with the normal delivery', () => {
+  it('should create two parcels with different selectedSla, one with a take away and one delivery and including multiple items', () => {
+    const items = createItems(4)
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+        selectedSla: slas.normalSla.id,
+        selectedDeliveryChannel: 'delivery',
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 0,
+        itemId: 0,
+      },
+      {
+        ...createLogisticsInfo(['normalSla', 'pickupCheckedInSla'], 1)[0],
+        selectedSla: slas.pickupCheckedInSla.id,
+        selectedDeliveryChannel: 'pickup-in-point',
+        addressId: addresses.pickupPointAddress2.addressId,
+        itemIndex: 1,
+        itemId: 1,
+      },
+      {
+        ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+        selectedSla: slas.normalSla.id,
+        selectedDeliveryChannel: 'delivery',
+        addressId: addresses.residentialAddress.addressId,
+        itemIndex: 2,
+        itemId: 2,
+      },
+      {
+        ...createLogisticsInfo(['normalSla', 'pickupCheckedInSla'], 1)[0],
+        selectedSla: slas.pickupCheckedInSla.id,
+        selectedDeliveryChannel: 'pickup-in-point',
+        addressId: addresses.pickupPointAddress2.addressId,
+        itemIndex: 3,
+        itemId: 3,
+      },
+    ]
+
+    const expectedParcel1 = {
+      deliveryIds: undefined,
+      deliveryWindow: null,
+      item: undefined,
+      address: residentialAddress,
+      items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
+      slas: [normalSla, expressSla],
+      hasAvailableDeliveryWindows: false,
+      availableDeliveryWindows: [],
+      deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
+      package: undefined,
+      pickupFriendlyName: null,
+      seller: '1',
+      selectedSla: slas.normalSla.id,
+      selectedSlaObj: slas.normalSla,
+      shippingEstimate: slas.normalSla.shippingEstimate,
+      shippingEstimateDate: slas.normalSla.shippingEstimateDate,
+      price: 10000,
+      listPrice: 10000,
+      sellingPrice: 10000,
+    }
+    const expectedParcel2 = {
+      deliveryIds: undefined,
+      deliveryWindow: null,
+      item: undefined,
+      deliveryChannel: 'pickup-in-point',
+      selectedSlaType: 'take-away',
+      availableDeliveryWindows: [],
+      address: slas.pickupCheckedInSla.pickupStoreInfo.address,
+      items: [{ ...items[1], index: 1 }, { ...items[3], index: 3 }],
+      slas: [normalSla, pickupCheckedInSla],
+      hasAvailableDeliveryWindows: false,
+      package: undefined,
+      pickupFriendlyName:
+        slas.pickupCheckedInSla.pickupStoreInfo.friendlyName,
+      seller: '1',
+      selectedSla: slas.pickupCheckedInSla.id,
+      selectedSlaObj: slas.pickupCheckedInSla,
+      shippingEstimate: slas.pickupCheckedInSla.shippingEstimate,
+      shippingEstimateDate: slas.pickupCheckedInSla.shippingEstimateDate,
+      price: 0,
+      listPrice: 0,
+      sellingPrice: 0,
+    }
+
+    const result = parcelify(
+      {
+        items,
+        shippingData: {
+          selectedAddresses,
+          logisticsInfo,
+        },
+        isCheckedIn: true,
+        checkedInPickupPointId,
       },
       { criteria: { groupByAvailableDeliveryWindows: true } }
     )
@@ -1201,6 +1312,8 @@ describe('has three package with two scheduled delivery and the other with the n
       deliveryWindow: undefined,
       item: undefined,
       deliveryChannel: undefined,
+      selectedSlaObj: null,
+      selectedSlaType: null,
       address: residentialAddress,
       items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
       slas: [normalSla, expressSla],
@@ -1221,6 +1334,8 @@ describe('has three package with two scheduled delivery and the other with the n
       deliveryWindow: undefined,
       item: undefined,
       deliveryChannel: undefined,
+      selectedSlaObj: null,
+      selectedSlaType: null,
       address: residentialAddress,
       items: [{ ...items[1], index: 1 }],
       slas: [normalSla, normalScheduledDeliverySla],
@@ -1242,6 +1357,8 @@ describe('has three package with two scheduled delivery and the other with the n
       deliveryWindow: undefined,
       item: undefined,
       deliveryChannel: undefined,
+      selectedSlaObj: null,
+      selectedSlaType: null,
       address: residentialAddress,
       items: [{ ...items[3], index: 3 }],
       slas: [normalSla, diffNormalScheduledDeliverySla],
@@ -1331,6 +1448,7 @@ describe('has three package with different prices', () => {
       hasAvailableDeliveryWindows: undefined,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[0], index: 0 }, { ...items[3], index: 3 }],
       slas: [normalSla, expressSla],
@@ -1339,8 +1457,9 @@ describe('has three package with different prices', () => {
       pickupFriendlyName: null,
       seller: '1',
       selectedSla: slas.normalSla.id,
-      shippingEstimate: '6bd',
-      shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
+      selectedSlaObj: slas.normalSla,
+      shippingEstimate: slas.normalSla.shippingEstimate,
+      shippingEstimateDate: slas.normalSla.shippingEstimateDate,
       price: 10000,
       listPrice: 10000,
       sellingPrice: 10000,
@@ -1351,6 +1470,7 @@ describe('has three package with different prices', () => {
       hasAvailableDeliveryWindows: undefined,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[1], index: 1 }, { ...items[4], index: 4 }],
       slas: [normalFastestSla, expressSla],
@@ -1359,8 +1479,9 @@ describe('has three package with different prices', () => {
       pickupFriendlyName: null,
       seller: '1',
       selectedSla: slas.normalFastestSla.id,
-      shippingEstimate: '3bd',
-      shippingEstimateDate: '2018-02-21T19:01:07.0336412+00:00',
+      selectedSlaObj: slas.normalFastestSla,
+      shippingEstimate: slas.normalFastestSla.shippingEstimate,
+      shippingEstimateDate: slas.normalFastestSla.shippingEstimateDate,
       price: 40000,
       listPrice: 40000,
       sellingPrice: 40000,
@@ -1371,6 +1492,7 @@ describe('has three package with different prices', () => {
       hasAvailableDeliveryWindows: undefined,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[2], index: 2 }, { ...items[5], index: 5 }],
       slas: [pickupNormalSla, expressSla],
@@ -1379,6 +1501,7 @@ describe('has three package with different prices', () => {
       pickupFriendlyName: null,
       seller: '1',
       selectedSla: slas.expressSla.id,
+      selectedSlaObj: slas.expressSla,
       shippingEstimate: '5bd',
       shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
       price: 20000,
@@ -1485,6 +1608,7 @@ describe('has three package with different prices and including scheduled delive
       hasAvailableDeliveryWindows: undefined,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[0], index: 0 }, { ...items[3], index: 3 }],
       slas: [normalSla, expressSla],
@@ -1493,6 +1617,7 @@ describe('has three package with different prices and including scheduled delive
       pickupFriendlyName: null,
       seller: '1',
       selectedSla: slas.normalSla.id,
+      selectedSlaObj: slas.normalSla,
       shippingEstimate: '6bd',
       shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
       price: 10000,
@@ -1505,6 +1630,7 @@ describe('has three package with different prices and including scheduled delive
       hasAvailableDeliveryWindows: undefined,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[1], index: 1 }, { ...items[4], index: 4 }],
       slas: [
@@ -1519,6 +1645,10 @@ describe('has three package with different prices and including scheduled delive
       pickupFriendlyName: null,
       seller: '1',
       selectedSla: slas.normalScheduledDeliverySla.id,
+      selectedSlaObj: {
+        ...slas.normalScheduledDeliverySla,
+        deliveryWindow,
+      },
       shippingEstimate: '6bd',
       shippingEstimateDate: '2018-05-26T09:00:00+00:00',
       price: 20000,
@@ -1531,6 +1661,7 @@ describe('has three package with different prices and including scheduled delive
       hasAvailableDeliveryWindows: undefined,
       item: undefined,
       deliveryChannel: 'delivery',
+      selectedSlaType: 'delivery',
       address: residentialAddress,
       items: [{ ...items[2], index: 2 }, { ...items[5], index: 5 }],
       slas: [pickupNormalSla, expressSla],
@@ -1539,6 +1670,7 @@ describe('has three package with different prices and including scheduled delive
       pickupFriendlyName: null,
       seller: '1',
       selectedSla: slas.expressSla.id,
+      selectedSlaObj: slas.expressSla,
       shippingEstimate: '5bd',
       shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
       price: 20000,

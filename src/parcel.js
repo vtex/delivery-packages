@@ -1,7 +1,7 @@
 import { getShippingEstimateQuantityInSeconds } from '@vtex/estimate-calculator'
 
 import './polyfills'
-import { hasDeliveryWindows, getSlaObj } from './sla'
+import { hasDeliveryWindows, getSlaObj, getSlaType } from './sla'
 import { getNewItems, getDeliveredItems } from './items'
 import { hydratePackageWithLogisticsExtraInfo } from './shipping'
 import {
@@ -12,14 +12,14 @@ import { DEFAULT_CRITERIA } from './constants'
 
 /** PRIVATE **/
 
-function groupPackages(items, criteria) {
-  return addToPackage(items, criteria, (packages, item) => {
+function groupPackages(items, criteria, order) {
+  return addToPackage(items, criteria, order, (packages, item) => {
     return packages.find(pack => pack.package.index === item.package.index)
   })
 }
 
-function groupDeliveries(items, criteria) {
-  return addToPackage(items, criteria, (packages, item) => {
+function groupDeliveries(items, criteria, order) {
+  return addToPackage(items, criteria, order, (packages, item) => {
     return packages.find(pack => {
       if (
         criteria.shippingEstimate &&
@@ -114,7 +114,7 @@ function getItemSelectedSlaPrices(item, shouldSumDeliveryWindow = false) {
   return prices
 }
 
-function addToPackage(items, criteria, fn) {
+function addToPackage(items, criteria, order, fn) {
   return items.reduce((packages, item) => {
     const pack = fn(packages, item)
 
@@ -141,8 +141,11 @@ function addToPackage(items, criteria, fn) {
       return packages
     }
 
-    const scheduledSla =
-      getSlaObj(item.slas, item.selectedSla) || getScheduledDeliverySLA(item)
+    const selectedSlaObj = getSlaObj(item.slas, item.selectedSla)
+
+    const selectedSlaType = getSlaType(selectedSlaObj, order)
+
+    const scheduledSla = selectedSlaObj || getScheduledDeliverySLA(item)
 
     const newPackage = {
       ...getItemSelectedSlaPrices(item, true),
@@ -153,8 +156,16 @@ function addToPackage(items, criteria, fn) {
         ? item.pickupFriendlyName
         : undefined,
       seller: criteria.seller ? item.item.seller : undefined,
-      address: criteria.selectedSla ? item.address : undefined,
+      address: criteria.selectedSla
+        ? item.address ||
+          (selectedSlaObj &&
+            selectedSlaObj.pickupStoreInfo &&
+            selectedSlaObj.pickupStoreInfo.address) ||
+          undefined
+        : undefined,
       selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
+      selectedSlaObj,
+      selectedSlaType,
       deliveryIds: item.deliveryIds,
       deliveryChannel: criteria.deliveryChannel
         ? item.deliveryChannel
@@ -228,10 +239,15 @@ export function parcelify(order, options = {}) {
     enhancePackage
   )
 
-  const deliveredPackages = groupPackages(deliveredItems.delivered, criteria)
+  const deliveredPackages = groupPackages(
+    deliveredItems.delivered,
+    criteria,
+    order
+  )
   const toBeDeliveredPackages = groupDeliveries(
     deliveredItems.toBeDelivered,
-    criteria
+    criteria,
+    order
   )
 
   return deliveredPackages.concat(toBeDeliveredPackages)
