@@ -1,5 +1,6 @@
 import './polyfills'
-import { isCurrentChannel } from './delivery-channel'
+import { isCurrentChannel, isPickup } from './delivery-channel'
+import { SLA_TYPES } from './constants'
 
 /** PRIVATE **/
 
@@ -92,6 +93,26 @@ export function getSlaObj(slas, slaId) {
   const slaObj = slas.find(sla => sla && sla.id === slaId)
 
   return slaObj || null
+}
+
+export function getSlaType(slaObj, order) {
+  if (!slaObj) {
+    return null
+  }
+
+  if (
+    order &&
+    order.isCheckedIn &&
+    slaObj.pickupPointId === order.checkedInPickupPointId
+  ) {
+    return SLA_TYPES.TAKE_AWAY
+  }
+
+  if (isPickup(slaObj)) {
+    return SLA_TYPES.PICKUP_IN_STORE
+  }
+
+  return SLA_TYPES.DELIVERY
 }
 
 export function excludePickupTypeFromSlas(slas) {
