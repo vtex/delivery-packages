@@ -42,6 +42,16 @@ export function getPickupAddress(pickupSla) {
   )
 }
 
+export function isCurrentAddressType(address, addressType) {
+  if (address && !address.addressType) {
+    return false
+  }
+  if (address && (typeof address.addressType === 'string')) {
+    return address.addressType === addressType
+  }
+  return address && address.addressType.value === addressType
+}
+
 /** PUBLIC **/
 
 export function isAddressComplete(address) {
@@ -49,22 +59,23 @@ export function isAddressComplete(address) {
   return !!(number && street && neighborhood && city && state)
 }
 
+export function isGiftRegistry(address) {
+  return isCurrentAddressType(address, GIFT_REGISTRY)
+}
+
 export function isPickupAddress(address) {
-  return address && address.addressType === PICKUP
+  return isCurrentAddressType(address, PICKUP)
 }
 
 export function isSearchAddress(address) {
-  return address && address.addressType === SEARCH
+  return isCurrentAddressType(address, SEARCH)
 }
 
 export function isDeliveryAddress(address) {
-  if (!address || !address.addressType) {
-    return false
-  }
   return (
-    address.addressType === RESIDENTIAL ||
-    address.addressType === COMMERCIAL ||
-    address.addressType === GIFT_REGISTRY
+    isCurrentAddressType(address, RESIDENTIAL) ||
+    isCurrentAddressType(address, COMMERCIAL) ||
+    isCurrentAddressType(address, GIFT_REGISTRY)
   )
 }
 

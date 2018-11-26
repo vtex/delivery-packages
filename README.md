@@ -818,6 +818,59 @@ An object containing all address fields like on availableAddresses of orderForm
 Type: `boolean`
 If the address refers to a residential address (to deliver items)
 
+## isGiftRegistry (address)
+
+Verify address refers to a gift list address
+
+##### Usage
+```js
+const { isGiftRegistry } = require('@vtex/delivery-packages/dist/address')
+
+isGiftRegistry({
+  addressId: '-4556418741084',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: '2',
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+})
+// -> false
+
+isGiftRegistry({
+  addressId: '141125d',
+  addressType: 'giftRegistry',
+  city: 'Rio de Janeiro',
+  complement: '',
+  country: 'BRA',
+  geoCoordinates: [-43.18080139160156, -22.96540069580078],
+  neighborhood: 'Copacabana',
+  number: '5',
+  postalCode: '22011050',
+  receiverName: 'auto auto',
+  reference: null,
+  state: 'RJ',
+  street: 'Rua General Azevedo Pimentel',
+})
+// -> true
+```
+
+**params:**
+- **address**
+Type: `object`
+An object containing all address fields like on availableAddresses of orderForm
+
+**returns:**
+- **isGiftRegistry**
+Type: `boolean`
+If the address refers to a gift list address
+
 
 ## getDeliveryAvailableAddresses (addresses)
 
