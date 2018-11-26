@@ -1,5 +1,6 @@
 import {
   isAddressComplete,
+  isGiftRegistry,
   isPickupAddress,
   isSearchAddress,
   isDeliveryAddress,
@@ -122,6 +123,31 @@ describe('Address', () => {
       expect(isDeliveryAddress1).toBeTruthy()
       expect(isDeliveryAddress2).toBeTruthy()
       expect(isDeliveryAddress3).toBeTruthy()
+    })
+  })
+
+  describe('isGiftRegistry', () => {
+    it('should be false if empty params are passed', () => {
+      const isGiftRegistryAddress1 = isGiftRegistry()
+      const isGiftRegistryAddress2 = isGiftRegistry({})
+
+      expect(isGiftRegistryAddress1).toBeFalsy()
+      expect(isGiftRegistryAddress2).toBeFalsy()
+    })
+
+    it('should be false if not gift registry address is passed', () => {
+      const isGiftRegistryAddress1 = isGiftRegistry(addresses.searchAddress)
+      const isGiftRegistryAddress2 = isGiftRegistry(addresses.pickupPointAddress)
+
+      expect(isGiftRegistryAddress1).toBeFalsy()
+      expect(isGiftRegistryAddress2).toBeFalsy()
+    })
+
+    it('should be true if residential address is passed', () => {
+      const isGiftRegistryAddress1 = isDeliveryAddress(
+        addresses.giftRegistryAddress
+      )
+      expect(isGiftRegistryAddress1).toBeTruthy()
     })
   })
 

@@ -43,8 +43,9 @@ export function getPickupAddress(pickupSla) {
 }
 
 export function isCurrentAddressType(address, addressType) {
-  if (address && !address.addressType) return false
-
+  if (address && !address.addressType) {
+    return false
+  }
   if (address && (typeof address.addressType === 'string')) {
     return address.addressType === addressType
   }
