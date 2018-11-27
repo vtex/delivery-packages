@@ -21,6 +21,14 @@ function groupPackages(items, criteria, order) {
 function groupDeliveries(items, criteria, order) {
   return addToPackage(items, criteria, order, (packages, item) => {
     return packages.find(pack => {
+      if (criteria.groupBySelectedSlaType) {
+        if (pack.selectedSlaType === getSlaType(item, order)) {
+          return true
+        }
+
+        return false
+      }
+
       if (
         criteria.shippingEstimate &&
         criteria.selectedSla &&

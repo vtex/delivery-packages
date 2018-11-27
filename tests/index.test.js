@@ -22,7 +22,7 @@ const {
   pickupSla,
 } = slas
 
-const { residentialAddress, pickupPointAddress } = addresses
+const { residentialAddress, pickupPointAddress, pickupPointAddress2 } = addresses
 
 describe('has one package with all items', () => {
   it('should create one parcel', () => {
@@ -1257,6 +1257,134 @@ describe('has one package with pickup checked in and the other with the normal d
     expect(result).toHaveLength(2)
     expect(result[0]).toEqual(expectedParcel1)
     expect(result[1]).toEqual(expectedParcel2)
+  })
+})
+
+describe('criteria groupBySelectedSlaType', () => {
+  describe('has one package with normal delivey, pickup checked in, scheduled delivery and pickup', () => {
+    it('should create three parcels, one with delivery (normal and scheduled), other with take away (pickup checked in) and another with pickup', () => {
+      const items = createItems(4)
+      const selectedAddresses = [pickupPointAddress2, residentialAddress]
+
+      const logisticsInfo = [
+        {
+          ...createLogisticsInfo(['normalSla', 'expressSla'], 1)[0],
+          selectedSla: slas.normalSla.id,
+          selectedDeliveryChannel: 'delivery',
+          addressId: addresses.residentialAddress.addressId,
+          itemIndex: 0,
+          itemId: 0,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupCheckedInSla'], 1)[0],
+          selectedSla: slas.pickupCheckedInSla.id,
+          selectedDeliveryChannel: 'pickup-in-point',
+          addressId: addresses.pickupPointAddress2.addressId,
+          itemIndex: 1,
+          itemId: 1,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'normalScheduledDeliverySla'], 1)[0],
+          selectedSla: slas.normalScheduledDeliverySla.id,
+          selectedDeliveryChannel: 'delivery',
+          addressId: addresses.residentialAddress.addressId,
+          itemIndex: 2,
+          itemId: 2,
+        },
+        {
+          ...createLogisticsInfo(['normalSla', 'pickupSla'], 1)[0],
+          selectedSla: slas.pickupSla.id,
+          selectedDeliveryChannel: 'pickup-in-point',
+          addressId: addresses.pickupPointAddress.addressId,
+          itemIndex: 3,
+          itemId: 3,
+        },
+      ]
+
+      const expectedParcel1 = {
+        deliveryIds: undefined,
+        deliveryWindow: null,
+        item: undefined,
+        address: residentialAddress,
+        items: [{ ...items[0], index: 0 }, { ...items[2], index: 2 }],
+        slas: [normalSla, expressSla],
+        deliveryChannel: 'delivery',
+        selectedSlaType: 'delivery',
+        package: undefined,
+        pickupFriendlyName: null,
+        seller: '1',
+        selectedSla: slas.normalSla.id,
+        selectedSlaObj: slas.normalSla,
+        shippingEstimate: slas.normalSla.shippingEstimate,
+        shippingEstimateDate: slas.normalSla.shippingEstimateDate,
+        price: 10000,
+        listPrice: 10000,
+        sellingPrice: 10000,
+      }
+
+      const expectedParcel2 = {
+        deliveryIds: undefined,
+        deliveryWindow: null,
+        item: undefined,
+        deliveryChannel: 'pickup-in-point',
+        selectedSlaType: 'take-away',
+        address: slas.pickupCheckedInSla.pickupStoreInfo.address,
+        items: [{ ...items[1], index: 1 }],
+        slas: [normalSla, pickupCheckedInSla],
+        package: undefined,
+        pickupFriendlyName:
+          slas.pickupCheckedInSla.pickupStoreInfo.friendlyName,
+        seller: '1',
+        selectedSla: slas.pickupCheckedInSla.id,
+        selectedSlaObj: slas.pickupCheckedInSla,
+        shippingEstimate: slas.pickupCheckedInSla.shippingEstimate,
+        shippingEstimateDate: slas.pickupCheckedInSla.shippingEstimateDate,
+        price: 0,
+        listPrice: 0,
+        sellingPrice: 0,
+      }
+
+      const expectedParcel3 = {
+        deliveryIds: undefined,
+        deliveryWindow: null,
+        item: undefined,
+        deliveryChannel: 'pickup-in-point',
+        selectedSlaType: 'pickup-in-point',
+        address: pickupPointAddress,
+        items: [{ ...items[3], index: 3 }],
+        slas: [normalSla, pickupSla],
+        package: undefined,
+        pickupFriendlyName:
+          slas.pickupSla.pickupStoreInfo.friendlyName,
+        seller: '1',
+        selectedSla: slas.pickupSla.id,
+        selectedSlaObj: slas.pickupSla,
+        shippingEstimate: slas.pickupSla.shippingEstimate,
+        shippingEstimateDate: slas.pickupSla.shippingEstimateDate,
+        price: 0,
+        listPrice: 0,
+        sellingPrice: 0,
+      }
+
+      const result = parcelify(
+        {
+          items,
+          shippingData: {
+            selectedAddresses,
+            logisticsInfo,
+          },
+          isCheckedIn: true,
+          checkedInPickupPointId,
+        },
+        { criteria: { groupBySelectedSlaType: true } }
+      )
+
+      expect(result).toHaveLength(3)
+
+      expect(result[0]).toEqual(expectedParcel1)
+      expect(result[1]).toEqual(expectedParcel2)
+      expect(result[2]).toEqual(expectedParcel3)
+    })
   })
 })
 
