@@ -1,4 +1,5 @@
 export const DEFAULT_CRITERIA = {
+  groupBySelectedSlaType: false,
   groupByAvailableDeliveryWindows: false,
   slaOptions: false,
   selectedSla: true,

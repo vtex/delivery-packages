@@ -15,6 +15,7 @@ There are many criteria to split items in different parcels. They are:
 5. Selected SLA Delivery Channel
 6. Packages already delivered (post purchase scenario)
 7. Group SLAs based on having a valid availableDeliveryWindows
+8. Selected SLA Type, distinguishing pickup from pickup checked in (take away)
 
 This module provides a consistent way to handle all those criteria.
 
@@ -99,6 +100,7 @@ Default:<br/>
 
 ```js
 {
+  groupBySelectedSlaType: false,
   groupByAvailableDeliveryWindows: false,
   slaOptions: false,
   selectedSla: true,
