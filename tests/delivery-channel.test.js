@@ -4,6 +4,7 @@ import {
   isPickup,
   isDelivery,
   findChannelById,
+  setSelectedDeliveryChannel,
 } from '../src/delivery-channel'
 import { DELIVERY, PICKUP_IN_STORE } from '../src/constants'
 
@@ -159,6 +160,46 @@ describe('Delivery channel', () => {
       expect(deliveryChannel2).toEqual(deliveryChannelObj)
       expect(deliveryChannel3).toEqual(pickupChannelObj)
       expect(deliveryChannel4).toEqual(pickupChannelObj)
+    })
+  })
+
+  describe('setSelectedDeliveryChannel', () => {
+    it('should set the selectedDeliveryChannel if logisticsInfo is object', () => {
+      const logisticsInfo = {
+        selectedDeliveryChannel: PICKUP_IN_STORE,
+      }
+
+      const result = setSelectedDeliveryChannel(logisticsInfo, DELIVERY)
+
+      const expectedResult = {
+        selectedDeliveryChannel: DELIVERY,
+      }
+
+      expect(result).toEqual(expectedResult)
+    })
+
+    it('should set the selectedDeliveryChannel if logisticsInfo is array of logisticsInfo', () => {
+      const logisticsInfo = [
+        {
+          selectedDeliveryChannel: PICKUP_IN_STORE,
+        },
+        {
+          selectedDeliveryChannel: PICKUP_IN_STORE,
+        },
+      ]
+
+      const result = setSelectedDeliveryChannel(logisticsInfo, DELIVERY)
+
+      const expectedResult = [
+        {
+          selectedDeliveryChannel: DELIVERY,
+        },
+        {
+          selectedDeliveryChannel: DELIVERY,
+        },
+      ]
+
+      expect(result).toEqual(expectedResult)
     })
   })
 })

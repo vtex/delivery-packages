@@ -52,6 +52,7 @@ $ npm install @vtex/delivery-packages
 - [isPickup](#ispickup-deliverychannelsource)
 - [isDelivery](#isdelivery-deliverychannelsource)
 - [findChannelById](#findchannelbyid-logisticsinfoitem-deliverychannelsource)
+- [setSelectedDeliveryChannel](#setSelectedDeliveryChannel-logisticsInfo-deliveryChannel)
 
 #### Items
 
@@ -263,6 +264,7 @@ parcelify(order, { criteria: { seller: false } })
 ```
 
 ## Address
+
 > @vtex/delivery-packages/dist/address
 
 ### addAddressId (address)
@@ -270,6 +272,7 @@ parcelify(order, { criteria: { seller: false } })
 Add property addressId with random hash string (uuid) if not present on address object passed
 
 #### Usage
+
 ```js
 const { addAddressId } = require('@vtex/delivery-packages/dist/address')
 
@@ -336,60 +339,72 @@ addAddressId({
 ```
 
 **params:**
+
 - **address**
-Type: `object`
-An object containing all address fields like on availableAddresses of orderForm
+  Type: `object`
+  An object containing all address fields like on availableAddresses of orderForm
 
 **returns:**
+
 - **newAddress**
-Type: `object`
-An object containing all address fields like on availableAddresses of orderForm with an addressId included
+  Type: `object`
+  An object containing all address fields like on availableAddresses of orderForm with an addressId included
 
 ### addPickupPointAddresses (addresses, pickupSlas)
 
 Add all addresses present on pickupSlas that are not already on addresses list
 
 #### Usage
-```js
-const { addPickupPointAddresses } = require('@vtex/delivery-packages/dist/address')
 
-addPickupPointAddresses([{
-  addressId: '1234',
-  addressType: 'residential',
-  receiverName: 'John Doe',
-  street: 'Rua Barão',
-  number: '2',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22231-100',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}], [{
-  id: 'Retirada normal',
-  deliveryChannel: 'pickup-in-point',
-  pickupStoreInfo: {
-    isPickupStore: true,
-    friendlyName: 'Shopping da Gávea',
-    address: {
-      addressId: '141125e',
-      addressType: 'pickup',
+```js
+const {
+  addPickupPointAddresses,
+} = require('@vtex/delivery-packages/dist/address')
+
+addPickupPointAddresses(
+  [
+    {
+      addressId: '1234',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
       city: 'Rio de Janeiro',
-      complement: '',
-      country: 'BRA',
-      geoCoordinates: [-43.18080139160156, -22.96540069580078],
-      neighborhood: 'Copacabana',
-      number: '5',
-      postalCode: '22011050',
-      receiverName: null,
-      reference: null,
       state: 'RJ',
-      street: 'Rua General Azevedo Pimentel',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
     },
-  },
-}])
+  ],
+  [
+    {
+      id: 'Retirada normal',
+      deliveryChannel: 'pickup-in-point',
+      pickupStoreInfo: {
+        isPickupStore: true,
+        friendlyName: 'Shopping da Gávea',
+        address: {
+          addressId: '141125e',
+          addressType: 'pickup',
+          city: 'Rio de Janeiro',
+          complement: '',
+          country: 'BRA',
+          geoCoordinates: [-43.18080139160156, -22.96540069580078],
+          neighborhood: 'Copacabana',
+          number: '5',
+          postalCode: '22011050',
+          receiverName: null,
+          reference: null,
+          state: 'RJ',
+          street: 'Rua General Azevedo Pimentel',
+        },
+      },
+    },
+  ]
+)
 // -> [{
 //   addressId: '1234',
 //   addressType: 'residential',
@@ -420,140 +435,165 @@ addPickupPointAddresses([{
 //   street: 'Rua General Azevedo Pimentel',
 // }]
 ```
+
 **params:**
+
 - **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on availableAddresses of orderForm
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on availableAddresses of orderForm
 - **pickupSlas**
-Type: `Array<object>`
-An array which each item is an object containing a list of slas of the pickup-in-point deliveryChannel
+  Type: `Array<object>`
+  An array which each item is an object containing a list of slas of the pickup-in-point deliveryChannel
 
 **returns:**
+
 - **newAddresses**
-Type: `Array<object>`
-New list of addresses containing the pickup addresses
+  Type: `Array<object>`
+  New list of addresses containing the pickup addresses
 
 ### findAddressIndex (addresses, searchAddress)
 
 Find a reference address index on addresses list according to the reference addressId or -1 if it doesn't find it
 
 #### Usage
+
 ```js
 const { findAddressIndex } = require('@vtex/delivery-packages/dist/address')
 
-findAddressIndex([{
-  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
-  addressType: 'residential',
-  receiverName: 'John Doe',
-  street: 'Rua Barão',
-  number: '2',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22231-100',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}, {
-  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
-  addressType: 'commercial',
-  receiverName: 'John Doe',
-  street: 'Rua dos bobos',
-  number: '0',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22250-040',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}], { addressId: '935befd9-dcc3-45f3-e327-9d8611e43630' })
+findAddressIndex(
+  [
+    {
+      addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+      addressType: 'commercial',
+      receiverName: 'John Doe',
+      street: 'Rua dos bobos',
+      number: '0',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22250-040',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
+  { addressId: '935befd9-dcc3-45f3-e327-9d8611e43630' }
+)
 // -> 0
 
-findAddressIndex([{
-  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
-  addressType: 'residential',
-  receiverName: 'John Doe',
-  street: 'Rua Barão',
-  number: '2',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22231-100',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}, {
-  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
-  addressType: 'commercial',
-  receiverName: 'John Doe',
-  street: 'Rua dos bobos',
-  number: '0',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22250-040',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}], { addressId: 'not-found' })
+findAddressIndex(
+  [
+    {
+      addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+      addressType: 'commercial',
+      receiverName: 'John Doe',
+      street: 'Rua dos bobos',
+      number: '0',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22250-040',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
+  { addressId: 'not-found' }
+)
 // -> -1
 ```
 
 **params:**
+
 - **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on availableAddresses of orderForm
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on availableAddresses of orderForm
 - **searchAddress**
-Type: `object`
-An object with addressId reference to be used to search
+  Type: `object`
+  An object with addressId reference to be used to search
 
 **returns:**
+
 - **index**
-Type: `number`
-Position on addresses of the searchAddress reference according to its addressId
+  Type: `number`
+  Position on addresses of the searchAddress reference according to its addressId
 
 ### findAddress (addresses, searchAddress)
 
 Find a reference address on addresses list according to the reference addressId or null if it doesn't find it
 
 #### Usage
+
 ```js
 const { findAddress } = require('@vtex/delivery-packages/dist/address')
 
-findAddress([{
-  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
-  addressType: 'residential',
-  receiverName: 'John Doe',
-  street: 'Rua Barão',
-  number: '2',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22231-100',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}, {
-  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
-  addressType: 'commercial',
-  receiverName: 'John Doe',
-  street: 'Rua dos bobos',
-  number: '0',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22250-040',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}], { addressId: '935befd9-dcc3-45f3-e327-9d8611e43630' })
+findAddress(
+  [
+    {
+      addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+      addressType: 'commercial',
+      receiverName: 'John Doe',
+      street: 'Rua dos bobos',
+      number: '0',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22250-040',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
+  { addressId: '935befd9-dcc3-45f3-e327-9d8611e43630' }
+)
 // -> {
 //   addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
 //   addressType: 'residential',
@@ -570,88 +610,103 @@ findAddress([{
 //   geoCoordinates: []
 // }
 
-findAddress([{
-  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
-  addressType: 'residential',
-  receiverName: 'John Doe',
-  street: 'Rua Barão',
-  number: '2',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22231-100',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}, {
-  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
-  addressType: 'commercial',
-  receiverName: 'John Doe',
-  street: 'Rua dos bobos',
-  number: '0',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22250-040',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}], { addressId: 'not-found' })
+findAddress(
+  [
+    {
+      addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+      addressType: 'commercial',
+      receiverName: 'John Doe',
+      street: 'Rua dos bobos',
+      number: '0',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22250-040',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
+  { addressId: 'not-found' }
+)
 // -> null
 ```
 
 **params:**
+
 - **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on availableAddresses of orderForm
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on availableAddresses of orderForm
 - **searchAddress**
-Type: `object`
-An object with addressId reference to be used to search
+  Type: `object`
+  An object with addressId reference to be used to search
 
 **returns:**
+
 - **addressFound**
-Type: `object`
-The address found
+  Type: `object`
+  The address found
 
 ### findAddressByPostalCode (addresses, searchAddress)
 
 Works like findAddress above but the searchAddress postalCode property is used instead
 
 #### Usage
+
 ```js
 const { findAddress } = require('@vtex/delivery-packages/dist/address')
 
-findAddress([{
-  addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
-  addressType: 'residential',
-  receiverName: 'John Doe',
-  street: 'Rua Barão',
-  number: '2',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22231-100',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}, {
-  addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
-  addressType: 'commercial',
-  receiverName: 'John Doe',
-  street: 'Rua dos bobos',
-  number: '0',
-  complement: null,
-  neighborhood: 'Botafogo',
-  postalCode: '22250-040',
-  city: 'Rio de Janeiro',
-  state: 'RJ',
-  country: 'BRA',
-  reference: null,
-  geoCoordinates: [],
-}], { postalCode: '22250-040' })
+findAddress(
+  [
+    {
+      addressId: '935befd9-dcc3-45f3-e327-9d8611e43630',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
+      addressType: 'commercial',
+      receiverName: 'John Doe',
+      street: 'Rua dos bobos',
+      number: '0',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22250-040',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
+  { postalCode: '22250-040' }
+)
 // -> {
 //   addressId: '783978bd-e71c-4602-4bc6-387cc68f226d',
 //   addressType: 'commercial',
@@ -674,6 +729,7 @@ findAddress([{
 Verify address has all required basic fields
 
 ##### Usage
+
 ```js
 const { isAddressComplete } = require('@vtex/delivery-packages/dist/address')
 
@@ -705,20 +761,23 @@ isAddressComplete({
 ```
 
 **params:**
+
 - **address**
-Type: `object`
-An object containing all address fields like on availableAddresses of orderForm
+  Type: `object`
+  An object containing all address fields like on availableAddresses of orderForm
 
 **returns:**
+
 - **isAddressComplete**
-Type: `boolean`
-If the address has all required fields
+  Type: `boolean`
+  If the address has all required fields
 
 ## isPickupAddress (address)
 
 Verify address refers to a pickup point
 
 ##### Usage
+
 ```js
 const { isPickupAddress } = require('@vtex/delivery-packages/dist/address')
 
@@ -758,20 +817,23 @@ isPickupAddress({
 ```
 
 **params:**
+
 - **address**
-Type: `object`
-An object containing all address fields like on availableAddresses of orderForm
+  Type: `object`
+  An object containing all address fields like on availableAddresses of orderForm
 
 **returns:**
+
 - **isPickupAddress**
-Type: `boolean`
-If the address refers to a pickup point
+  Type: `boolean`
+  If the address refers to a pickup point
 
 ## isDeliveryAddress (address)
 
 Verify address refers to a residential address (to deliver items)
 
 ##### Usage
+
 ```js
 const { isDeliveryAddress } = require('@vtex/delivery-packages/dist/address')
 
@@ -811,20 +873,23 @@ isDeliveryAddress({
 ```
 
 **params:**
+
 - **address**
-Type: `object`
-An object containing all address fields like on availableAddresses of orderForm
+  Type: `object`
+  An object containing all address fields like on availableAddresses of orderForm
 
 **returns:**
+
 - **isDeliveryAddress**
-Type: `boolean`
-If the address refers to a residential address (to deliver items)
+  Type: `boolean`
+  If the address refers to a residential address (to deliver items)
 
 ## isGiftRegistry (address)
 
 Verify address refers to a gift list address
 
 ##### Usage
+
 ```js
 const { isGiftRegistry } = require('@vtex/delivery-packages/dist/address')
 
@@ -864,23 +929,27 @@ isGiftRegistry({
 ```
 
 **params:**
+
 - **address**
-Type: `object`
-An object containing all address fields like on availableAddresses of orderForm
+  Type: `object`
+  An object containing all address fields like on availableAddresses of orderForm
 
 **returns:**
-- **isGiftRegistry**
-Type: `boolean`
-If the address refers to a gift list address
 
+- **isGiftRegistry**
+  Type: `boolean`
+  If the address refers to a gift list address
 
 ## getDeliveryAvailableAddresses (addresses)
 
 Filter only residential and complete address
 
 ##### Usage
+
 ```js
-const { getDeliveryAvailableAddresses } = require('@vtex/delivery-packages/dist/address')
+const {
+  getDeliveryAvailableAddresses,
+} = require('@vtex/delivery-packages/dist/address')
 
 getDeliveryAvailableAddresses([
   {
@@ -912,7 +981,7 @@ getDeliveryAvailableAddresses([
     reference: null,
     state: 'RJ',
     street: 'Rua General Azevedo Pimentel',
-  }
+  },
 ])
 // -> [
 //   {
@@ -934,20 +1003,23 @@ getDeliveryAvailableAddresses([
 ```
 
 **params:**
+
 - **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on availableAddresses of orderForm
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on availableAddresses of orderForm
 
 **returns:**
+
 - **filteredAddresses**
-Type: `Array<object>`
-Filtered addresses that contain only residential and complete address
+  Type: `Array<object>`
+  Filtered addresses that contain only residential and complete address
 
 ## groupByAddressType (addresses)
 
 Create an object where each key is an address type and each value is an array of addresses grouped by each address type
 
 ##### Usage
+
 ```js
 const { groupByAddressType } = require('@vtex/delivery-packages/dist/address')
 
@@ -981,7 +1053,7 @@ groupByAddressType([
     reference: null,
     state: 'RJ',
     street: 'Rua General Azevedo Pimentel',
-  }
+  },
 ])
 // -> {
 //   residential: [{
@@ -1018,104 +1090,46 @@ groupByAddressType([
 ```
 
 **params:**
+
 - **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on selectedAddresses of orderForm
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on selectedAddresses of orderForm
 
 **returns:**
+
 - **group of addresses**
-Type: `object`
-An object where each key is an address type and each value is an array of addresses grouped by each address type
+  Type: `object`
+  An object where each key is an address type and each value is an array of addresses grouped by each address type
 
 ## addOrReplaceAddressTypeOnList (addresses, newAddress)
 
 Adds new address if the addressType of newAddress is not found or replace an existing address of that type
 
 ##### Usage
+
 ```js
-const { addOrReplaceAddressTypeOnList } = require('@vtex/delivery-packages/dist/address')
+const {
+  addOrReplaceAddressTypeOnList,
+} = require('@vtex/delivery-packages/dist/address')
 
-addOrReplaceAddressTypeOnList([
-  {
-    addressId: '-4556418741084',
-    addressType: 'residential',
-    receiverName: 'John Doe',
-    street: 'Rua Barão',
-    number: '2',
-    complement: null,
-    neighborhood: 'Botafogo',
-    postalCode: '22231-100',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    country: 'BRA',
-    reference: null,
-    geoCoordinates: [],
-  }
-],
-{
-  addressId: '141125d',
-  addressType: 'pickup',
-  city: 'Rio de Janeiro',
-  complement: '',
-  country: 'BRA',
-  geoCoordinates: [-43.18080139160156, -22.96540069580078],
-  neighborhood: 'Copacabana',
-  number: '5',
-  postalCode: '22011050',
-  receiverName: 'auto auto',
-  reference: null,
-  state: 'RJ',
-  street: 'Rua General Azevedo Pimentel',
-})
-// -> [
-//   {
-//     addressId: '-4556418741084',
-//     addressType: 'residential',
-//     receiverName: 'John Doe',
-//     street: 'Rua Barão',
-//     number: '2',
-//     complement: null,
-//     neighborhood: 'Botafogo',
-//     postalCode: '22231-100',
-//     city: 'Rio de Janeiro',
-//     state: 'RJ',
-//     country: 'BRA',
-//     reference: null,
-//     geoCoordinates: [],
-//   },
-//   {
-//     addressId: '141125d',
-//     addressType: 'pickup',
-//     city: 'Rio de Janeiro',
-//     complement: '',
-//     country: 'BRA',
-//     geoCoordinates: [-43.18080139160156, -22.96540069580078],
-//     neighborhood: 'Copacabana',
-//     number: '5',
-//     postalCode: '22011050',
-//     receiverName: 'auto auto',
-//     reference: null,
-//     state: 'RJ',
-//     street: 'Rua General Azevedo Pimentel',
-//   }
-// ]
-
-addOrReplaceAddressTypeOnList([
-  {
-    addressId: '-4556418741084',
-    addressType: 'residential',
-    receiverName: 'John Doe',
-    street: 'Rua Barão',
-    number: '2',
-    complement: null,
-    neighborhood: 'Botafogo',
-    postalCode: '22231-100',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    country: 'BRA',
-    reference: null,
-    geoCoordinates: [],
-  },
+addOrReplaceAddressTypeOnList(
+  [
+    {
+      addressId: '-4556418741084',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
   {
     addressId: '141125d',
     addressType: 'pickup',
@@ -1131,108 +1145,7 @@ addOrReplaceAddressTypeOnList([
     state: 'RJ',
     street: 'Rua General Azevedo Pimentel',
   }
-], {
-  addressId: '1234',
-  addressType: 'pickup',
-  city: 'Rio de Janeiro',
-  complement: '',
-  country: 'BRA',
-  geoCoordinates: [],
-  neighborhood: 'Botafogo',
-  number: '300',
-  postalCode: '22250040',
-  receiverName: 'auto auto',
-  reference: null,
-  state: 'RJ',
-  street: 'Praia de botafogo',
-})
-// -> [
-//   {
-//     addressId: '-4556418741084',
-//     addressType: 'residential',
-//     receiverName: 'John Doe',
-//     street: 'Rua Barão',
-//     number: '2',
-//     complement: null,
-//     neighborhood: 'Botafogo',
-//     postalCode: '22231-100',
-//     city: 'Rio de Janeiro',
-//     state: 'RJ',
-//     country: 'BRA',
-//     reference: null,
-//     geoCoordinates: [],
-//   },
-//   {
-//     addressId: '1234',
-//     addressType: 'pickup',
-//     city: 'Rio de Janeiro',
-//     complement: '',
-//     country: 'BRA',
-//     geoCoordinates: [],
-//     neighborhood: 'Botafogo',
-//     number: '300',
-//     postalCode: '22250040',
-//     receiverName: 'auto auto',
-//     reference: null,
-//     state: 'RJ',
-//     street: 'Praia de botafogo',
-//   }
-// ]
-```
-
-**params:**
-- **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on selectedAddresses of orderForm
-- **newAddress**
-Type: `string`
-New address to be included on the list of addresses
-
-**returns:**
-- **new addresses**
-Type: `object`
-New list of addresses with the newAddress included
-
-## addOrReplaceAddressOnList (addresses, newAddress)
-
-Adds new address if the newAddress is not found or replace an existing address with the same addressId
-
-##### Usage
-```js
-const { addOrReplaceAddressOnList } = require('@vtex/delivery-packages/dist/address')
-
-addOrReplaceAddressOnList([
-  {
-    addressId: '-4556418741084',
-    addressType: 'residential',
-    receiverName: 'John Doe',
-    street: 'Rua Barão',
-    number: '2',
-    complement: null,
-    neighborhood: 'Botafogo',
-    postalCode: '22231-100',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    country: 'BRA',
-    reference: null,
-    geoCoordinates: [],
-  }
-],
-{
-  addressId: '141125d',
-  addressType: 'pickup',
-  city: 'Rio de Janeiro',
-  complement: '',
-  country: 'BRA',
-  geoCoordinates: [-43.18080139160156, -22.96540069580078],
-  neighborhood: 'Copacabana',
-  number: '5',
-  postalCode: '22011050',
-  receiverName: 'auto auto',
-  reference: null,
-  state: 'RJ',
-  street: 'Rua General Azevedo Pimentel',
-})
+)
 // -> [
 //   {
 //     addressId: '-4556418741084',
@@ -1266,52 +1179,55 @@ addOrReplaceAddressOnList([
 //   }
 // ]
 
-addOrReplaceAddressTypeOnList([
-  {
-    addressId: '-4556418741084',
-    addressType: 'residential',
-    receiverName: 'John Doe',
-    street: 'Rua Barão',
-    number: '2',
-    complement: null,
-    neighborhood: 'Botafogo',
-    postalCode: '22231-100',
-    city: 'Rio de Janeiro',
-    state: 'RJ',
-    country: 'BRA',
-    reference: null,
-    geoCoordinates: [],
-  },
+addOrReplaceAddressTypeOnList(
+  [
+    {
+      addressId: '-4556418741084',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '141125d',
+      addressType: 'pickup',
+      city: 'Rio de Janeiro',
+      complement: '',
+      country: 'BRA',
+      geoCoordinates: [-43.18080139160156, -22.96540069580078],
+      neighborhood: 'Copacabana',
+      number: '5',
+      postalCode: '22011050',
+      receiverName: 'auto auto',
+      reference: null,
+      state: 'RJ',
+      street: 'Rua General Azevedo Pimentel',
+    },
+  ],
   {
     addressId: '1234',
     addressType: 'pickup',
     city: 'Rio de Janeiro',
     complement: '',
     country: 'BRA',
-    geoCoordinates: [-43.18080139160156, -22.96540069580078],
-    neighborhood: 'Copacabana',
-    number: '5',
-    postalCode: '22011050',
+    geoCoordinates: [],
+    neighborhood: 'Botafogo',
+    number: '300',
+    postalCode: '22250040',
     receiverName: 'auto auto',
     reference: null,
     state: 'RJ',
-    street: 'Rua General Azevedo Pimentel',
+    street: 'Praia de botafogo',
   }
-], {
-  addressId: '1234',
-  addressType: 'pickup',
-  city: 'Rio de Janeiro',
-  complement: '',
-  country: 'BRA',
-  geoCoordinates: [],
-  neighborhood: 'Botafogo',
-  number: '300',
-  postalCode: '22250040',
-  receiverName: 'auto auto',
-  reference: null,
-  state: 'RJ',
-  street: 'Praia de botafogo',
-})
+)
 // -> [
 //   {
 //     addressId: '-4556418741084',
@@ -1347,17 +1263,195 @@ addOrReplaceAddressTypeOnList([
 ```
 
 **params:**
+
 - **addresses**
-Type: `Array<object>`
-An array which each item is an object containing all address fields like on selectedAddresses of orderForm
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on selectedAddresses of orderForm
 - **newAddress**
-Type: `string`
-New address to be included on the list of addresses
+  Type: `string`
+  New address to be included on the list of addresses
 
 **returns:**
+
 - **new addresses**
-Type: `object`
-New list of addresses with the newAddress included
+  Type: `object`
+  New list of addresses with the newAddress included
+
+## addOrReplaceAddressOnList (addresses, newAddress)
+
+Adds new address if the newAddress is not found or replace an existing address with the same addressId
+
+##### Usage
+
+```js
+const {
+  addOrReplaceAddressOnList,
+} = require('@vtex/delivery-packages/dist/address')
+
+addOrReplaceAddressOnList(
+  [
+    {
+      addressId: '-4556418741084',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+  ],
+  {
+    addressId: '141125d',
+    addressType: 'pickup',
+    city: 'Rio de Janeiro',
+    complement: '',
+    country: 'BRA',
+    geoCoordinates: [-43.18080139160156, -22.96540069580078],
+    neighborhood: 'Copacabana',
+    number: '5',
+    postalCode: '22011050',
+    receiverName: 'auto auto',
+    reference: null,
+    state: 'RJ',
+    street: 'Rua General Azevedo Pimentel',
+  }
+)
+// -> [
+//   {
+//     addressId: '-4556418741084',
+//     addressType: 'residential',
+//     receiverName: 'John Doe',
+//     street: 'Rua Barão',
+//     number: '2',
+//     complement: null,
+//     neighborhood: 'Botafogo',
+//     postalCode: '22231-100',
+//     city: 'Rio de Janeiro',
+//     state: 'RJ',
+//     country: 'BRA',
+//     reference: null,
+//     geoCoordinates: [],
+//   },
+//   {
+//     addressId: '141125d',
+//     addressType: 'pickup',
+//     city: 'Rio de Janeiro',
+//     complement: '',
+//     country: 'BRA',
+//     geoCoordinates: [-43.18080139160156, -22.96540069580078],
+//     neighborhood: 'Copacabana',
+//     number: '5',
+//     postalCode: '22011050',
+//     receiverName: 'auto auto',
+//     reference: null,
+//     state: 'RJ',
+//     street: 'Rua General Azevedo Pimentel',
+//   }
+// ]
+
+addOrReplaceAddressTypeOnList(
+  [
+    {
+      addressId: '-4556418741084',
+      addressType: 'residential',
+      receiverName: 'John Doe',
+      street: 'Rua Barão',
+      number: '2',
+      complement: null,
+      neighborhood: 'Botafogo',
+      postalCode: '22231-100',
+      city: 'Rio de Janeiro',
+      state: 'RJ',
+      country: 'BRA',
+      reference: null,
+      geoCoordinates: [],
+    },
+    {
+      addressId: '1234',
+      addressType: 'pickup',
+      city: 'Rio de Janeiro',
+      complement: '',
+      country: 'BRA',
+      geoCoordinates: [-43.18080139160156, -22.96540069580078],
+      neighborhood: 'Copacabana',
+      number: '5',
+      postalCode: '22011050',
+      receiverName: 'auto auto',
+      reference: null,
+      state: 'RJ',
+      street: 'Rua General Azevedo Pimentel',
+    },
+  ],
+  {
+    addressId: '1234',
+    addressType: 'pickup',
+    city: 'Rio de Janeiro',
+    complement: '',
+    country: 'BRA',
+    geoCoordinates: [],
+    neighborhood: 'Botafogo',
+    number: '300',
+    postalCode: '22250040',
+    receiverName: 'auto auto',
+    reference: null,
+    state: 'RJ',
+    street: 'Praia de botafogo',
+  }
+)
+// -> [
+//   {
+//     addressId: '-4556418741084',
+//     addressType: 'residential',
+//     receiverName: 'John Doe',
+//     street: 'Rua Barão',
+//     number: '2',
+//     complement: null,
+//     neighborhood: 'Botafogo',
+//     postalCode: '22231-100',
+//     city: 'Rio de Janeiro',
+//     state: 'RJ',
+//     country: 'BRA',
+//     reference: null,
+//     geoCoordinates: [],
+//   },
+//   {
+//     addressId: '1234',
+//     addressType: 'pickup',
+//     city: 'Rio de Janeiro',
+//     complement: '',
+//     country: 'BRA',
+//     geoCoordinates: [],
+//     neighborhood: 'Botafogo',
+//     number: '300',
+//     postalCode: '22250040',
+//     receiverName: 'auto auto',
+//     reference: null,
+//     state: 'RJ',
+//     street: 'Praia de botafogo',
+//   }
+// ]
+```
+
+**params:**
+
+- **addresses**
+  Type: `Array<object>`
+  An array which each item is an object containing all address fields like on selectedAddresses of orderForm
+- **newAddress**
+  Type: `string`
+  New address to be included on the list of addresses
+
+**returns:**
+
+- **new addresses**
+  Type: `object`
+  New list of addresses with the newAddress included
 
 ## Delivery Channel
 
@@ -1494,6 +1588,48 @@ findChannelById(
   Type: `object`
   Object like `{ id: 'delivery' }` or `{ id: 'pickup-in-point' }`
 
+### setSelectedDeliveryChannel (logisticsInfo, deliveryChannel)
+
+Set the `selectedDeliveryChannel` property for single or multiple logisticsInfo
+
+##### Usage
+
+```js
+const {
+  selectedDeliveryChannel,
+} = require('@vtex/delivery-packages/dist/delivery-channel')
+
+selectedDeliveryChannel(
+  { selectedDeliveryChannel: 'delivery' },
+  'pickup-in-point'
+)
+// -> { selectedDeliveryChannel: 'pickup-in-point' }
+
+selectedDeliveryChannel(
+  [
+    { selectedDeliveryChannel: 'pickup-in-point' },
+    { selectedDeliveryChannel: 'pickup-in-point' },
+  ],
+  'delivery'
+)
+// -> [{ selectedDeliveryChannel: 'delivery' }, { selectedDeliveryChannel: 'delivery' }]
+```
+
+**params:**
+
+- **logisticsInfo**
+  Type: `object` or `Array<object>`
+  An object containing a deliveryChannels array
+- **deliveryChannelSource**
+  Type: `object` or `string`
+  An object containing a deliveryChannel string or the string itself
+
+**returns:**
+
+- **deliveryChannel**
+  Type: `object` or `Array<object>`
+  Object like `{ selectedDeliveryChannel: 'delivery' }` or `[{ selectedDeliveryChannel: 'pickup-in-point' }]`
+
 ## Items
 
 > @vtex/delivery-packages/dist/items
@@ -1596,13 +1732,11 @@ getDeliveredItems({ items, packages })
 Return multiple values with information about the items indexes
 
 ##### Usage
+
 ```js
 const { getItemsIndexes } = require('@vtex/delivery-packages/dist/items')
 
-const items = [
-  { itemIndex: 0, sla: 'sla1' },
-  { itemIndex: 2, sla: 'sla2' },
-]
+const items = [{ itemIndex: 0, sla: 'sla1' }, { itemIndex: 2, sla: 'sla2' }]
 
 getItemsIndexes(items)
 // -> {
@@ -1614,13 +1748,15 @@ getItemsIndexes(items)
 ```
 
 **params:**
+
 - **items**
-Type: `Array<object>`
-Array of items with itemIndex keys like the logisticsInfo of the orderForm
+  Type: `Array<object>`
+  Array of items with itemIndex keys like the logisticsInfo of the orderForm
 
 **returns:**
+
 - **indexes context**
-Type: { indexes: `Array<number>`, otherIndexes: `Array<number>`, indexesMap: `object`, maxIndex: `number`}
+  Type: { indexes: `Array<number>`, otherIndexes: `Array<number>`, indexesMap: `object`, maxIndex: `number`}
 
 indexes: an array with all the numbers matching the items passed
 
@@ -2521,73 +2657,78 @@ filterLogisticsInfo(logisticsInfo, { items }, keepSize)
 Get new logisticsInfo and selectedAddresses making sure all pickup addresses that are on a selectedSla are included on selectedAddresses list and then making sure all logisticsInfo items have addressIds matching the ones on selectedAddresses.
 
 ##### Usage
+
 ```js
-const { getNewLogisticsMatchingSelectedAddresses } = require('@vtex/delivery-packages/dist/shipping')
+const {
+  getNewLogisticsMatchingSelectedAddresses,
+} = require('@vtex/delivery-packages/dist/shipping')
 
 const logisticsInfo = [
   {
     // You can pass all the properties of the logisticsInfo
-    "addressId": "-4556418741084",
-    "selectedSla": "MeuPickupPoint",
-    "selectedDeliveryChannel": "pickup-in-point",
-    "itemIndex": 0,
-    "slas": [
+    addressId: '-4556418741084',
+    selectedSla: 'MeuPickupPoint',
+    selectedDeliveryChannel: 'pickup-in-point',
+    itemIndex: 0,
+    slas: [
       {
-      	"id": "MeuPickupPoint",
-      	"deliveryChannel": "pickup-in-point",
-      	"name": "VTEX RJ (1b4e9b2)",
-      	"shippingEstimate": "0bd",
-      	"price": 0,
-      	"pickupPointId": "1_1b4e9b2",
-      	"pickupStoreInfo": {
-      		"isPickupStore": true,
-      		"friendlyName": "VTEX RJ",
-      		"address": {
-      			"addressType": "pickup",
-      			"receiverName": null,
-      			"addressId": "1b4e9b2",
-      			"postalCode": "22250040",
-      			"city": "Rio de Janeiro",
-      			"state": "RJ",
-      			"country": "BRA",
-      			"street": "Praia de Botafogo",
-      			"number": "300",
-      			"neighborhood": "Botafogo",
-      			"complement": "",
-      			"reference": null,
-      			"geoCoordinates": [-43.1822662, -22.9459858]
-      		}
-      	}
-      }
-    ]
+        id: 'MeuPickupPoint',
+        deliveryChannel: 'pickup-in-point',
+        name: 'VTEX RJ (1b4e9b2)',
+        shippingEstimate: '0bd',
+        price: 0,
+        pickupPointId: '1_1b4e9b2',
+        pickupStoreInfo: {
+          isPickupStore: true,
+          friendlyName: 'VTEX RJ',
+          address: {
+            addressType: 'pickup',
+            receiverName: null,
+            addressId: '1b4e9b2',
+            postalCode: '22250040',
+            city: 'Rio de Janeiro',
+            state: 'RJ',
+            country: 'BRA',
+            street: 'Praia de Botafogo',
+            number: '300',
+            neighborhood: 'Botafogo',
+            complement: '',
+            reference: null,
+            geoCoordinates: [-43.1822662, -22.9459858],
+          },
+        },
+      },
+    ],
   },
   {
-    "addressId": null,
-    "selectedSla": "Normal",
-    "selectedDeliveryChannel": "delivery",
-    "itemIndex": 1,
-    "slas": [
+    addressId: null,
+    selectedSla: 'Normal',
+    selectedDeliveryChannel: 'delivery',
+    itemIndex: 1,
+    slas: [
       // You can pass all the properties of the sla
-      { "id": "Normal", "deliveryChannel": "delivery" }
-    ]
-  }
+      { id: 'Normal', deliveryChannel: 'delivery' },
+    ],
+  },
 ]
 
-const selectedAddresses = [{
-  "addressId": "-4556418741084",
-  "addressType": "residential",
-  "receiverName": "John Doe",
-  "street": "Rua Barão",
-  "number": "2",
-  "complement": null,
-  "neighborhood": "Botafogo",
-  "postalCode": "22231-100",
-  "city": "Rio de Janeiro",
-  "state": "RJ",
-  "country": "BRA",
-  "reference": null,
-  "geoCoordinates": [],
-}]
+const selectedAddresses = [
+  {
+    addressId: '-4556418741084',
+    addressType: 'residential',
+    receiverName: 'John Doe',
+    street: 'Rua Barão',
+    number: '2',
+    complement: null,
+    neighborhood: 'Botafogo',
+    postalCode: '22231-100',
+    city: 'Rio de Janeiro',
+    state: 'RJ',
+    country: 'BRA',
+    reference: null,
+    geoCoordinates: [],
+  },
+]
 
 getNewLogisticsMatchingSelectedAddresses(logisticsInfo, selectedAddresses)
 // -> {
@@ -2668,43 +2809,45 @@ getNewLogisticsMatchingSelectedAddresses(logisticsInfo, selectedAddresses)
 ```
 
 **params:**
+
 - **logisticsInfo**
-Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
+  Type: `Array<object>`
+  The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 - **selectedAddresses**
-Type: `Array<object>`
-The selectedAddresses like the one inside `orderForm.shippingData` with address objects that are related to the order
-**returns:**
+  Type: `Array<object>`
+  The selectedAddresses like the one inside `orderForm.shippingData` with address objects that are related to the order
+  **returns:**
 - **new object with new logisticsInfo and new selectedAddresses**
-Type: `{ logisticsInfo: Array<object>, selectedAddresses: Array<object> }`
-New logisticsInfo and selectedAddresses with matching addressIds and with all pickup addresses included
+  Type: `{ logisticsInfo: Array<object>, selectedAddresses: Array<object> }`
+  New logisticsInfo and selectedAddresses with matching addressIds and with all pickup addresses included
 
 ### mergeLogisticsInfos (logisticsInfo1, logisticsInfo2)
 
 Get new logisticsInfo with the merged items from logisticsInfo1 and logisticsInfo2
 
 ##### Usage
+
 ```js
 const { mergeLogisticsInfos } = require('@vtex/delivery-packages/dist/shipping')
 
 const logisticsInfo1 = [
   {
     // You can pass all the properties of the logisticsInfo
-    "itemIndex": 0,
-    "selectedSla": "sla1",
+    itemIndex: 0,
+    selectedSla: 'sla1',
   },
   {
     // You can pass all the properties of the logisticsInfo
-    "itemIndex": 2,
-    "selectedSla": "sla3",
-  }
+    itemIndex: 2,
+    selectedSla: 'sla3',
+  },
 ]
 const logisticsInfo2 = [
   {
     // You can pass all the properties of the logisticsInfo
-    "itemIndex": 1,
-    "selectedSla": "sla2",
-  }
+    itemIndex: 1,
+    selectedSla: 'sla2',
+  },
 ]
 mergeLogisticsInfos(logisticsInfo1, logisticsInfo2)
 // -> [
@@ -2724,16 +2867,17 @@ mergeLogisticsInfos(logisticsInfo1, logisticsInfo2)
 ```
 
 **params:**
+
 - **logisticsInfo1**
-Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm.shippingData` with `itemIndex`
+  Type: `Array<object>`
+  The logisticsInfo like the one inside `orderForm.shippingData` with `itemIndex`
 - **logisticsInfo2**
-Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm.shippingData` with `itemIndex`
-**returns:**
+  Type: `Array<object>`
+  The logisticsInfo like the one inside `orderForm.shippingData` with `itemIndex`
+  **returns:**
 - **new logisticsInfo**
-Type: `Array<object>`
-Return all items of logisticsInfo2 completing its missing items from the logisticsInfo1 (merge operation)
+  Type: `Array<object>`
+  Return all items of logisticsInfo2 completing its missing items from the logisticsInfo1 (merge operation)
 
 ## SLA
 
@@ -2926,18 +3070,18 @@ Get the sla type (`delivery`, `pickup-in-point` or `take-away`) based on the sla
 ```js
 const { getSlaType } = require('@vtex/delivery-packages/dist/sla')
 
-getSlaType(
-  { id: 'Normal', deliveryChannel: 'delivery' }
-)
+getSlaType({ id: 'Normal', deliveryChannel: 'delivery' })
 // -> "delivery"
 
-getSlaType(
-  { id: 'Pickup', deliveryChannel: 'pickup-in-point' }
-)
+getSlaType({ id: 'Pickup', deliveryChannel: 'pickup-in-point' })
 // -> "pickup-in-point"
 
 getSlaType(
-  { id: 'Pickup checked In', deliveryChannel: 'pickup-in-point', pickupPointId: '1_2' },
+  {
+    id: 'Pickup checked In',
+    deliveryChannel: 'pickup-in-point',
+    pickupPointId: '1_2',
+  },
   { orderId: '123', checkedInPickupPointId: '1_2' }
 )
 // -> "take-away"
@@ -2964,29 +3108,36 @@ getSlaType(
 Change logisticsInfoItem info to match the sla passed
 
 ##### Usage
+
 ```js
 const { changeSelectedSla } = require('@vtex/delivery-packages/dist/sla')
 
 changeSelectedSla(
   // Pode passar qualquer outra propriedade de um logisticsInfo item
-  { "itemIndex": 0, "selectedSla": "Pickup", "selectedDeliveryChannel": "pickup-in-point" },
-  { "id": "Normal", "deliveryChannel": "delivery" }
+  {
+    itemIndex: 0,
+    selectedSla: 'Pickup',
+    selectedDeliveryChannel: 'pickup-in-point',
+  },
+  { id: 'Normal', deliveryChannel: 'delivery' }
 )
 // -> { "itemIndex": 0, "selectedSla": "Normal", "selectedDeliveryChannel": "delivery" }
 ```
 
 **params:**
+
 - **logisticsInfoItem**
-Type: `object`
-An object like the ones on logisticsInfo of the orderForm
+  Type: `object`
+  An object like the ones on logisticsInfo of the orderForm
 - **sla**
-Type: `object`
-An object like the ones on logisticsInfoItem.slas
+  Type: `object`
+  An object like the ones on logisticsInfoItem.slas
 
 **returns:**
+
 - **newLogisticsInfoItem**
-Type: `object`
-The new logisticsInfoItem with the selectedSla infos changed to match the sla param
+  Type: `object`
+  The new logisticsInfoItem with the selectedSla infos changed to match the sla param
 
 ### getSelectedSla ({logisticsInfo, itemIndex, selectedSla})
 
@@ -3054,14 +3205,15 @@ getSelectedSla({
 **returns:**
 
 - **selectedSla**
-Type: `object`
-the selectedSla object on the logisticsInfo item that itemIndex refers and optionally using another selectedSla then the one on logisticsInfo item
+  Type: `object`
+  the selectedSla object on the logisticsInfo item that itemIndex refers and optionally using another selectedSla then the one on logisticsInfo item
 
 ### getSelectedSlas (logisticsInfo)
 
 Get all selected slas objects on logisticsInfo.
 
 ##### Usage
+
 ```js
 const { getSelectedSlas } = require('@vtex/delivery-packages/dist/sla')
 
@@ -3071,17 +3223,19 @@ let logisticsInfo = [
     selectedSla: 'Normal',
     itemIndex: 0,
     slas: [
-      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
-    ]
+      { id: 'Normal', deliveryChannel: 'delivery' },
+      { id: 'Expressa', deliveryChannel: 'delivery' },
+    ],
   },
   {
     // other logisticsInfo properties can be passed also
     selectedSla: 'Expressa',
     itemIndex: 1,
     slas: [
-      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
-    ]
-  }
+      { id: 'Normal', deliveryChannel: 'delivery' },
+      { id: 'Expressa', deliveryChannel: 'delivery' },
+    ],
+  },
 ]
 
 getSelectedSlas(logisticsInfo)
@@ -3093,17 +3247,19 @@ logisticsInfo = [
     selectedSla: 'Normal',
     itemIndex: 0,
     slas: [
-      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
-    ]
+      { id: 'Normal', deliveryChannel: 'delivery' },
+      { id: 'Expressa', deliveryChannel: 'delivery' },
+    ],
   },
   {
     // other logisticsInfo properties can be passed also
     selectedSla: null,
     itemIndex: 1,
     slas: [
-      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
-    ]
-  }
+      { id: 'Normal', deliveryChannel: 'delivery' },
+      { id: 'Expressa', deliveryChannel: 'delivery' },
+    ],
+  },
 ]
 
 getSelectedSlas(logisticsInfo)
@@ -3111,20 +3267,23 @@ getSelectedSlas(logisticsInfo)
 ```
 
 **params:**
+
 - **logisticsInfo**
-Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
+  Type: `Array<object>`
+  The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 **returns:**
+
 - **selectedSlas**
-Type: `Array<object>`
-the selected slas objects on the logisticsInfo items hydrated with itemIndex reference or empty array in case of wrong or empty params passed
+  Type: `Array<object>`
+  the selected slas objects on the logisticsInfo items hydrated with itemIndex reference or empty array in case of wrong or empty params passed
 
 ## getPickupSelectedSlas (logisticsInfo)
 
 Get the selected slas objects on logisticsInfo filtered by pickup points type.
 
 ##### Usage
+
 ```js
 const { getPickupSelectedSlas } = require('@vtex/delivery-packages/dist/sla')
 
@@ -3134,17 +3293,19 @@ let logisticsInfo = [
     selectedSla: 'Normal',
     itemIndex: 0,
     slas: [
-      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Expressa", "deliveryChannel": "delivery" }
-    ]
+      { id: 'Normal', deliveryChannel: 'delivery' },
+      { id: 'Expressa', deliveryChannel: 'delivery' },
+    ],
   },
   {
     // other logisticsInfo properties can be passed also
     selectedSla: 'Pickup',
     itemIndex: 1,
     slas: [
-      { "id": "Normal", "deliveryChannel": "delivery" }, { "id": "Pickup", "deliveryChannel": "pickup-in-point" }
-    ]
-  }
+      { id: 'Normal', deliveryChannel: 'delivery' },
+      { id: 'Pickup', deliveryChannel: 'pickup-in-point' },
+    ],
+  },
 ]
 
 getPickupSelectedSlas(logisticsInfo)
@@ -3152,14 +3313,16 @@ getPickupSelectedSlas(logisticsInfo)
 ```
 
 **params:**
+
 - **logisticsInfo**
-Type: `Array<object>`
-The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
+  Type: `Array<object>`
+  The logisticsInfo like the one inside `orderForm.shippingData` with `selectedSla` and `slas`
 
 **returns:**
+
 - **selectedPickupSlas**
-Type: `Array<object>`
-the selected slas objects on the logisticsInfo items hydrated with itemIndex reference and filtered by pickup type or empty array in case of wrong or empty params passed
+  Type: `Array<object>`
+  the selected slas objects on the logisticsInfo items hydrated with itemIndex reference and filtered by pickup type or empty array in case of wrong or empty params passed
 
 ## License
 

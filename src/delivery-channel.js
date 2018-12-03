@@ -53,3 +53,19 @@ export function findChannelById(logisticsInfoItem, deliveryChannelSource) {
     ) || null
   )
 }
+
+export function setSelectedDeliveryChannel(logisticsInfo, deliveryChannel) {
+  if (Array.isArray(logisticsInfo)) {
+    return logisticsInfo.map(li => ({
+      ...li,
+      selectedDeliveryChannel: deliveryChannel,
+    }))
+  }
+
+  return (
+    logisticsInfo && {
+      ...logisticsInfo,
+      selectedDeliveryChannel: deliveryChannel,
+    }
+  )
+}
