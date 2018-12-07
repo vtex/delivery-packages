@@ -80,6 +80,7 @@ $ npm install @vtex/delivery-packages
 - [hasDeliveryWindows](#hasdeliverywindows-slas)
 - [excludePickupTypeFromSlas](#excludepickuptypefromslas-slas)
 - [getSlaObj](#getslaobj-slas-slaid)
+- [getSlaType](#getslatype)
 - [changeSelectedSla](#changeselectedsla-logisticsinfoitem-sla)
 - [getSelectedSla](#getselectedsla-logisticsinfo-itemindex-selectedsla)
 - [getSelectedSlas](#getselectedslas-logisticsinfo)

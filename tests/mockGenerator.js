@@ -210,6 +210,27 @@ const slas = {
     shippingEstimate: '0bd',
     pickupPointId: checkedInPickupPointId,
   },
+  pickupCheckInSla: {
+    id: 'retirada na loja (1072f1c)',
+    name: 'retirada na loja (1072f1c)',
+    shippingEstimate: '0bd',
+    shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
+    deliveryChannel: 'pickup-in-point',
+    availableDeliveryWindows: [],
+    deliveryWindow: null,
+    price: 0,
+    listPrice: 0,
+    tax: 0,
+    pickupPointId: '1_1072f1c',
+    pickupStoreInfo: {
+      isPickupStore: true,
+      friendlyName: 'Rio de Janeiro | Botafogo',
+      address: {
+        ...addresses.pickupPointAddress,
+        receiverName: null,
+      },
+    },
+  },
   expressSla: {
     id: 'Expressa',
     shippingEstimate: '5bd',
