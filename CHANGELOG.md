@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.16.0] - 2018-12-07
 
 ## Fixed
-- getSlaType for old checkIn
+- `getSlaType` for old checkIn
 
 ## Added
 - CheckIn and utils functions (still without docs until we believe they should be public)
