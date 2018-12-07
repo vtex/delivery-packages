@@ -239,6 +239,27 @@ describe('Sla', () => {
 
       expect(slaType).toEqual(SLA_TYPES.TAKE_AWAY)
     })
+
+    it('should return delivery sla type when delivery sla and checkedIn on pickup order are passed', () => {
+      const slaObj = { deliveryChannel: DELIVERY }
+      const order = { isCheckedIn: true, checkedInPickupPointId }
+
+      const slaType = getSlaType(slaObj, order)
+
+      expect(slaType).toEqual(SLA_TYPES.DELIVERY)
+    })
+
+    it('should return take away sla type when old checkIn sla and checkedIn with master data order are passed', () => {
+      const slaObj = {
+        deliveryChannel: DELIVERY,
+        id: 'VIRTUAL_STORE', // old checkin
+      }
+      const order = { isCheckedIn: true, storeId: 7 }
+
+      const slaType = getSlaType(slaObj, order)
+
+      expect(slaType).toEqual(SLA_TYPES.TAKE_AWAY)
+    })
   })
 
   describe('findSlaWithChannel', () => {

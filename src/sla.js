@@ -1,6 +1,7 @@
 import './polyfills'
 import { isCurrentChannel, isPickup } from './delivery-channel'
 import { SLA_TYPES } from './constants'
+import { getCheckInFlagsOnOrder } from './checkin'
 
 /** PRIVATE **/
 
@@ -100,10 +101,13 @@ export function getSlaType(slaObj, order) {
     return null
   }
 
+  const orderFlags = getCheckInFlagsOnOrder(order)
+
   if (
     order &&
     order.isCheckedIn &&
-    slaObj.pickupPointId === order.checkedInPickupPointId
+    (slaObj.pickupPointId === order.checkedInPickupPointId ||
+      orderFlags.isCheckInOnMasterDataStore)
   ) {
     return SLA_TYPES.TAKE_AWAY
   }
