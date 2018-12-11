@@ -9,10 +9,20 @@ import uuid from './uuid'
 
 /** PRIVATE **/
 
+function getCleanAddressType(addressType) {
+  return addressType && addressType.trim().toLowerCase()
+}
+
+export function equalsAddressType(addressType1, addressType2) {
+  return getCleanAddressType(addressType1) === getCleanAddressType(addressType2)
+}
+
 export function getFirstAddressForType(addresses, addressType) {
   if (!addresses || addresses.length === 0 || !addressType) {
     return null
   }
+
+  addressType = getCleanAddressType(addressType)
 
   const groups = groupByAddressType(addresses)
   const groupAddresses = groups[addressType]
@@ -39,13 +49,6 @@ export function getPickupAddress(pickupSla) {
       pickupSla.pickupStoreInfo &&
       pickupSla.pickupStoreInfo.address) ||
     null
-  )
-}
-
-export function equalsAddressType(addressType1, addressType2) {
-  return (
-    addressType1.trim().toLocaleLowerCase() ===
-    addressType2.trim().toLocaleLowerCase()
   )
 }
 
@@ -135,7 +138,7 @@ export function groupByAddressType(addresses) {
 
   return addresses.reduce((groups, address, index) => {
     if (address && address.addressType) {
-      const addressType = address.addressType.trim().toLocaleLowerCase()
+      const addressType = getCleanAddressType(address.addressType)
       address.index = index
       if (!groups[addressType]) {
         groups[addressType] = []
