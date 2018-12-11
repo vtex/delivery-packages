@@ -42,14 +42,21 @@ export function getPickupAddress(pickupSla) {
   )
 }
 
+export function equalsAddressType(addressType1, addressType2) {
+  return (
+    addressType1.trim().toLocaleLowerCase() ===
+    addressType2.trim().toLocaleLowerCase()
+  )
+}
+
 export function isCurrentAddressType(address, addressType) {
   if (address && !address.addressType) {
     return false
   }
-  if (address && (typeof address.addressType === 'string')) {
-    return address.addressType === addressType
+  if (address && typeof address.addressType === 'string') {
+    return equalsAddressType(address.addressType, addressType)
   }
-  return address && address.addressType.value === addressType
+  return address && equalsAddressType(address.addressType.value, addressType)
 }
 
 /** PUBLIC **/
@@ -128,11 +135,12 @@ export function groupByAddressType(addresses) {
 
   return addresses.reduce((groups, address, index) => {
     if (address && address.addressType) {
+      const addressType = address.addressType.trim().toLocaleLowerCase()
       address.index = index
-      if (!groups[address.addressType]) {
-        groups[address.addressType] = []
+      if (!groups[addressType]) {
+        groups[addressType] = []
       }
-      groups[address.addressType].push(address)
+      groups[addressType].push(address)
     }
     return groups
   }, {})
