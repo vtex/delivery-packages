@@ -44,8 +44,8 @@ export function getPickupAddress(pickupSla) {
 
 export function equalsAddressType(addressType1, addressType2) {
   return (
-    addressType1.trim().toLocaleLowerCase() ===
-    addressType2.trim().toLocaleLowerCase()
+    addressType1.trim().toLowerCase() ===
+    addressType2.trim().toLowerCase()
   )
 }
 
@@ -135,7 +135,7 @@ export function groupByAddressType(addresses) {
 
   return addresses.reduce((groups, address, index) => {
     if (address && address.addressType) {
-      const addressType = address.addressType.trim().toLocaleLowerCase()
+      const addressType = address.addressType.trim().toLowerCase()
       address.index = index
       if (!groups[addressType]) {
         groups[addressType] = []
