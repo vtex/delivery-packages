@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.16.2] - 2018-12-12
+
+## Fixed
+- `addressType` is now case insensitive on address functions
+
 ## [2.16.1] - 2018-12-07
 
 ## [2.16.0] - 2018-12-07

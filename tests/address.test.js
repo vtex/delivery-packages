@@ -137,7 +137,9 @@ describe('Address', () => {
 
     it('should be false if not gift registry address is passed', () => {
       const isGiftRegistryAddress1 = isGiftRegistry(addresses.searchAddress)
-      const isGiftRegistryAddress2 = isGiftRegistry(addresses.pickupPointAddress)
+      const isGiftRegistryAddress2 = isGiftRegistry(
+        addresses.pickupPointAddress
+      )
 
       expect(isGiftRegistryAddress1).toBeFalsy()
       expect(isGiftRegistryAddress2).toBeFalsy()
@@ -646,6 +648,25 @@ describe('Address', () => {
       const address1 = getFirstAddressForDelivery(addresses1)
 
       expect(address1).toEqual(residentialAddress1)
+    })
+
+    it('should find delivery address even with upper case values on list', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const residentialAddress2 = {
+        ...addresses.residentialAddress2,
+        addressType: addresses.residentialAddress2.addressType.toUpperCase(),
+      }
+
+      const addresses1 = [
+        pickupAddress,
+        residentialAddress2,
+        residentialAddress1,
+      ]
+
+      const address1 = getFirstAddressForDelivery(addresses1)
+
+      expect(address1).toEqual(residentialAddress2)
     })
   })
 })
