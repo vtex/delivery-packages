@@ -1,4 +1,6 @@
-import { getShippingEstimateQuantityInSeconds } from '@vtex/estimate-calculator'
+import {
+  getShippingEstimateQuantityInSeconds,
+} from '@vtex/estimate-calculator'
 
 import './polyfills'
 import { hasDeliveryWindows, getSlaObj, getSlaType } from './sla'
@@ -56,8 +58,7 @@ function groupDeliveries(items, criteria, order) {
 
       const hasDeliveryWindow = pack.deliveryWindow && item.deliveryWindow
 
-      const areWindowsDifferent =
-        hasDeliveryWindow &&
+      const areWindowsDifferent = hasDeliveryWindow &&
         pack.deliveryWindow.startDateUtc !== item.deliveryWindow.startDateUtc &&
         pack.deliveryWindow.endDateUtc !== item.deliveryWindow.endDateUtc
 
@@ -76,8 +77,8 @@ function groupDeliveries(items, criteria, order) {
         return false
       }
 
-      const scheduledSla =
-        getSlaObj(item.slas, item.selectedSla) || getScheduledDeliverySLA(item)
+      const scheduledSla = getSlaObj(item.slas, item.selectedSla) ||
+        getScheduledDeliverySLA(item)
 
       if (
         criteria.groupByAvailableDeliveryWindows &&
@@ -123,80 +124,83 @@ function getItemSelectedSlaPrices(item, shouldSumDeliveryWindow = false) {
 }
 
 function addToPackage(items, criteria, order, fn) {
-  return items.reduce((packages, item) => {
-    const pack = fn(packages, item)
+  return items.reduce(
+    (packages, item) => {
+      const pack = fn(packages, item)
 
-    if (pack) {
-      if (
-        criteria.selectedSla &&
-        getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
-          getShippingEstimateQuantityInSeconds(item.shippingEstimate)
-      ) {
-        pack.shippingEstimate = item.shippingEstimate
-        pack.shippingEstimateDate = item.shippingEstimateDate
+      if (pack) {
+        if (
+          criteria.selectedSla &&
+          getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
+            getShippingEstimateQuantityInSeconds(item.shippingEstimate)
+        ) {
+          pack.shippingEstimate = item.shippingEstimate
+          pack.shippingEstimateDate = item.shippingEstimateDate
+        }
+
+        if (!criteria.selectedSla) {
+          pack.slas = pack.slas.concat(item.slas)
+        }
+
+        pack.items = pack.items.concat(item.item)
+        const slaPrices = getItemSelectedSlaPrices(item)
+        pack.listPrice += slaPrices.listPrice
+        pack.price += slaPrices.price
+        pack.sellingPrice += slaPrices.sellingPrice
+
+        return packages
       }
 
-      if (!criteria.selectedSla) {
-        pack.slas = pack.slas.concat(item.slas)
-      }
+      const selectedSlaObj = getSlaObj(item.slas, item.selectedSla)
 
-      pack.items = pack.items.concat(item.item)
-      const slaPrices = getItemSelectedSlaPrices(item)
-      pack.listPrice += slaPrices.listPrice
-      pack.price += slaPrices.price
-      pack.sellingPrice += slaPrices.sellingPrice
+      const selectedSlaType = getSlaType(selectedSlaObj, order)
 
-      return packages
-    }
+      const scheduledSla = selectedSlaObj || getScheduledDeliverySLA(item)
 
-    const selectedSlaObj = getSlaObj(item.slas, item.selectedSla)
-
-    const selectedSlaType = getSlaType(selectedSlaObj, order)
-
-    const scheduledSla = selectedSlaObj || getScheduledDeliverySLA(item)
-
-    const newPackage = {
-      ...getItemSelectedSlaPrices(item, true),
-      items: [item.item],
-      package: item.package,
-      slas: item.slas,
-      pickupFriendlyName: criteria.selectedSla
-        ? item.pickupFriendlyName
-        : undefined,
-      seller: criteria.seller ? item.item.seller : undefined,
-      address: criteria.selectedSla
-        ? item.address ||
-          (selectedSlaObj &&
-            selectedSlaObj.pickupStoreInfo &&
-            selectedSlaObj.pickupStoreInfo.address) ||
-          undefined
-        : undefined,
-      selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
-      selectedSlaObj,
-      selectedSlaType,
-      deliveryIds: item.deliveryIds,
-      deliveryChannel: criteria.deliveryChannel
-        ? item.deliveryChannel
-        : undefined,
-      hasAvailableDeliveryWindows: criteria.groupByAvailableDeliveryWindows
-        ? hasDeliveryWindows(item.slas)
-        : undefined,
-      availableDeliveryWindows:
-        criteria.groupByAvailableDeliveryWindows && scheduledSla
+      const newPackage = {
+        ...getItemSelectedSlaPrices(item, true),
+        items: [item.item],
+        package: item.package,
+        slas: item.slas,
+        pickupFriendlyName: criteria.selectedSla
+          ? item.pickupFriendlyName
+          : undefined,
+        seller: criteria.seller ? item.item.seller : undefined,
+        address: criteria.selectedSla
+          ? item.address ||
+              (selectedSlaObj &&
+                selectedSlaObj.pickupStoreInfo &&
+                selectedSlaObj.pickupStoreInfo.address) ||
+              undefined
+          : undefined,
+        selectedSla: criteria.selectedSla ? item.selectedSla : undefined,
+        selectedSlaObj,
+        selectedSlaType,
+        deliveryIds: item.deliveryIds,
+        deliveryChannel: criteria.deliveryChannel
+          ? item.deliveryChannel
+          : undefined,
+        hasAvailableDeliveryWindows: criteria.groupByAvailableDeliveryWindows
+          ? hasDeliveryWindows(item.slas)
+          : undefined,
+        availableDeliveryWindows: criteria.groupByAvailableDeliveryWindows &&
+          scheduledSla
           ? scheduledSla.availableDeliveryWindows
           : undefined,
-      deliveryWindow: criteria.selectedSla ? item.deliveryWindow : undefined,
-      shippingEstimate: criteria.selectedSla
-        ? item.shippingEstimate
-        : undefined,
-      shippingEstimateDate: criteria.selectedSla
-        ? item.shippingEstimateDate
-        : undefined,
-      item: undefined,
-    }
+        deliveryWindow: criteria.selectedSla ? item.deliveryWindow : undefined,
+        shippingEstimate: criteria.selectedSla
+          ? item.shippingEstimate
+          : undefined,
+        shippingEstimateDate: criteria.selectedSla
+          ? item.shippingEstimateDate
+          : undefined,
+        item: undefined,
+      }
 
-    return packages.concat(newPackage)
-  }, [])
+      return packages.concat(newPackage)
+    },
+    []
+  )
 }
 
 /** PUBLIC **/
@@ -214,20 +218,18 @@ export function parcelify(order, options = {}) {
     ...(options.criteria ? options.criteria : {}),
   }
 
-  const packages =
-    packageAttachment && packageAttachment.packages
-      ? packageAttachment.packages
-      : []
-  const logisticsInfo =
-    shippingData && shippingData.logisticsInfo ? shippingData.logisticsInfo : []
-  const selectedAddresses =
-    shippingData && shippingData.selectedAddresses
-      ? shippingData.selectedAddresses
-      : []
-  const changes =
-    changesAttachment && changesAttachment.changesData
-      ? changesAttachment.changesData
-      : []
+  const packages = packageAttachment && packageAttachment.packages
+    ? packageAttachment.packages
+    : []
+  const logisticsInfo = shippingData && shippingData.logisticsInfo
+    ? shippingData.logisticsInfo
+    : []
+  const selectedAddresses = shippingData && shippingData.selectedAddresses
+    ? shippingData.selectedAddresses
+    : []
+  const changes = changesAttachment && changesAttachment.changesData
+    ? changesAttachment.changesData
+    : []
 
   const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
   const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
