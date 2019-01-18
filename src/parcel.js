@@ -208,6 +208,7 @@ function addToPackage(items, criteria, order, fn) {
 export function parcelify(order, options = {}) {
   const {
     items = [],
+    marketplaceItems = [],
     packageAttachment = {},
     shippingData = {},
     changesAttachment = {},
@@ -231,7 +232,17 @@ export function parcelify(order, options = {}) {
     ? changesAttachment.changesData
     : []
 
-  const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
+  const FIXED_ITEM_INDEX = 0
+  const useItems = criteria.useMarketplaceItems === false ||
+    marketplaceItems.length === 0
+
+  const itemsWithIndex = useItems
+    ? items.map((item, index) => ({ ...item, index }))
+    : marketplaceItems.map(item => ({
+      ...item,
+      index: FIXED_ITEM_INDEX,
+    }))
+
   const packagesWithIndex = packages.map((pack, index) => ({ ...pack, index }))
 
   const itemsCleaned = getNewItems(itemsWithIndex, changes)
