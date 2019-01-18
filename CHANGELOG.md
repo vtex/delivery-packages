@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Creates the parcel object using the `marketplaceItems` instead of the `items` if `marketplaceItems` has something in it and if the criteria `useMarketplaceItems` is true.
+- Change the default options of `parcelify` adding `useMarketplaceItems` as `true`.
+
 ## [2.16.2] - 2018-12-12
 
 ## Fixed
+
 - `addressType` is now case insensitive on address functions
 
 ## [2.16.1] - 2018-12-07
@@ -17,9 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.16.0] - 2018-12-07
 
 ## Fixed
+
 - `getSlaType` for old checkIn
 
 ## Added
+
 - CheckIn and utils functions (still without docs until we believe they should be public)
 
 ## [2.15.0] - 2018-11-27
