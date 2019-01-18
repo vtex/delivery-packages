@@ -107,7 +107,8 @@ Default:<br/>
   selectedSla: true,
   seller: true,
   shippingEstimate: true,
-  deliveryChannel: true
+  deliveryChannel: true,
+  useMarketplaceItems: true
 }
 ```
 
