@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.17.0] - 2019-01-21
+
 ### Added
 
 - Creates the parcel object using the `marketplaceItems` instead of the `items` if `marketplaceItems` has something in it and if the criteria `useMarketplaceItems` is true.
