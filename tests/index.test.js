@@ -11,6 +11,7 @@ import {
   createLogisticsInfo,
 } from './mockGenerator'
 import orderMock from './Order'
+import { DEFAULT_CRITERIA } from '../src/constants'
 
 const {
   expressSla,
@@ -1865,5 +1866,51 @@ describe('Order with changes and all delivered', () => {
     })
 
     expect(result).toHaveLength(1)
+  })
+})
+
+describe('Order with marketplaceItems (gift list)', () => {
+  it('should create packages successfully', () => {
+    const items = createItems(1)
+    const marketplaceItems = createItems(2)
+    const selectedAddresses = [residentialAddress]
+    const logisticInfo = { ...baseLogisticsInfo.normal, slas: null }
+    const logisticsInfo = [
+      { ...logisticInfo, itemIndex: 0 },
+    ]
+
+    const result = parcelify({
+      items,
+      marketplaceItems,
+      shippingData: {
+        logisticsInfo,
+        selectedAddresses,
+      },
+    })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].items).toHaveLength(2)
+  })
+
+  it('should not consider marketplaceItems if criteria is false', () => {
+    const items = createItems(1)
+    const marketplaceItems = createItems(2)
+    const selectedAddresses = [residentialAddress]
+    const logisticInfo = { ...baseLogisticsInfo.normal, slas: null }
+    const logisticsInfo = [
+      { ...logisticInfo, itemIndex: 0 },
+    ]
+
+    const result = parcelify({
+      items,
+      marketplaceItems,
+      shippingData: {
+        logisticsInfo,
+        selectedAddresses,
+      },
+    }, { criteria: { useMarketplaceItems: false } })
+
+    expect(result).toHaveLength(1)
+    expect(result[0].items).toHaveLength(1)
   })
 })

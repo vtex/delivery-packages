@@ -6,6 +6,7 @@ export const DEFAULT_CRITERIA = {
   seller: true,
   shippingEstimate: true,
   deliveryChannel: true,
+  useMarketplaceItems: true,
 }
 
 export const PICKUP_IN_STORE = 'pickup-in-point'
