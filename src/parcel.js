@@ -131,8 +131,7 @@ function addToPackage(items, criteria, order, fn) {
       if (pack) {
         if (
           criteria.selectedSla &&
-          getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
-            getShippingEstimateQuantityInSeconds(item.shippingEstimate)
+          pack.shippingEstimateDate < item.shippingEstimateDate
         ) {
           pack.shippingEstimate = item.shippingEstimate
           pack.shippingEstimateDate = item.shippingEstimateDate
