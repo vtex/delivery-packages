@@ -278,7 +278,7 @@ const slas = {
   normalScheduledDeliverySla: {
     id: 'Agendada',
     shippingEstimate: '6bd',
-    shippingEstimateDate: '2018-05-26T09:00:00+00:00',
+    shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
     deliveryChannel: 'delivery',
     deliveryWindow: null,
     availableDeliveryWindows: availableDeliveryWindows.slice(0, 3),
