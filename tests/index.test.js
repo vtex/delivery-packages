@@ -179,22 +179,30 @@ describe('has one package and a delivery', () => {
 })
 
 describe('has two packages with different shipping estimates', () => {
-  it('should create one parcel with the latest estimate', () => {
-    const items = createItems(2)
-    const packageAttachment = {
-      packages: [
-        createPackage([
-          { itemIndex: 0, quantity: 1 },
-          { itemIndex: 1, quantity: 1 },
-        ]),
-      ],
-    }
-    const selectedAddresses = [residentialAddress]
+  const items = createItems(2)
+  const packageAttachment = {
+    packages: [
+      createPackage([
+        { itemIndex: 0, quantity: 1 },
+        { itemIndex: 1, quantity: 1 },
+      ]),
+    ],
+  }
+  const selectedAddresses = [residentialAddress]
+
+  it('should create one parcel with the worst estimate ordered by "shippingEstimateDate"', () => {
     const logisticsInfo = [
       {
         ...baseLogisticsInfo.express,
+        // force `expressSla` to have the same `shippingEstimate` as `normalSla`
+        // but keep different `shippingEstimateDate`
         itemIndex: 0,
-        slas: [expressSla],
+        slas: [
+          {
+            ...expressSla,
+            shippingEstimate: normalSla.shippingEstimate,
+          },
+        ],
       },
       {
         ...baseLogisticsInfo.normal,
@@ -216,6 +224,47 @@ describe('has two packages with different shipping estimates', () => {
 
     expect(result).toHaveLength(1)
     expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
+    expect(result[0].shippingEstimateDate).toBe(normalSla.shippingEstimateDate)
+  })
+
+  it('should create one parcel with the worst estimate ordered by "shippingEstimate" if "shippingEstimateDate" is not available', () => {
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.express,
+        itemIndex: 0,
+        slas: [
+          {
+            ...expressSla,
+            shippingEstimateDate: undefined,
+          },
+        ],
+      },
+      {
+        ...baseLogisticsInfo.normal,
+        itemIndex: 1,
+        slas: [
+          {
+            ...normalSla,
+            shippingEstimateDate: undefined,
+          },
+        ],
+      },
+    ]
+
+    const order = {
+      items,
+      packageAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    }
+
+    const result = parcelify(order)
+
+    expect(result).toHaveLength(1)
+    expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
+    expect(result[0].shippingEstimateDate).toBe(undefined)
   })
 })
 
