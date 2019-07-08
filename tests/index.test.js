@@ -11,7 +11,6 @@ import {
   createLogisticsInfo,
 } from './mockGenerator'
 import orderMock from './Order'
-import { DEFAULT_CRITERIA } from '../src/constants'
 
 const {
   expressSla,
@@ -1316,8 +1315,8 @@ describe('criteria groupBySelectedSlaType', () => {
         seller: '1',
         selectedSla: slas.normalSla.id,
         selectedSlaObj: slas.normalSla,
-        shippingEstimate: slas.normalSla.shippingEstimate,
-        shippingEstimateDate: slas.normalSla.shippingEstimateDate,
+        shippingEstimate: slas.normalScheduledDeliverySla.shippingEstimate,
+        shippingEstimateDate: slas.normalScheduledDeliverySla.shippingEstimateDate,
         price: 10000,
         listPrice: 10000,
         sellingPrice: 10000,
