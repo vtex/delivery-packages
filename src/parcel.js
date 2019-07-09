@@ -123,17 +123,24 @@ function getItemSelectedSlaPrices(item, shouldSumDeliveryWindow = false) {
   return prices
 }
 
+function hasWorstShippingEstimate(pack, item) {
+  if (item.shippingEstimateDate) {
+    return pack.shippingEstimateDate < item.shippingEstimateDate
+  }
+
+  return (
+    getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
+    getShippingEstimateQuantityInSeconds(item.shippingEstimate)
+  )
+}
+
 function addToPackage(items, criteria, order, fn) {
   return items.reduce(
     (packages, item) => {
       const pack = fn(packages, item)
 
       if (pack) {
-        if (
-          criteria.selectedSla &&
-          getShippingEstimateQuantityInSeconds(pack.shippingEstimate) <
-            getShippingEstimateQuantityInSeconds(item.shippingEstimate)
-        ) {
+        if (criteria.selectedSla && hasWorstShippingEstimate(pack, item)) {
           pack.shippingEstimate = item.shippingEstimate
           pack.shippingEstimateDate = item.shippingEstimateDate
         }

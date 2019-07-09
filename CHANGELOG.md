@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.17.1] - 2019-07-08
+
+- Compare delivery dates with `shippingEstimateDate` instead of `shippingEstimate`.
+
 ## [2.17.0] - 2019-01-21
 
 ### Added

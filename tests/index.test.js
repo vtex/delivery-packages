@@ -11,7 +11,6 @@ import {
   createLogisticsInfo,
 } from './mockGenerator'
 import orderMock from './Order'
-import { DEFAULT_CRITERIA } from '../src/constants'
 
 const {
   expressSla,
@@ -180,7 +179,7 @@ describe('has one package and a delivery', () => {
 })
 
 describe('has two packages with different shipping estimates', () => {
-  it('should create one parcel with the latest estimate', () => {
+  it('should create one parcel with the worst estimate ordered by "shippingEstimateDate"', () => {
     const items = createItems(2)
     const packageAttachment = {
       packages: [
@@ -194,8 +193,15 @@ describe('has two packages with different shipping estimates', () => {
     const logisticsInfo = [
       {
         ...baseLogisticsInfo.express,
+        // force `expressSla` to have the same `shippingEstimate` as `normalSla`
+        // but keep different `shippingEstimateDate`
         itemIndex: 0,
-        slas: [expressSla],
+        slas: [
+          {
+            ...expressSla,
+            shippingEstimate: normalSla.shippingEstimate,
+          },
+        ],
       },
       {
         ...baseLogisticsInfo.normal,
@@ -217,6 +223,57 @@ describe('has two packages with different shipping estimates', () => {
 
     expect(result).toHaveLength(1)
     expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
+    expect(result[0].shippingEstimateDate).toBe(normalSla.shippingEstimateDate)
+  })
+
+  it('should create one parcel with the worst estimate ordered by "shippingEstimate" if "shippingEstimateDate" is not available', () => {
+    const items = createItems(2)
+    const packageAttachment = {
+      packages: [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 1, quantity: 1 },
+        ]),
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
+    const logisticsInfo = [
+      {
+        ...baseLogisticsInfo.express,
+        itemIndex: 0,
+        slas: [
+          {
+            ...expressSla,
+            shippingEstimateDate: undefined,
+          },
+        ],
+      },
+      {
+        ...baseLogisticsInfo.normal,
+        itemIndex: 1,
+        slas: [
+          {
+            ...normalSla,
+            shippingEstimateDate: undefined,
+          },
+        ],
+      },
+    ]
+
+    const order = {
+      items,
+      packageAttachment,
+      shippingData: {
+        selectedAddresses,
+        logisticsInfo,
+      },
+    }
+
+    const result = parcelify(order)
+
+    expect(result).toHaveLength(1)
+    expect(result[0].shippingEstimate).toBe(normalSla.shippingEstimate)
+    expect(result[0].shippingEstimateDate).toBe(undefined)
   })
 })
 
@@ -1748,7 +1805,7 @@ describe('has three package with different prices and including scheduled delive
       selectedSla: slas.normalSla.id,
       selectedSlaObj: slas.normalSla,
       shippingEstimate: '6bd',
-      shippingEstimateDate: '2018-02-24T19:01:07.0336412+00:00',
+      shippingEstimateDate: normalSla.shippingEstimateDate,
       price: 10000,
       listPrice: 10000,
       sellingPrice: 10000,
@@ -1779,7 +1836,7 @@ describe('has three package with different prices and including scheduled delive
         deliveryWindow,
       },
       shippingEstimate: '6bd',
-      shippingEstimateDate: '2018-05-26T09:00:00+00:00',
+      shippingEstimateDate: normalScheduledDeliverySla.shippingEstimateDate,
       price: 20000,
       listPrice: 20000,
       sellingPrice: 20000,
@@ -1801,7 +1858,7 @@ describe('has three package with different prices and including scheduled delive
       selectedSla: slas.expressSla.id,
       selectedSlaObj: slas.expressSla,
       shippingEstimate: '5bd',
-      shippingEstimateDate: '2018-02-23T19:01:07.0336412+00:00',
+      shippingEstimateDate: expressSla.shippingEstimateDate,
       price: 20000,
       listPrice: 20000,
       sellingPrice: 20000,
