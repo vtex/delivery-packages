@@ -179,18 +179,17 @@ describe('has one package and a delivery', () => {
 })
 
 describe('has two packages with different shipping estimates', () => {
-  const items = createItems(2)
-  const packageAttachment = {
-    packages: [
-      createPackage([
-        { itemIndex: 0, quantity: 1 },
-        { itemIndex: 1, quantity: 1 },
-      ]),
-    ],
-  }
-  const selectedAddresses = [residentialAddress]
-
   it('should create one parcel with the worst estimate ordered by "shippingEstimateDate"', () => {
+    const items = createItems(2)
+    const packageAttachment = {
+      packages: [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 1, quantity: 1 },
+        ]),
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
       {
         ...baseLogisticsInfo.express,
@@ -228,6 +227,16 @@ describe('has two packages with different shipping estimates', () => {
   })
 
   it('should create one parcel with the worst estimate ordered by "shippingEstimate" if "shippingEstimateDate" is not available', () => {
+    const items = createItems(2)
+    const packageAttachment = {
+      packages: [
+        createPackage([
+          { itemIndex: 0, quantity: 1 },
+          { itemIndex: 1, quantity: 1 },
+        ]),
+      ],
+    }
+    const selectedAddresses = [residentialAddress]
     const logisticsInfo = [
       {
         ...baseLogisticsInfo.express,
