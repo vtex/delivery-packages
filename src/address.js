@@ -6,6 +6,7 @@ import {
   GIFT_REGISTRY,
 } from './constants'
 import uuid from './uuid'
+import get from 'lodash/get'
 
 /** PRIVATE **/
 
@@ -64,9 +65,17 @@ export function isCurrentAddressType(address, addressType) {
 
 /** PUBLIC **/
 
-export function isAddressComplete(address) {
+export function isAddressComplete(address, options) {
   const { number, street, neighborhood, city, state } = address || {}
-  return !!(number && street && neighborhood && city && state)
+  const verifyNumber = !(get(options, 'verifyNumber') === false)
+
+  return !!(
+    (!verifyNumber || number) &&
+    street &&
+    neighborhood &&
+    city &&
+    state
+  )
 }
 
 export function isGiftRegistry(address) {
@@ -121,13 +130,13 @@ export function findAddressByPostalCode(addresses, searchAddress) {
   return findAddress(addresses, searchAddress, 'postalCode')
 }
 
-export function getDeliveryAvailableAddresses(addresses) {
+export function getDeliveryAvailableAddresses(addresses, options) {
   if (!addresses || addresses.length === 0) {
     return []
   }
 
   return addresses.filter(address => {
-    return isAddressComplete(address) && isDeliveryAddress(address)
+    return isAddressComplete(address, options) && isDeliveryAddress(address)
   })
 }
 
