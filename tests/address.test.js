@@ -54,14 +54,14 @@ describe('Address', () => {
       expect(isAddressComplete1).toBeTruthy()
     })
 
-    it('should be false if missing number when it is explicity required', () => {
+    it('should be false if missing number when it is explicitly required', () => {
       const completeAddress = { ...addresses.residentialAddress, number: null }
       const isAddressComplete1 = isAddressComplete(completeAddress, { verifyNumber: true })
 
       expect(isAddressComplete1).toBeFalsy()
     })
 
-    it('should be false if missing number when it is implicit required', () => {
+    it('should be false if missing number when it is implicitly required', () => {
       const completeAddress = { ...addresses.residentialAddress, number: null }
       const isAddressComplete1 = isAddressComplete(completeAddress)
 
