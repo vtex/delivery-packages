@@ -49,14 +49,27 @@ describe('Address', () => {
 
     it('should be true if missing number when it is not required', () => {
       const completeAddress = { ...addresses.residentialAddress, number: null }
-      const isAddressComplete1 = isAddressComplete(completeAddress, { verifyNumber: false })
+      const requiredFields = [
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+      ]
+      const isAddressComplete1 = isAddressComplete(completeAddress, requiredFields)
 
       expect(isAddressComplete1).toBeTruthy()
     })
 
     it('should be false if missing number when it is explicitly required', () => {
       const completeAddress = { ...addresses.residentialAddress, number: null }
-      const isAddressComplete1 = isAddressComplete(completeAddress, { verifyNumber: true })
+      const requiredFields = [
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+        'number',
+      ]
+      const isAddressComplete1 = isAddressComplete(completeAddress, requiredFields)
 
       expect(isAddressComplete1).toBeFalsy()
     })
@@ -235,12 +248,18 @@ describe('Address', () => {
         ...addresses.residentialAddress,
         number: null,
       }
+      const requiredFields = [
+        'state',
+        'city',
+        'neighborhood',
+        'street',
+      ]
 
       const addresses1 = getDeliveryAvailableAddresses([
         incompleteAddress1,
         residentialAddress1,
         withoutNumberAddress,
-      ], { verifyNumber: false })
+      ], requiredFields)
 
       expect(addresses1).toEqual([residentialAddress1, withoutNumberAddress])
     })
