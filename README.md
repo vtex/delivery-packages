@@ -734,7 +734,7 @@ Type: `object`
 An object containing all address fields like on availableAddresses of orderForm
 
 - **requiredFields**
-Type: `object`
+Type: `array`
 An array containing all required fields. The default required address fields are `state`, `city`, `neighborhood`, `street` and `number`.
 
 **returns:**
