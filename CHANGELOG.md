@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.17.2] - 2020-03-18
+### Added
+- Options to number verification at `isAddressComplete` function
+
 ## [2.17.1] - 2019-07-08
 
 - Compare delivery dates with `shippingEstimateDate` instead of `shippingEstimate`.

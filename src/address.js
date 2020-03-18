@@ -64,9 +64,19 @@ export function isCurrentAddressType(address, addressType) {
 
 /** PUBLIC **/
 
-export function isAddressComplete(address) {
-  const { number, street, neighborhood, city, state } = address || {}
-  return !!(number && street && neighborhood && city && state)
+export const defaultRequiredAddressFields = [
+  'state',
+  'city',
+  'neighborhood',
+  'street',
+  'number',
+]
+
+export function isAddressComplete(
+  address,
+  requiredFields = defaultRequiredAddressFields
+) {
+  return !!address && requiredFields.every(field => !!address[field])
 }
 
 export function isGiftRegistry(address) {
@@ -121,13 +131,13 @@ export function findAddressByPostalCode(addresses, searchAddress) {
   return findAddress(addresses, searchAddress, 'postalCode')
 }
 
-export function getDeliveryAvailableAddresses(addresses) {
+export function getDeliveryAvailableAddresses(addresses, requiredFields) {
   if (!addresses || addresses.length === 0) {
     return []
   }
 
   return addresses.filter(address => {
-    return isAddressComplete(address) && isDeliveryAddress(address)
+    return isAddressComplete(address, requiredFields) && isDeliveryAddress(address)
   })
 }
 

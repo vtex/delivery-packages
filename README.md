@@ -704,12 +704,38 @@ isAddressComplete({
   geoCoordinates: [],
 })
 // -> false
+
+isAddressComplete({
+  addressId: '-4556418741084',
+  addressType: 'residential',
+  receiverName: 'John Doe',
+  street: 'Rua Barão',
+  number: null,
+  complement: null,
+  neighborhood: 'Botafogo',
+  postalCode: '22231-100',
+  city: 'Rio de Janeiro',
+  state: 'RJ',
+  country: 'BRA',
+  reference: null,
+  geoCoordinates: [],
+}, [
+  'state',
+  'city',
+  'neighborhood',
+  'street',
+])
+// -> true
 ```
 
 **params:**
 - **address**
 Type: `object`
 An object containing all address fields like on availableAddresses of orderForm
+
+- **requiredFields**
+Type: `array`
+An array containing all required fields. The default required address fields are `state`, `city`, `neighborhood`, `street` and `number`.
 
 **returns:**
 - **isAddressComplete**
