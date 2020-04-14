@@ -9,6 +9,7 @@ import {
   getFirstAddressForType,
   getPickupAddress,
   addOrReplaceAddressTypeOnList,
+  addOrReplaceDeliveryAddressOnList,
   addOrReplaceAddressOnList,
   addPickupPointAddresses,
   addAddressId,
@@ -49,13 +50,11 @@ describe('Address', () => {
 
     it('should be true if missing number when it is not required', () => {
       const completeAddress = { ...addresses.residentialAddress, number: null }
-      const requiredFields = [
-        'state',
-        'city',
-        'neighborhood',
-        'street',
-      ]
-      const isAddressComplete1 = isAddressComplete(completeAddress, requiredFields)
+      const requiredFields = ['state', 'city', 'neighborhood', 'street']
+      const isAddressComplete1 = isAddressComplete(
+        completeAddress,
+        requiredFields
+      )
 
       expect(isAddressComplete1).toBeTruthy()
     })
@@ -69,7 +68,10 @@ describe('Address', () => {
         'street',
         'number',
       ]
-      const isAddressComplete1 = isAddressComplete(completeAddress, requiredFields)
+      const isAddressComplete1 = isAddressComplete(
+        completeAddress,
+        requiredFields
+      )
 
       expect(isAddressComplete1).toBeFalsy()
     })
@@ -248,18 +250,12 @@ describe('Address', () => {
         ...addresses.residentialAddress,
         number: null,
       }
-      const requiredFields = [
-        'state',
-        'city',
-        'neighborhood',
-        'street',
-      ]
+      const requiredFields = ['state', 'city', 'neighborhood', 'street']
 
-      const addresses1 = getDeliveryAvailableAddresses([
-        incompleteAddress1,
-        residentialAddress1,
-        withoutNumberAddress,
-      ], requiredFields)
+      const addresses1 = getDeliveryAvailableAddresses(
+        [incompleteAddress1, residentialAddress1, withoutNumberAddress],
+        requiredFields
+      )
 
       expect(addresses1).toEqual([residentialAddress1, withoutNumberAddress])
     })
@@ -436,6 +432,87 @@ describe('Address', () => {
       const expectedAddresses1 = [...baseAddresses, residentialAddress2]
 
       const resultAddresses1 = addOrReplaceAddressTypeOnList(
+        addresses1,
+        residentialAddress2
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+  })
+
+  describe('addOrReplaceDeliveryAddressOnList', () => {
+    it('should be empty if empty params are passed', () => {
+      const addresses1 = addOrReplaceDeliveryAddressOnList()
+      const addresses2 = addOrReplaceDeliveryAddressOnList([], null)
+
+      expect(addresses1).toBeUndefined()
+      expect(addresses2).toEqual([])
+    })
+
+    it('should add address on empty address list', () => {
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = []
+      const expectedAddresses1 = [...addresses1, residentialAddress1]
+
+      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
+        addresses1,
+        residentialAddress1
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should append delivery address on a list that doesnt have delivery address', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const addresses1 = [pickupAddress, searchAddress]
+      const expectedAddresses1 = [...addresses1, residentialAddress1]
+
+      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
+        addresses1,
+        residentialAddress1
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should replace delivery address with same addressType', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = addresses.residentialAddress
+      const residentialAddress2 = {
+        ...residentialAddress1,
+        receiverName: 'Other Doe',
+      }
+      const baseAddresses = [pickupAddress, searchAddress]
+      const addresses1 = [...baseAddresses, residentialAddress1]
+      const expectedAddresses1 = [...baseAddresses, residentialAddress2]
+
+      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
+        addresses1,
+        residentialAddress2
+      )
+
+      expect(resultAddresses1).toEqual(expectedAddresses1)
+    })
+
+    it('should replace delivery address with another delivery addressType', () => {
+      const pickupAddress = addresses.pickupPointAddress
+      const searchAddress = addresses.searchAddress
+      const residentialAddress1 = {
+        ...addresses.residentialAddress,
+        index: undefined,
+      }
+      const residentialAddress2 = {
+        ...addresses.commercialAddress,
+        index: undefined,
+      }
+      const baseAddresses = [pickupAddress, searchAddress]
+      const addresses1 = [...baseAddresses, residentialAddress1]
+      const expectedAddresses1 = [...baseAddresses, residentialAddress2]
+
+      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
         addresses1,
         residentialAddress2
       )
@@ -727,6 +804,20 @@ describe('Address', () => {
       const address1 = getFirstAddressForDelivery(addresses1)
 
       expect(address1).toEqual(residentialAddress2)
+    })
+
+    it('should find delivery address with commercial addressType', () => {
+      const pickupAddress = { ...addresses.pickupPointAddress }
+      const addresses1 = [
+        pickupAddress,
+        { ...addresses.commercialAddress },
+        { ...addresses.residentialAddress },
+      ]
+      const expectedDeliveryAddress = { ...addresses.commercialAddress }
+
+      const address1 = getFirstAddressForDelivery(addresses1)
+
+      expect(address1).toEqual(expectedDeliveryAddress)
     })
   })
 })

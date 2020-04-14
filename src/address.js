@@ -1,10 +1,4 @@
-import {
-  PICKUP,
-  SEARCH,
-  RESIDENTIAL,
-  COMMERCIAL,
-  GIFT_REGISTRY,
-} from './constants'
+import { PICKUP, SEARCH, GIFT_REGISTRY } from './constants'
 import uuid from './uuid'
 
 /** PRIVATE **/
@@ -36,11 +30,17 @@ export function getFirstAddressOnAnyOfTheseTypes(addresses, addressesTypes) {
 }
 
 export function getFirstAddressForDelivery(addresses) {
-  return getFirstAddressOnAnyOfTheseTypes(addresses, [
-    RESIDENTIAL,
-    COMMERCIAL,
-    GIFT_REGISTRY,
-  ])
+  if (!addresses || addresses.length === 0) {
+    return null
+  }
+
+  const deliveryAddresses = addresses.filter(address =>
+    isDeliveryAddress(address)
+  )
+
+  return deliveryAddresses && deliveryAddresses.length > 0
+    ? deliveryAddresses[0]
+    : null
 }
 
 export function getPickupAddress(pickupSla) {
@@ -92,11 +92,11 @@ export function isSearchAddress(address) {
 }
 
 export function isDeliveryAddress(address) {
-  return (
-    isCurrentAddressType(address, RESIDENTIAL) ||
-    isCurrentAddressType(address, COMMERCIAL) ||
-    isCurrentAddressType(address, GIFT_REGISTRY)
-  )
+  if (!address || !address.addressType) {
+    return false
+  }
+
+  return !isPickupAddress(address) && !isSearchAddress(address)
 }
 
 export function addAddressId(address) {
@@ -137,7 +137,9 @@ export function getDeliveryAvailableAddresses(addresses, requiredFields) {
   }
 
   return addresses.filter(address => {
-    return isAddressComplete(address, requiredFields) && isDeliveryAddress(address)
+    return (
+      isAddressComplete(address, requiredFields) && isDeliveryAddress(address)
+    )
   })
 }
 
@@ -173,6 +175,28 @@ export function addOrReplaceAddressTypeOnList(addresses, newAddress) {
   }
 
   const addressIndex = address.index
+  newAddresses[addressIndex] = {
+    ...newAddresses[addressIndex],
+    ...newAddress,
+  }
+
+  return newAddresses
+}
+
+export function addOrReplaceDeliveryAddressOnList(addresses, newAddress) {
+  if (!addresses || !newAddress || isPickupAddress(newAddress)) {
+    return addresses
+  }
+
+  const newAddresses = [...addresses]
+
+  const address = getFirstAddressForDelivery(newAddresses)
+
+  if (!address) {
+    return [...newAddresses, newAddress]
+  }
+
+  const addressIndex = findAddressIndex(newAddresses, address)
   newAddresses[addressIndex] = {
     ...newAddresses[addressIndex],
     ...newAddress,
