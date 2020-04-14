@@ -1547,12 +1547,12 @@ addOrReplaceDeliveryAddressOnList([
 Type: `Array<object>`
 An array which each item is an object containing all address fields like on selectedAddresses of orderForm
 - **newAddress**
-Type: `string`
+Type: `object`
 New address to be included on the list of addresses
 
 **returns:**
 - **new addresses**
-Type: `object`
+Type: `Array<object>`
 New list of addresses with the newAddress included
 
 ## Delivery Channel
