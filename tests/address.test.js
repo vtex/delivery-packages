@@ -450,56 +450,59 @@ describe('Address', () => {
     })
 
     it('should add address on empty address list', () => {
-      const residentialAddress1 = addresses.residentialAddress
-      const addresses1 = []
-      const expectedAddresses1 = [...addresses1, residentialAddress1]
+      const { residentialAddress } = addresses
+      const currentAddresses = []
+      const expectedAddresses = [...currentAddresses, residentialAddress]
 
-      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
-        addresses1,
-        residentialAddress1
+      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+        currentAddresses,
+        residentialAddress
       )
 
-      expect(resultAddresses1).toEqual(expectedAddresses1)
+      expect(resultAddresses).toEqual(expectedAddresses)
     })
 
     it('should append delivery address on a list that doesnt have delivery address', () => {
-      const pickupAddress = addresses.pickupPointAddress
-      const searchAddress = addresses.searchAddress
-      const residentialAddress1 = addresses.residentialAddress
-      const addresses1 = [pickupAddress, searchAddress]
-      const expectedAddresses1 = [...addresses1, residentialAddress1]
+      const {
+        pickupPointAddress: pickupAddress,
+        searchAddress,
+        residentialAddress,
+      } = addresses
+      const currentAddresses = [pickupAddress, searchAddress]
+      const expectedAddresses = [...currentAddresses, residentialAddress]
 
-      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
-        addresses1,
-        residentialAddress1
+      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+        currentAddresses,
+        residentialAddress
       )
 
-      expect(resultAddresses1).toEqual(expectedAddresses1)
+      expect(resultAddresses).toEqual(expectedAddresses)
     })
 
     it('should replace delivery address with same addressType', () => {
-      const pickupAddress = addresses.pickupPointAddress
-      const searchAddress = addresses.searchAddress
-      const residentialAddress1 = addresses.residentialAddress
+      const {
+        pickupPointAddress: pickupAddress,
+        searchAddress,
+        residentialAddress: residentialAddress1,
+      } = addresses
       const residentialAddress2 = {
         ...residentialAddress1,
         receiverName: 'Other Doe',
       }
       const baseAddresses = [pickupAddress, searchAddress]
-      const addresses1 = [...baseAddresses, residentialAddress1]
-      const expectedAddresses1 = [...baseAddresses, residentialAddress2]
+      const currentAddresses = [...baseAddresses, residentialAddress1]
+      const expectedAddresses = [...baseAddresses, residentialAddress2]
 
-      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
-        addresses1,
+      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+        currentAddresses,
         residentialAddress2
       )
 
-      expect(resultAddresses1).toEqual(expectedAddresses1)
+      expect(resultAddresses).toEqual(expectedAddresses)
     })
 
     it('should replace delivery address with another delivery addressType', () => {
-      const pickupAddress = addresses.pickupPointAddress
-      const searchAddress = addresses.searchAddress
+      const { pickupPointAddress: pickupAddress, searchAddress } = addresses
       const residentialAddress1 = {
         ...addresses.residentialAddress,
         index: undefined,
@@ -509,15 +512,15 @@ describe('Address', () => {
         index: undefined,
       }
       const baseAddresses = [pickupAddress, searchAddress]
-      const addresses1 = [...baseAddresses, residentialAddress1]
-      const expectedAddresses1 = [...baseAddresses, residentialAddress2]
+      const currentAddresses = [...baseAddresses, residentialAddress1]
+      const expectedAddresses = [...baseAddresses, residentialAddress2]
 
-      const resultAddresses1 = addOrReplaceDeliveryAddressOnList(
-        addresses1,
+      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+        currentAddresses,
         residentialAddress2
       )
 
-      expect(resultAddresses1).toEqual(expectedAddresses1)
+      expect(resultAddresses).toEqual(expectedAddresses)
     })
   })
 
