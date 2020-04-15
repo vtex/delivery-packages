@@ -9,7 +9,7 @@ import {
   getFirstAddressForType,
   getPickupAddress,
   addOrReplaceAddressTypeOnList,
-  addOrReplaceDeliveryAddressOnList,
+  setDeliveryAddressOnList,
   addOrReplaceAddressOnList,
   addPickupPointAddresses,
   addAddressId,
@@ -440,10 +440,10 @@ describe('Address', () => {
     })
   })
 
-  describe('addOrReplaceDeliveryAddressOnList', () => {
+  describe('setDeliveryAddressOnList', () => {
     it('should be empty if empty params are passed', () => {
-      const addresses1 = addOrReplaceDeliveryAddressOnList()
-      const addresses2 = addOrReplaceDeliveryAddressOnList([], null)
+      const addresses1 = setDeliveryAddressOnList()
+      const addresses2 = setDeliveryAddressOnList([], null)
 
       expect(addresses1).toBeUndefined()
       expect(addresses2).toEqual([])
@@ -454,7 +454,7 @@ describe('Address', () => {
       const currentAddresses = []
       const expectedAddresses = [...currentAddresses, residentialAddress]
 
-      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+      const resultAddresses = setDeliveryAddressOnList(
         currentAddresses,
         residentialAddress
       )
@@ -471,7 +471,7 @@ describe('Address', () => {
       const currentAddresses = [pickupAddress, searchAddress]
       const expectedAddresses = [...currentAddresses, residentialAddress]
 
-      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+      const resultAddresses = setDeliveryAddressOnList(
         currentAddresses,
         residentialAddress
       )
@@ -493,7 +493,7 @@ describe('Address', () => {
       const currentAddresses = [...baseAddresses, residentialAddress1]
       const expectedAddresses = [...baseAddresses, residentialAddress2]
 
-      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+      const resultAddresses = setDeliveryAddressOnList(
         currentAddresses,
         residentialAddress2
       )
@@ -515,7 +515,7 @@ describe('Address', () => {
       const currentAddresses = [...baseAddresses, residentialAddress1]
       const expectedAddresses = [...baseAddresses, residentialAddress2]
 
-      const resultAddresses = addOrReplaceDeliveryAddressOnList(
+      const resultAddresses = setDeliveryAddressOnList(
         currentAddresses,
         residentialAddress2
       )

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add new address function named `addOrReplaceDeliveryAddressOnList`
+- Add new address function named `setDeliveryAddressOnList`
 
 ## [2.17.2] - 2020-03-18
 ### Added

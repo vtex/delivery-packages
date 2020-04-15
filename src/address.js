@@ -183,7 +183,7 @@ export function addOrReplaceAddressTypeOnList(addresses, newAddress) {
   return newAddresses
 }
 
-export function addOrReplaceDeliveryAddressOnList(addresses, newAddress) {
+export function setDeliveryAddressOnList(addresses, newAddress) {
   if (!addresses || !newAddress || isPickupAddress(newAddress)) {
     return addresses
   }
