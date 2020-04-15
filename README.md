@@ -45,7 +45,7 @@ $ npm install @vtex/delivery-packages
 - [groupByAddressType](#groupbyaddresstype-addresses)
 - [addOrReplaceAddressTypeOnList](#addorreplaceaddresstypeonlist-addresses-newaddress)
 - [addOrReplaceAddressOnList](#addorreplaceaddressonlist-addresses-newaddress)
-- [addOrReplaceDeliveryAddressOnList](#addorreplacedeliveryaddressonlist-addresses-newaddress)
+- [setDeliveryAddressOnList](#setdeliveryaddressonlist-addresses-newaddress)
 
 #### Delivery Channel
 
@@ -1388,15 +1388,15 @@ New address to be included on the list of addresses
 Type: `object`
 New list of addresses with the newAddress included
 
-## addOrReplaceDeliveryAddressOnList (addresses, newAddress)
+## setDeliveryAddressOnList (addresses, newAddress)
 
-Adds new address if no delivery address exists on addresses and if addressType of newAddress is delivery or replace an existing address of the delivery type
+Adds a new address if no delivery address exists on addresses and the `addressType` of `newAddress` is delivery **or** replace an existing delivery address with the current delivery address merged with the `newAddress` data.
 
 ##### Usage
 ```js
-const { addOrReplaceDeliveryAddressOnList } = require('@vtex/delivery-packages/dist/address')
+const { setDeliveryAddressOnList } = require('@vtex/delivery-packages/dist/address')
 
-addOrReplaceDeliveryAddressOnList([
+setDeliveryAddressOnList([
   {
     addressId: '141125d',
     addressType: 'pickup',
@@ -1462,7 +1462,7 @@ addOrReplaceDeliveryAddressOnList([
 //   },
 // ]
 
-addOrReplaceDeliveryAddressOnList([
+setDeliveryAddressOnList([
   {
     addressId: '-4556418741084',
     addressType: 'residential',
