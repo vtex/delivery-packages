@@ -42,7 +42,7 @@ export function getLogisticsInfoData(params) {
       : logisticsInfo[itemIndex].shippingEstimate
         ? logisticsInfo[itemIndex].shippingEstimate
         : undefined,
-    deliveryWindow: selectedSla ? selectedSla.deliveryWindow : undefined,
+    deliveryWindow: logisticsInfo[itemIndex].deliveryWindow,
     shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate
       ? logisticsInfo[itemIndex].shippingEstimateDate
       : selectedSla

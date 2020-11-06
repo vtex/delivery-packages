@@ -175,6 +175,7 @@ describe('Shipping', () => {
         },
       ]
       logisticsInfo[0].slas[1].deliveryWindow = availableDeliveryWindows[1]
+      logisticsInfo[0].deliveryWindow = availableDeliveryWindows[1]
       const selectedAddresses = [addresses.residentialAddress]
       const deliveredItems = getDeliveredItems({
         items: itemsWithIndex,

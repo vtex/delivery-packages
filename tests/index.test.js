@@ -285,6 +285,7 @@ describe("has two packages one with deliveryWindow and the other don't", () => {
       {
         ...baseLogisticsInfo.normal,
         itemIndex: 0,
+        deliveryWindow: {},
         slas: [
           {
             ...normalSla,
@@ -343,6 +344,7 @@ describe('has one package one with deliveryWindow', () => {
       {
         ...baseLogisticsInfo.normal,
         itemIndex: 0,
+        deliveryWindow: deliveryWindow,
         slas: [
           {
             ...normalSla,
@@ -354,6 +356,7 @@ describe('has one package one with deliveryWindow', () => {
       {
         ...baseLogisticsInfo.normal,
         itemIndex: 1,
+        deliveryWindow: deliveryWindow,
         slas: [
           {
             ...normalSla,
@@ -1057,11 +1060,13 @@ describe('has one package with scheduled delivery and the other with the normal 
       {
         ...baseLogisticsInfo.scheduled,
         itemIndex: 0,
+        deliveryWindow: normalScheduledDeliverySla.deliveryWindow,
         slas: [expressSla, normalScheduledDeliverySla],
       },
       {
         ...baseLogisticsInfo.express,
         itemIndex: 1,
+        deliveryWindow: expressSla.deliveryWindow,
         slas: [expressSla, normalScheduledDeliverySla],
       },
     ]
@@ -1153,7 +1158,7 @@ describe('has one package with scheduled delivery and the other with the normal 
 
     const expectedParcel1 = {
       deliveryIds: undefined,
-      deliveryWindow: undefined,
+      deliveryWindow: null,
       item: undefined,
       deliveryChannel: undefined,
       selectedSlaObj: null,
@@ -1175,7 +1180,7 @@ describe('has one package with scheduled delivery and the other with the normal 
     }
     const expectedParcel2 = {
       deliveryIds: undefined,
-      deliveryWindow: undefined,
+      deliveryWindow: null,
       item: undefined,
       deliveryChannel: undefined,
       selectedSlaObj: null,
@@ -1495,7 +1500,7 @@ describe('has three package with two scheduled delivery and the other with the n
 
     const expectedParcel1 = {
       deliveryIds: undefined,
-      deliveryWindow: undefined,
+      deliveryWindow: null,
       item: undefined,
       deliveryChannel: undefined,
       selectedSlaObj: null,
@@ -1517,7 +1522,7 @@ describe('has three package with two scheduled delivery and the other with the n
     }
     const expectedParcel2 = {
       deliveryIds: undefined,
-      deliveryWindow: undefined,
+      deliveryWindow: null,
       item: undefined,
       deliveryChannel: undefined,
       selectedSlaObj: null,
@@ -1540,7 +1545,7 @@ describe('has three package with two scheduled delivery and the other with the n
     }
     const expectedParcel3 = {
       deliveryIds: undefined,
-      deliveryWindow: undefined,
+      deliveryWindow: null,
       item: undefined,
       deliveryChannel: undefined,
       selectedSlaObj: null,

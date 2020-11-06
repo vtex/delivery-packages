@@ -62,6 +62,7 @@
     "sshpk": "^1.13.2"
   },
   "jest": {
+    "testURL": "http://localhost/",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest"
     },
