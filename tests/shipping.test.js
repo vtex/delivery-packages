@@ -300,6 +300,41 @@ describe('Shipping', () => {
         addresses.pickupPointAddress.receiverName
       )
     })
+
+    it('should return the deliveryWindow for null slas (slas array is null in fulfillment)', () => {
+      const items = createItems(1)
+      const packages = [createPackage([{ itemIndex: 0, quantity: 1 }])]
+      const itemsWithIndex = items.map((item, index) => ({ ...item, index }))
+      const packagesWithIndex = packages.map((pack, index) => ({
+        ...pack,
+        index,
+      }))
+      const selectedDeliveryWindow = availableDeliveryWindows[0]
+      const logisticsInfo = [
+        {
+          ...baseLogisticsInfo.scheduled,
+          itemIndex: 0,
+          deliveryWindow: selectedDeliveryWindow,
+          slas: null,
+        },
+      ]
+      const selectedAddresses = [addresses.pickupPointAddress]
+      const deliveredItems = getDeliveredItems({
+        items: itemsWithIndex,
+        packages: packagesWithIndex,
+      })
+      const pkg = deliveredItems.delivered[0]
+
+      const result = hydratePackageWithLogisticsExtraInfo(
+        pkg,
+        logisticsInfo,
+        selectedAddresses
+      )
+
+      expect(result.deliveryWindow).toBeDefined()
+      expect(result.deliveryWindow.startDateUtc).toEqual(selectedDeliveryWindow.startDateUtc)
+      expect(result.deliveryWindow.endDateUtc).toEqual(selectedDeliveryWindow.endDateUtc)
+    })
   })
 
   // logisticsInfo, selectedSla, availableDeliveryWindows = null
