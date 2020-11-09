@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `deliveryWindow` calculation now uses the field inside `logisticInfo` object instead of inside `slas` array.
+
 ## [2.18.0] - 2020-04-15
 ### Added
 - Add new address function named `setDeliveryAddressOnList`
