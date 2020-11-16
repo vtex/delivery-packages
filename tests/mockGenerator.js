@@ -421,7 +421,6 @@ const createLogisticsInfo = (slaTypes, quantity, price = 0) => {
     price: price,
     listPrice: price,
     sellingPrice: price,
-    deliveryWindow: null,
   }))
 }
 
