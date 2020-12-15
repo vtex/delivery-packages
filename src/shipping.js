@@ -21,6 +21,16 @@ import {
 
 /** PRIVATE **/
 
+function getDeliveryWindow(selectedSla, itemLogisticsInfo) {
+  if (selectedSla) {
+    return selectedSla.deliveryWindow
+  }
+  if (itemLogisticsInfo.deliveryWindow) {
+    return itemLogisticsInfo.deliveryWindow
+  }
+  return undefined
+}
+
 // params: { itemIndex, logisticsInfo }
 export function getLogisticsInfoData(params) {
   if (!params || !params.logisticsInfo || params.logisticsInfo.length === 0) {
@@ -42,7 +52,7 @@ export function getLogisticsInfoData(params) {
       : logisticsInfo[itemIndex].shippingEstimate
         ? logisticsInfo[itemIndex].shippingEstimate
         : undefined,
-    deliveryWindow: selectedSla ? selectedSla.deliveryWindow : undefined,
+    deliveryWindow: getDeliveryWindow(selectedSla, logisticsInfo[itemIndex]),
     shippingEstimateDate: logisticsInfo[itemIndex].shippingEstimateDate
       ? logisticsInfo[itemIndex].shippingEstimateDate
       : selectedSla
