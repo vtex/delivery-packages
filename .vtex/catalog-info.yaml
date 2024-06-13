@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: delivery-packages
+  description: Library of functions that help to separate items in parcels and
+    select delivery items on UIs
+  annotations:
+    github.com/project-slug: vtex/delivery-packages
+    vtex.com/o11y-os-index: ""
+    vtex.com/janus-acronym: ""
+    grafana/dashboard-selector: ""
+    backstage.io/techdocs-ref: dir:../
+  tags:
+    - javascript
+spec:
+  type: library
+  lifecycle: stable
+  owner: sales-experience
+  system: sales-app
+  dependsOn: []
