@@ -15,6 +15,6 @@ metadata:
 spec:
   type: library
   lifecycle: stable
-  owner: sales-experience
+  owner: te-0008
   system: sales-app
   dependsOn: []
