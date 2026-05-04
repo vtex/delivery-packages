@@ -19,7 +19,8 @@
     "branch": "echo $(git rev-parse --abbrev-ref HEAD) > /tmp/branch",
     "lint-only-changed": "LIST=`git diff-index --name-only HEAD | uniq | grep /.*\\.js$ | grep -v json`; if [ \"$LIST\" ]; then eslint $LIST; fi",
     "lint-not-beta": "npm run branch && if [ $(cat /tmp/branch) != \"beta\" ]; then npm run lint-only-changed; else echo 'skip lint on beta' ; fi",
-    "test-not-beta": "npm run branch && if [ $(cat /tmp/branch) != \"beta\" ]; then npm run test; else echo 'skip tests on beta' ; fi"
+    "test-not-beta": "npm run branch && if [ $(cat /tmp/branch) != \"beta\" ]; then npm run test; else echo 'skip tests on beta' ; fi",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [
     "vtex",
