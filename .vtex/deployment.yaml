@@ -9,7 +9,7 @@
           sonarProjectName: delivery-packages
           nodeVersion: 20-bookworm
           nodeCommands:
-            - test -- --coverage
+            - test:coverage
         runtime:
           architecture: amd64
         when:
