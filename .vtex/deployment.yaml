@@ -1,5 +1,5 @@
 - name: delivery-packages
-  referenceId: PLACEHOLDER
+  referenceId: 5ZMT2PKH
   description: SonarQube scan for delivery-packages
   build:
     provider: dkcicd
