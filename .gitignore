@@ -2,3 +2,11 @@ node_modules
 .vscode
 *.log
 dist
+
+# SDD artifacts — ephemeral, not committed
+specs/**/plan.md
+specs/**/tasks.md
+specs/**/analysis.md
+
+# spec-kit runtime
+.specify/memory/*.log
