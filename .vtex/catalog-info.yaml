@@ -11,6 +11,8 @@ metadata:
     backstage.io/techdocs-ref: dir:../
     vtex.com/application-id: 5ZMT2PKH
     vtex.com/platform-flow-id: Shopper#4
+    vtex.com/sdd-check-skip: 'true'
+    vtex.com/sdd-check-skip-reason: The component is in a KTLO mode. There is no active development for years.
   tags:
     - javascript
 spec:
